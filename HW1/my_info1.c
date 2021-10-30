@@ -4,9 +4,6 @@
 
 #define PROC_NAME "my_info"
 
-
-
-
 static int show(struct seq_file *m, void *v)
 {
     return 0;
