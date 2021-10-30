@@ -47,7 +47,6 @@ static void *start(struct seq_file *m, loff_t *pos)
     return NULL;
 }
 
-
 static void *next(struct seq_file *m, void *v, loff_t *pos)
 {
     (*pos)++;
@@ -56,7 +55,6 @@ static void *next(struct seq_file *m, void *v, loff_t *pos)
         return &cpu_data(*pos);
     return NULL;
 }
-
 
 static void stop(struct seq_file *m, void *v)
 {
@@ -70,7 +68,6 @@ const struct seq_operations info_op =
     .show	= show,
 };
 
-
 static int my_open(struct inode *inode, struct file *file)
 
 {
@@ -78,8 +75,6 @@ static int my_open(struct inode *inode, struct file *file)
     return seq_open(file, &info_op);
 
 };
-
-
 
 static const struct file_operations my_file_ops =
 {
@@ -90,7 +85,7 @@ static const struct file_operations my_file_ops =
 
 };
 
-static int __init procfs_init(void)
+static int __init init(void)
 
 {
 
@@ -102,24 +97,16 @@ static int __init procfs_init(void)
 
 }
 
-
-
-static void __exit procfs_exit(void)
+static void __exit exit(void)
 
 {
 
     remove_proc_entry(PROC_NAME, NULL);
 
-    pr_debug("/proc/%s removed\n", PROC_NAME);
-
 }
 
+module_init(init);
 
-
-module_init(procfs_init);
-
-module_exit(procfs_exit);
-
-
+module_exit(exit);
 
 MODULE_LICENSE("GPL");
