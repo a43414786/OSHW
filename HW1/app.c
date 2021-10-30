@@ -56,7 +56,7 @@ void print_device_info(nodeptr all,nodeptr *ptrs,char input)
         print_info(ptrs[0]);
         break;
     case 'c':
-        printf("Cpu information:\n");
+        printf("CPU information:\n");
         print_info(ptrs[1]);
         break;
     case 'm':
