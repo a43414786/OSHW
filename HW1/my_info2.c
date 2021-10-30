@@ -16,13 +16,15 @@ static void *start(struct seq_file *m, loff_t *pos)
     /*version information*/
     seq_printf(m, "=============Version=============\n");
     seq_printf(m, "Linux version %s\n",utsname()->release);
-
-    return pos;
+    if((*pos) > 0) return NULL;
+    else return pos;
 }
 
 static void *next(struct seq_file *m, void *v, loff_t *pos)
 {
-    return NULL;
+    (*pos)++;
+    if((*pos) > 0) return NULL;
+    else return pos;
 }
 
 static void stop(struct seq_file *m, void *v)
