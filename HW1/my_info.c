@@ -69,9 +69,10 @@ if(flag){
     seq_printf(m, "Linux version %s\n",utsname()->release);
 flag--;
 }
-    if ((*pos) < 1)
-        return &cpu_data(*pos);
-    return NULL;
+    *pos = cpumask_next(*pos - 1, cpu_online_mask);
+	if ((*pos) < nr_cpu_ids)
+		return &cpu_data(*pos);
+	return NULL;
 }
 
 
