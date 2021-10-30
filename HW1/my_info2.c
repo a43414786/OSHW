@@ -17,7 +17,7 @@ static void *start(struct seq_file *m, loff_t *pos)
     seq_printf(m, "=============Version=============\n");
     seq_printf(m, "Linux version %s\n",utsname()->release);
 
-    return NULL;
+    return pos;
 }
 
 static void *next(struct seq_file *m, void *v, loff_t *pos)
