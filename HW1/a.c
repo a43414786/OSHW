@@ -36,7 +36,7 @@ void addnode(nodeptr *root,char c)
 
 void Makeinfolist(nodeptr *allarg,nodeptr **ptrsarg){
     
-    char word,input = ' ';
+    char word;
     short flag1 = 0,flag2 = 0;
     nodeptr all = NULL,ptrs[4] = {NULL,NULL,NULL,NULL};
     int counter = -1;
@@ -98,8 +98,8 @@ void Makeinfolist(nodeptr *allarg,nodeptr **ptrsarg){
     addnode(&all,'\n');
     addnode(&ptrs[counter],'\n');
     addnode(&ptrs[counter],'\n');
-    close(myfile)
-    close(myfile1)
+    fclose(myfile)
+    fclose(myfile1)
     *allarg = all;
     *ptrsarg = ptrs;
     
@@ -148,6 +148,7 @@ void print_device_info(nodeptr all,nodeptr *ptrs,char input)
 }
 int main()
 {
+    char input = ' '
     nodeptr all = NULL,ptrs[4] = {NULL,NULL,NULL,NULL};
     while(input != 'e')
     {
