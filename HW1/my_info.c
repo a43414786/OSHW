@@ -66,7 +66,7 @@ static void *c_start(struct seq_file *m, loff_t *pos)
     seq_printf(m, "=============Version=============\n");
     seq_printf(m, "Linux version %s\n",utsname()->release);
     seq_printf(m, "\n=============CPU================");
-    flag--;
+
     *pos = cpumask_next(*pos - 1, cpu_online_mask);
 	if ((*pos) < nr_cpu_ids)
 		return &cpu_data(*pos);
