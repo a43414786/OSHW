@@ -48,25 +48,25 @@ void print_info(nodeptr root)
 }
 
 
-void print_device_info(nodeptr all,nodeptr *ptrs,char input)
+void print_device_info(nodeptr all,nodeptr verinfo,nodeptr cpuinfo,nodeptr meminfo,nodeptr timeinfo)
 {
     switch(input)
     {
     case 'v':
         printf("Version: ");
-        print_info(ptrs[0]);
+        print_info(verinfo);
         break;
     case 'c':
         printf("CPU information:\n");
-        print_info(ptrs[1]);
+        print_info(cpuinfo);
         break;
     case 'm':
         printf("Memory information:\n");
-        print_info(ptrs[2]);
+        print_info(meminfo);
         break;
     case 't':
         printf("Time information:\n");
-        print_info(ptrs[3]);
+        print_info(timeinfo);
         break;
     case 'a':
         print_info(all);
@@ -78,7 +78,7 @@ void print_device_info(nodeptr all,nodeptr *ptrs,char input)
     
 }
 
-void Makeinfolist(nodeptr *allarg,nodeptr **ptrsarg){
+void Makeinfolist(nodeptr *allarg,nodeptr *all,nodeptr *verinfo,nodeptr *cpuinfo,nodeptr *meminfo,nodeptr *timeinfo){
     
     char word;
     short flag1 = 0,flag2 = 0;
@@ -146,21 +146,24 @@ void Makeinfolist(nodeptr *allarg,nodeptr **ptrsarg){
     fclose(myfile);
     //fclose(myfile1);
     *allarg = all;
-    *ptrsarg = ptrs;
+    *verinfo = ptrs[0];
+    *cpuinfo = ptrs[1];
+    *meminfo = ptrs[2];
+    *timeinfo = ptrs[3];
     
 }
 
 int main()
 {
     char input = ' ';
-    nodeptr all = NULL,ptrs[4] = {NULL,NULL,NULL,NULL};
+    nodeptr all = NULL,verinfo = NULL,cpuinfo = NULL,meminfo = NULL,timeinfo = NULL;
     while(input != 'e')
     {
-        Makeinfolist(&all,&ptrs);
+        Makeinfolist(&all,&verinfo,&cpuinfo,&meminfo,&timeinfo);
         printf("Which information do you want?\nVersion(v),CPU(c),Memory(m),Time(t),All(a),Exit(e)?\n");
         scanf("\n%c",&input);
 
-        print_device_info(all,ptrs,input);
+        print_device_info(all,verinfo,cpuinfo,meminfo,timeinfo);
     }
     /*
     for(int i = 0 ; i < 4 ; i++)
