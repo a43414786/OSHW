@@ -152,7 +152,7 @@ static const struct file_operations my_file_ops =
 
 };
 
-static int __init init(void)
+static int __init my_init(void)
 
 {
 
@@ -164,7 +164,7 @@ static int __init init(void)
 
 }
 
-static void __exit exit(void)
+static void __exit my_exit(void)
 
 {
 
@@ -172,8 +172,8 @@ static void __exit exit(void)
 
 }
 
-module_init(init);
+module_init(my_init);
 
-module_exit(exit);
+module_exit(my_exit);
 
 MODULE_LICENSE("GPL");
