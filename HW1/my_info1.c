@@ -12,14 +12,12 @@ static int show(struct seq_file *m, void *v)
 
 static void *start(struct seq_file *m, loff_t *pos)
 {
-    (*pos) = 0;
-    return pos;
+    return NULL;
 }
 
 static void *next(struct seq_file *m, void *v, loff_t *pos)
 {
-    if(++(*pos) < 1)return pos;
-    else return NULL;
+    return NULL;
 }
 
 static void stop(struct seq_file *m, void *v)
