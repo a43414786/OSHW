@@ -159,7 +159,6 @@ void Makeinfolist(char input){
             ptrs[i] = temp;
         } 
     }
-    free(ptrs);
 }
 
 int main()
@@ -173,12 +172,6 @@ int main()
         Makeinfolist(input);
         
     }
-    /*
-    for(int i = 0 ; i < 4 ; i++)
-    {
-        free(ptrs[i]);
-    }
-    free(all);*/
     
     return 0;
 }
