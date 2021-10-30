@@ -100,7 +100,7 @@ void Makeinfolist(nodeptr *allarg,nodeptr **ptrsarg){
     addnode(&ptrs[counter],'\n');
     addnode(&ptrs[counter],'\n');
     fclose(myfile);
-    fclose(myfile1);
+    //fclose(myfile1);
     *allarg = all;
     *ptrsarg = ptrs;
     
