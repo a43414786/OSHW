@@ -45,7 +45,7 @@ void Makeinfolist(nodeptr *allarg,nodeptr **ptrsarg){
     while((word = fgetc(myfile1)) != EOF){
     	printf("%c",word);
     }
-
+    printf("\n\n");
 
     while((word = fgetc(myfile)) != EOF )
     {
