@@ -62,14 +62,11 @@ static int show_my_info(struct seq_file *m, void *v)
 
 static void *c_start(struct seq_file *m, loff_t *pos)
 {
-static int flag = 1;
-if(flag){
 /*version information*/
     seq_printf(m, "=============Version=============\n");
     seq_printf(m, "Linux version %s\n",utsname()->release);
     seq_printf(m, "\n=============CPU================");
     flag--;
-}
     *pos = cpumask_next(*pos - 1, cpu_online_mask);
 	if ((*pos) < nr_cpu_ids)
 		return &cpu_data(*pos);
@@ -80,7 +77,10 @@ if(flag){
 static void *c_next(struct seq_file *m, void *v, loff_t *pos)
 {
     (*pos)++;
-    return c_start(m, pos);
+    *pos = cpumask_next(*pos - 1, cpu_online_mask);
+	if ((*pos) < nr_cpu_ids)
+		return &cpu_data(*pos);
+	return NULL;
 }
 
 static void c_stop(struct seq_file *m, void *v)
