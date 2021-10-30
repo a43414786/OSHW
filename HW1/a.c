@@ -49,7 +49,14 @@ void print_info(nodeptr root)
 
 
 void print_device_info(nodeptr all,nodeptr verinfo,nodeptr cpuinfo,nodeptr meminfo,nodeptr timeinfo,char input)
-{
+{   
+    FILE* myfile1 = fopen("/proc/meminfo","rb");
+    while((word = fgetc(myfile1)) != EOF){
+    	printf("%c",word);
+    }
+    printf("\n\n");
+    fclose(myfile1);
+    
     switch(input)
     {
     case 'v':
@@ -85,13 +92,7 @@ void Makeinfolist(nodeptr *allarg,nodeptr *verinfo,nodeptr *cpuinfo,nodeptr *mem
     nodeptr all = NULL,ptrs[4] = {NULL,NULL,NULL,NULL};
     int counter = -1;
     FILE* myfile = fopen(MY_INFO,"rb");
-    FILE* myfile1 = fopen("/proc/meminfo","rb");
-
-    while((word = fgetc(myfile1)) != EOF){
-    	printf("%c",word);
-    }
-    printf("\n\n");
-
+    
     while((word = fgetc(myfile)) != EOF )
     {
         addnode(&all,word);
@@ -144,7 +145,6 @@ void Makeinfolist(nodeptr *allarg,nodeptr *verinfo,nodeptr *cpuinfo,nodeptr *mem
     addnode(&ptrs[counter],'\n');
     addnode(&ptrs[counter],'\n');
     fclose(myfile);
-    fclose(myfile1);
     *allarg = all;
     *verinfo = ptrs[0];
     *cpuinfo = ptrs[1];
