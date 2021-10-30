@@ -78,7 +78,7 @@ void print_device_info(nodeptr all,nodeptr verinfo,nodeptr cpuinfo,nodeptr memin
     
 }
 
-void Makeinfolist(nodeptr *allarg,nodeptr *all,nodeptr *verinfo,nodeptr *cpuinfo,nodeptr *meminfo,nodeptr *timeinfo){
+void Makeinfolist(nodeptr *allarg,nodeptr *verinfo,nodeptr *cpuinfo,nodeptr *meminfo,nodeptr *timeinfo){
     
     char word;
     short flag1 = 0,flag2 = 0;
