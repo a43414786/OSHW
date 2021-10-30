@@ -34,49 +34,8 @@ void addnode(nodeptr *root,char c)
     }
 }
 
-void print_info(nodeptr root)
-{
-
-    while(root)
-    {
-
-        printf("%c",root->c);
-        root = root->next;
-
-    }
-
-}
-
-void print_device_info(nodeptr all,nodeptr *ptrs,char input)
-{
-    switch(input)
-    {
-    case 'v':
-        printf("Version: ");
-        print_info(ptrs[0]);
-        break;
-    case 'c':
-        printf("CPU information:\n");
-        print_info(ptrs[1]);
-        break;
-    case 'm':
-        printf("Memory information:\n");
-        print_info(ptrs[2]);
-        break;
-    case 't':
-        printf("Time information:\n");
-        print_info(ptrs[3]);
-        break;
-    case 'a':
-        print_info(all);
-        break;
-    default:
-        break;
-    }
-
-}
-int main()
-{
+void Makeinfolist(nodeptr *allarg,nodeptr **ptrsarg){
+    
     char word,input = ' ';
     short flag1 = 0,flag2 = 0;
     nodeptr all = NULL,ptrs[4] = {NULL,NULL,NULL,NULL};
@@ -139,21 +98,72 @@ int main()
     addnode(&all,'\n');
     addnode(&ptrs[counter],'\n');
     addnode(&ptrs[counter],'\n');
+    close(myfile)
+    close(myfile1)
+    *allarg = all;
+    *ptrsarg = ptrs;
+    
+}
 
+void print_info(nodeptr root)
+{
+
+    while(root)
+    {
+
+        printf("%c",root->c);
+        root = root->next;
+
+    }
+
+}
+
+void print_device_info(nodeptr all,nodeptr *ptrs,char input)
+{
+    switch(input)
+    {
+    case 'v':
+        printf("Version: ");
+        print_info(ptrs[0]);
+        break;
+    case 'c':
+        printf("CPU information:\n");
+        print_info(ptrs[1]);
+        break;
+    case 'm':
+        printf("Memory information:\n");
+        print_info(ptrs[2]);
+        break;
+    case 't':
+        printf("Time information:\n");
+        print_info(ptrs[3]);
+        break;
+    case 'a':
+        print_info(all);
+        break;
+    default:
+        break;
+    }
+
+}
+int main()
+{
+    nodeptr all = NULL,ptrs[4] = {NULL,NULL,NULL,NULL};
     while(input != 'e')
     {
+        Makeinfolist(&all,&ptrs);
         printf("Which information do you want?\nVersion(v),CPU(c),Memory(m),Time(t),All(a),Exit(e)?\n");
         scanf("\n%c",&input);
 
         print_device_info(all,ptrs,input);
     }
-
+    /*
     for(int i = 0 ; i < 4 ; i++)
     {
         free(ptrs[i]);
     }
-    free(all);
-
+    free(all);*/
+    
     return 0;
 }
 
