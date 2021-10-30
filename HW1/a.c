@@ -50,14 +50,6 @@ void print_info(nodeptr root)
 
 void print_device_info(nodeptr all,nodeptr *ptrs,char input)
 {   
-    char word;
-    FILE* myfile1 = fopen("/proc/meminfo","rb");
-    while((word = fgetc(myfile1)) != EOF){
-    	printf("%c",word);
-    }
-    printf("\n\n");
-    fclose(myfile1);
-    
     switch(input)
     {
     case 'v':
