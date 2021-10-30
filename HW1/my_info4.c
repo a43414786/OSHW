@@ -16,9 +16,6 @@
 #include <linux/vmalloc.h>
 #include <asm/page.h>
 #include <asm/pgtable.h>
-#include <linux/sched.h>
-#include <linux/time.h>
-#include <linux/kernel_stat.h>
 
 #define PROC_NAME "my_info"
 
