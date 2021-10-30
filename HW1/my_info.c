@@ -36,7 +36,7 @@ static int show_my_info(struct seq_file *m, void *v)
 
    
 
-    seq_printf(m, "processor\t: %u\n"
+    seq_printf(m, "\nprocessor\t: %u\n"
                "model name\t: %s\n"
                "physical id\t: %d\n"
                "core id\t\t: %d\n"
@@ -67,7 +67,7 @@ if(flag){
 /*version information*/
     seq_printf(m, "=============Version=============\n");
     seq_printf(m, "Linux version %s\n",utsname()->release);
-    seq_printf(m, "\n=============CPU================\n");
+    seq_printf(m, "\n=============CPU================");
     flag--;
 }
     *pos = cpumask_next(*pos - 1, cpu_online_mask);
