@@ -72,23 +72,33 @@ static int __init procfs_init(void)
 
 }
 
-
-
-static void __exit procfs_exit(void)
+static int __init init(void)
 
 {
 
-    remove_proc_entry(PROC_NAME, NULL);
+    struct proc_dir_entry *entry;
 
-    pr_debug("/proc/%s removed\n", PROC_NAME);
+    entry = proc_create(PROC_NAME, 0, NULL, &my_file_ops);
+
+    return 0;
 
 }
 
 
 
-module_init(procfs_init);
+static void __exit exit(void)
 
-module_exit(procfs_exit);
+{
+
+    remove_proc_entry(PROC_NAME, NULL);
+
+}
+
+
+
+module_init(init);
+
+module_exit(exit);
 
 
 
