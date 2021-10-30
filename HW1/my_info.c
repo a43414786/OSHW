@@ -90,13 +90,12 @@ static void stop(struct seq_file *m, void *v)
     seq_printf(m, "Inactive\t: %lu kB\n", (pages[LRU_INACTIVE_ANON] +
                                            pages[LRU_INACTIVE_FILE]) << (PAGE_SHIFT - 10));
 
+    seq_printf(m, "Shmem\t\t: %lu kB\n", i.sharedram << (PAGE_SHIFT - 10));
 
     seq_printf(m, "Dirty\t\t: %lu kB\n",
                global_node_page_state(NR_FILE_DIRTY) << (PAGE_SHIFT - 10));
     seq_printf(m, "Writeback\t: %lu kB\n",
                global_node_page_state(NR_WRITEBACK) << (PAGE_SHIFT - 10));
-
-    seq_printf(m, "Shmem\t\t: %lu kB\n", i.sharedram << (PAGE_SHIFT - 10));
 
     seq_printf(m, "KernelStack\t: %lu kB\n",
                global_zone_page_state(NR_KERNEL_STACK_KB));
