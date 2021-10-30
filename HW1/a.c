@@ -48,7 +48,7 @@ void print_info(nodeptr root)
 }
 
 
-void print_device_info(nodeptr all,nodeptr verinfo,nodeptr cpuinfo,nodeptr meminfo,nodeptr timeinfo,char input)
+void print_device_info(nodeptr all,nodeptr *ptrs,char input)
 {   
     char word;
     FILE* myfile1 = fopen("/proc/meminfo","rb");
@@ -62,19 +62,19 @@ void print_device_info(nodeptr all,nodeptr verinfo,nodeptr cpuinfo,nodeptr memin
     {
     case 'v':
         printf("Version: ");
-        print_info(verinfo);
+        print_info(ptrs[0]);
         break;
     case 'c':
         printf("CPU information:\n");
-        print_info(cpuinfo);
+        print_info(ptrs[1]);
         break;
     case 'm':
         printf("Memory information:\n");
-        print_info(meminfo);
+        print_info(ptrs[2]);
         break;
     case 't':
         printf("Time information:\n");
-        print_info(timeinfo);
+        print_info(ptrs[3]);
         break;
     case 'a':
         print_info(all);
@@ -86,7 +86,7 @@ void print_device_info(nodeptr all,nodeptr verinfo,nodeptr cpuinfo,nodeptr memin
     
 }
 
-void Makeinfolist(nodeptr *allarg,nodeptr *verinfo,nodeptr *cpuinfo,nodeptr *meminfo,nodeptr *timeinfo){
+void Makeinfolist(char input){
     
     char word;
     short flag1 = 0,flag2 = 0;
@@ -146,11 +146,7 @@ void Makeinfolist(nodeptr *allarg,nodeptr *verinfo,nodeptr *cpuinfo,nodeptr *mem
     addnode(&ptrs[counter],'\n');
     addnode(&ptrs[counter],'\n');
     fclose(myfile);
-    *allarg = all;
-    *verinfo = ptrs[0];
-    *cpuinfo = ptrs[1];
-    *meminfo = ptrs[2];
-    *timeinfo = ptrs[3];
+    print_device_info(all,ptrs,input);
     
 }
 
@@ -160,11 +156,10 @@ int main()
     nodeptr all = NULL,verinfo = NULL,cpuinfo = NULL,meminfo = NULL,timeinfo = NULL;
     while(input != 'e')
     {
-        Makeinfolist(&all,&verinfo,&cpuinfo,&meminfo,&timeinfo);
         printf("Which information do you want?\nVersion(v),CPU(c),Memory(m),Time(t),All(a),Exit(e)?\n");
         scanf("\n%c",&input);
-
-        print_device_info(all,verinfo,cpuinfo,meminfo,timeinfo,input);
+        Makeinfolist(input);
+        
     }
     /*
     for(int i = 0 ; i < 4 ; i++)
