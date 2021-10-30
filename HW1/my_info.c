@@ -29,19 +29,9 @@ static int show_my_info(struct seq_file *m, void *v)
 
     struct cpuinfo_x86 *c = v;
 
-    struct sysinfo i;
-    unsigned long pages[NR_LRU_LISTS];
-    int lru;
+   
 
-    struct timespec uptime;
-    struct timespec idle;
-    u64 nsec;
-    u32 rem;
-    int j;
-
-    /*version information*/
-    seq_printf(m, "=============Version=============\n");
-    seq_printf(m, "Linux version %s\n",utsname()->release);
+   
     /*cpu information*/
 
     seq_printf(m, "\n=============CPU================\n");
@@ -65,7 +55,45 @@ static int show_my_info(struct seq_file *m, void *v)
                c->x86_cache_alignment,
                c->x86_phys_bits, c->x86_virt_bits
               );
-    /*mem informatiom*/
+   
+
+    return 0;
+}
+
+static void *c_start(struct seq_file *m, loff_t *pos)
+{
+static int flag = 1;
+if(flag){
+/*version information*/
+    seq_printf(m, "=============Version=============\n");
+    seq_printf(m, "Linux version %s\n",utsname()->release);
+flag--;
+}
+    if ((*pos) < 1)
+        return &cpu_data(*pos);
+    return NULL;
+}
+
+
+static void *c_next(struct seq_file *m, void *v, loff_t *pos)
+{
+    (*pos)++;
+    return c_start(m, pos);
+}
+
+static void c_stop(struct seq_file *m, void *v)
+{
+    struct sysinfo i;
+    unsigned long pages[NR_LRU_LISTS];
+    int lru;
+
+    struct timespec uptime;
+    struct timespec idle;
+    u64 nsec;
+    u32 rem;
+    int j;
+
+/*mem informatiom*/
 
     seq_printf(m, "\n============Memory==============\n");
 
@@ -118,24 +146,6 @@ static int show_my_info(struct seq_file *m, void *v)
                (unsigned long) idle.tv_sec,
                (idle.tv_nsec / (NSEC_PER_SEC / 100)));
 
-    return 0;
-}
-
-static void *c_start(struct seq_file *m, loff_t *pos)
-{
-    if ((*pos) < 1)
-        return &cpu_data(*pos);
-    return NULL;
-}
-
-static void *c_next(struct seq_file *m, void *v, loff_t *pos)
-{
-    (*pos)++;
-    return c_start(m, pos);
-}
-
-static void c_stop(struct seq_file *m, void *v)
-{
 }
 
 const struct seq_operations info_op =
