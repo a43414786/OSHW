@@ -1,24 +1,6 @@
 #include <linux/module.h>
 #include <linux/proc_fs.h>
 #include <linux/seq_file.h>
-#include <linux/utsname.h>
-#include <linux/fs.h>
-#include <linux/init.h>
-#include <linux/kernel.h>
-#include <linux/mm.h>
-#include <linux/hugetlb.h>
-#include <linux/mman.h>
-#include <linux/mmzone.h>
-#include <linux/quicklist.h>
-#include <linux/swap.h>
-#include <linux/vmstat.h>
-#include <linux/atomic.h>
-#include <linux/vmalloc.h>
-#include <asm/page.h>
-#include <asm/pgtable.h>
-#include <linux/sched.h>
-#include <linux/time.h>
-#include <linux/kernel_stat.h>
 
 #define PROC_NAME "my_info"
 
