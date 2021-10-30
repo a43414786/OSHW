@@ -21,7 +21,6 @@ static void *start(struct seq_file *m, loff_t *pos)
     return pos;
 }
 
-
 static void *next(struct seq_file *m, void *v, loff_t *pos)
 {
     if(++(*pos) < 1)return pos;
@@ -40,7 +39,6 @@ const struct seq_operations info_op =
     .show	= show,
 };
 
-
 static int my_open(struct inode *inode, struct file *file)
 
 {
@@ -48,8 +46,6 @@ static int my_open(struct inode *inode, struct file *file)
     return seq_open(file, &info_op);
 
 };
-
-
 
 static const struct file_operations my_file_ops =
 {
@@ -59,18 +55,6 @@ static const struct file_operations my_file_ops =
     .read = seq_read,
 
 };
-
-static int __init procfs_init(void)
-
-{
-
-    struct proc_dir_entry *entry;
-
-    entry = proc_create(PROC_NAME, 0, NULL, &my_file_ops);
-
-    return 0;
-
-}
 
 static int __init init(void)
 
@@ -84,8 +68,6 @@ static int __init init(void)
 
 }
 
-
-
 static void __exit exit(void)
 
 {
@@ -94,12 +76,8 @@ static void __exit exit(void)
 
 }
 
-
-
 module_init(init);
 
 module_exit(exit);
-
-
 
 MODULE_LICENSE("GPL");
