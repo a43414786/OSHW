@@ -22,20 +22,10 @@
 
 #define PROC_NAME "my_info"
 
-static int show_my_info(struct seq_file *m, void *v)
+static int show(struct seq_file *m, void *v)
 {
-
-
-
     struct cpuinfo_x86 *c = v;
-
-   
-
-   
     /*cpu information*/
-
-   
-
     seq_printf(m, "\nprocessor\t: %u\n"
                "model name\t: %s\n"
                "physical id\t: %d\n"
@@ -60,30 +50,30 @@ static int show_my_info(struct seq_file *m, void *v)
     return 0;
 }
 
-static void *c_start(struct seq_file *m, loff_t *pos)
+static void *start(struct seq_file *m, loff_t *pos)
 {
-/*version information*/
+    /*version information*/
     seq_printf(m, "=============Version=============\n");
     seq_printf(m, "Linux version %s\n",utsname()->release);
     seq_printf(m, "\n=============CPU================");
 
     *pos = cpumask_next(*pos - 1, cpu_online_mask);
-	if ((*pos) < nr_cpu_ids)
-		return &cpu_data(*pos);
-	return NULL;
+    if ((*pos) < nr_cpu_ids)
+        return &cpu_data(*pos);
+    return NULL;
 }
 
 
-static void *c_next(struct seq_file *m, void *v, loff_t *pos)
+static void *next(struct seq_file *m, void *v, loff_t *pos)
 {
     (*pos)++;
     *pos = cpumask_next(*pos - 1, cpu_online_mask);
-	if ((*pos) < nr_cpu_ids)
-		return &cpu_data(*pos);
-	return NULL;
+    if ((*pos) < nr_cpu_ids)
+        return &cpu_data(*pos);
+    return NULL;
 }
 
-static void c_stop(struct seq_file *m, void *v)
+static void stop(struct seq_file *m, void *v)
 {
     struct sysinfo i;
     unsigned long pages[NR_LRU_LISTS];
@@ -152,10 +142,10 @@ static void c_stop(struct seq_file *m, void *v)
 
 const struct seq_operations info_op =
 {
-    .start	= c_start,
-    .next	= c_next,
-    .stop	= c_stop,
-    .show	= show_my_info,
+    .start	= start,
+    .next	= next,
+    .stop	= stop,
+    .show	= show,
 };
 
 
