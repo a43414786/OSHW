@@ -34,6 +34,36 @@ void addnode(nodeptr *root,char c)
     }
 }
 
+void print_device_info(nodeptr all,nodeptr *ptrs,char input)
+{
+    switch(input)
+    {
+    case 'v':
+        printf("Version: ");
+        print_info(ptrs[0]);
+        break;
+    case 'c':
+        printf("CPU information:\n");
+        print_info(ptrs[1]);
+        break;
+    case 'm':
+        printf("Memory information:\n");
+        print_info(ptrs[2]);
+        break;
+    case 't':
+        printf("Time information:\n");
+        print_info(ptrs[3]);
+        break;
+    case 'a':
+        print_info(all);
+        break;
+    default:
+        break;
+    }
+
+    
+}
+
 void Makeinfolist(nodeptr *allarg,nodeptr **ptrsarg){
     
     char word;
@@ -119,34 +149,7 @@ void print_info(nodeptr root)
 
 }
 
-void print_device_info(nodeptr all,nodeptr *ptrs,char input)
-{
-    switch(input)
-    {
-    case 'v':
-        printf("Version: ");
-        print_info(ptrs[0]);
-        break;
-    case 'c':
-        printf("CPU information:\n");
-        print_info(ptrs[1]);
-        break;
-    case 'm':
-        printf("Memory information:\n");
-        print_info(ptrs[2]);
-        break;
-    case 't':
-        printf("Time information:\n");
-        print_info(ptrs[3]);
-        break;
-    case 'a':
-        print_info(all);
-        break;
-    default:
-        break;
-    }
 
-}
 int main()
 {
     char input = ' ';
