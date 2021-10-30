@@ -1,3 +1,4 @@
+#include <linux/kernel.h>
 #include <linux/module.h>
 #include <linux/proc_fs.h>
 #include <linux/seq_file.h>
@@ -11,6 +12,7 @@ static int show(struct seq_file *m, void *v)
 
 static void *start(struct seq_file *m, loff_t *pos)
 {
+    (*pos) = 0;
     return pos;
 }
 
