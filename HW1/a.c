@@ -34,6 +34,20 @@ void addnode(nodeptr *root,char c)
     }
 }
 
+void print_info(nodeptr root)
+{
+
+    while(root)
+    {
+
+        printf("%c",root->c);
+        root = root->next;
+
+    }
+
+}
+
+
 void print_device_info(nodeptr all,nodeptr *ptrs,char input)
 {
     switch(input)
@@ -135,20 +149,6 @@ void Makeinfolist(nodeptr *allarg,nodeptr **ptrsarg){
     *ptrsarg = ptrs;
     
 }
-
-void print_info(nodeptr root)
-{
-
-    while(root)
-    {
-
-        printf("%c",root->c);
-        root = root->next;
-
-    }
-
-}
-
 
 int main()
 {
