@@ -40,12 +40,13 @@ void Makeinfolist(nodeptr *allarg,nodeptr **ptrsarg){
     short flag1 = 0,flag2 = 0;
     nodeptr all = NULL,ptrs[4] = {NULL,NULL,NULL,NULL};
     int counter = -1;
-    FILE* myfile = fopen(MY_INFO,"rb"),*myfile1 = fopen("/proc/meminfo","rb");
+    FILE* myfile = fopen(MY_INFO,"rb");
+    /*,*myfile1 = fopen("/proc/meminfo","rb");
 
     while((word = fgetc(myfile1)) != EOF){
     	printf("%c",word);
     }
-    printf("\n\n");
+    printf("\n\n");*/
 
     while((word = fgetc(myfile)) != EOF )
     {
