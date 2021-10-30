@@ -90,7 +90,7 @@ void Makeinfolist(char input){
     
     char word;
     short flag1 = 0,flag2 = 0;
-    nodeptr all = NULL,ptrs[4] = {NULL,NULL,NULL,NULL};
+    nodeptr all = NULL,ptrs[4] = {NULL,NULL,NULL,NULL},temp = NULL;
     int counter = -1;
     FILE* myfile = fopen(MY_INFO,"rb");
     
@@ -147,7 +147,19 @@ void Makeinfolist(char input){
     addnode(&ptrs[counter],'\n');
     fclose(myfile);
     print_device_info(all,ptrs,input);
-    
+    while(all){
+        temp = all->next;
+        free(all);
+        all = temp;
+    }
+    for(int i = 0 ; i < 4 ; i++){
+        while(ptrs[i]){
+            temp = ptrs[i]->next;
+            free(ptrs[i]);
+            ptrs[i] = temp;
+        } 
+    }
+    free(ptrs);
 }
 
 int main()
