@@ -85,12 +85,12 @@ void Makeinfolist(nodeptr *allarg,nodeptr *verinfo,nodeptr *cpuinfo,nodeptr *mem
     nodeptr all = NULL,ptrs[4] = {NULL,NULL,NULL,NULL};
     int counter = -1;
     FILE* myfile = fopen(MY_INFO,"rb");
-    /*,*myfile1 = fopen("/proc/meminfo","rb");
+    FILE* myfile1 = fopen("/proc/meminfo","rb");
 
     while((word = fgetc(myfile1)) != EOF){
     	printf("%c",word);
     }
-    printf("\n\n");*/
+    printf("\n\n");
 
     while((word = fgetc(myfile)) != EOF )
     {
@@ -144,7 +144,7 @@ void Makeinfolist(nodeptr *allarg,nodeptr *verinfo,nodeptr *cpuinfo,nodeptr *mem
     addnode(&ptrs[counter],'\n');
     addnode(&ptrs[counter],'\n');
     fclose(myfile);
-    //fclose(myfile1);
+    fclose(myfile1);
     *allarg = all;
     *verinfo = ptrs[0];
     *cpuinfo = ptrs[1];
