@@ -78,7 +78,7 @@ void print_device_info(nodeptr all,nodeptr verinfo,nodeptr cpuinfo,nodeptr memin
     
 }
 
-void Makeinfolist(nodeptr *allarg,nodeptr *all,nodeptr *verinfo,nodeptr *cpuinfo,nodeptr *meminfo,nodeptr *timeinfo){
+void Makeinfolist(nodeptr *allarg,nodeptr *all,nodeptr *verinfo,nodeptr *cpuinfo,nodeptr *meminfo,nodeptr *timeinfo,input){
     
     char word;
     short flag1 = 0,flag2 = 0;
@@ -163,7 +163,7 @@ int main()
         printf("Which information do you want?\nVersion(v),CPU(c),Memory(m),Time(t),All(a),Exit(e)?\n");
         scanf("\n%c",&input);
 
-        print_device_info(all,verinfo,cpuinfo,meminfo,timeinfo);
+        print_device_info(all,verinfo,cpuinfo,meminfo,timeinfo,input);
     }
     /*
     for(int i = 0 ; i < 4 ; i++)
