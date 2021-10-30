@@ -148,7 +148,7 @@ void print_device_info(nodeptr all,nodeptr *ptrs,char input)
 }
 int main()
 {
-    char input = ' '
+    char input = ' ';
     nodeptr all = NULL,ptrs[4] = {NULL,NULL,NULL,NULL};
     while(input != 'e')
     {
