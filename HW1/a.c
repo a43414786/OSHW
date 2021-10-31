@@ -155,8 +155,7 @@ void Makeinfolist(char input){
 
 int main()
 {
-    char input = ' ';
-    nodeptr all = NULL,verinfo = NULL,cpuinfo = NULL,meminfo = NULL,timeinfo = NULL;
+    char input = 0;
     while(input != 'e')
     {
         printf("Which information do you want?\nVersion(v),CPU(c),Memory(m),Time(t),All(a),Exit(e)?\n");
