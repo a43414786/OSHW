@@ -1,43 +1,28 @@
 #include <stdio.h>
 #include <pthread.h>
 #include <unistd.h>
-#include <semaphore.h>
-
-sem_t semaphore; // 旗標
-int counter = 0;
 
 // 子執行緒函數
-void* child() {
-  for(int i = 0;i < 5;++i) {
-    sem_wait(&semaphore); // 等待工作
-    printf("Counter = %d\n", ++counter);
+void* child(void* data) {
+  char *str = (char*) data; // 取得輸入資料
+  for(int i = 0;i < 3;++i) {
+    printf("%s\n", str); // 每秒輸出文字
     sleep(1);
   }
-  pthread_exit(NULL);
+  pthread_exit(NULL); // 離開子執行緒
 }
 
 // 主程式
-int main(void) {
+int main() {
+  pthread_t t; // 宣告 pthread 變數
+  pthread_create(&t, NULL, child, "Child"); // 建立子執行緒
 
-  // 初始化旗標，僅用於本行程，初始值為 0
-  sem_init(&semaphore, 0, 0);
+  // 主執行緒工作
+  for(int i = 0;i < 3;++i) {
+    printf("Master\n"); // 每秒輸出文字
+    sleep(1);
+  }
 
-  pthread_t t;
-  pthread_create(&t, NULL, child, NULL);
-
-  // 送出兩個工作
-  printf("Post 2 jobs.\n");
-  sem_post(&semaphore);
-  sem_post(&semaphore);
-  sleep(4);
-
-  // 送出三個工作
-  printf("Post 3 jobs.\n");
-  sem_post(&semaphore);
-  sem_post(&semaphore);
-  sem_post(&semaphore);
-
-  pthread_join(t, NULL);
-
+  pthread_join(t, NULL); // 等待子執行緒執行完成
   return 0;
 }
