@@ -48,8 +48,9 @@ void* a(){
 int main(int argc , char *argv[])
 {
 
-    pthread_t t;
+   
     while(1){
+        pthread_t t;
         pthread_create(&t,NULL,a,NULL);
         sleep(0.1);
     }
