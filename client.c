@@ -5,11 +5,9 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <pthread.h>
 
-
-int main(int argc , char *argv[])
-{
-
+void* a(){
     //socket的建立
     int sockfd = 0;
     sockfd = socket(AF_INET , SOCK_STREAM , 0);
@@ -44,5 +42,15 @@ int main(int argc , char *argv[])
     printf("%s",receiveMessage);
     printf("close Socket\n");
     close(sockfd);
+    pthread_exit(0);
+}
+
+int main(int argc , char *argv[])
+{
+
+    pthread_t t;
+    while(1){
+        pthread_create(&t,NULL,a,NULL);
+    }
     return 0;
 }
