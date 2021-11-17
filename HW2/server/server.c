@@ -35,9 +35,15 @@ int main(int argc, char **argv)
 
     /* Open a listen socket fd */
     int listenfd __attribute__((unused)) = open_listenfd(server_port);
-
+    int clientsock = 0;
+    struct sockaddr_in clientinfo; 
+    int addrlen = sizeof(clientinfo);
     /* Start coding your server code here! */
-
+    if(listenfd > 0){
+        while(1){
+            clientsock = accept(listenfd,(struct sockaddr*)&clientinfo,addrlen);
+        }
+    }
     return 0;
 }
 
