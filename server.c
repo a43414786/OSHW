@@ -5,13 +5,24 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <pthread.h>
+
+void* a(void* input){
+    int* forClientSockfd = (int*)input;
+    char inputBuffer[256] = {};
+    char message[] = {"Hi,this is server.\n"};
+
+    send(*forClientSockfd,message,sizeof(message),0);
+    recv(*forClientSockfd,inputBuffer,sizeof(inputBuffer),0);
+    printf("Get:%s\n",inputBuffer);
+
+}
 
 int main(int argc , char *argv[])
 
 {
     //socket的建立
-    char inputBuffer[256] = {};
-    char message[] = {"Hi,this is server.\n"};
+   
     int sockfd = 0,forClientSockfd = 0;
     sockfd = socket(AF_INET , SOCK_STREAM , 0);
 
@@ -31,10 +42,10 @@ int main(int argc , char *argv[])
     listen(sockfd,5);
 
     while(1){
+        pthread_t t;
         forClientSockfd = accept(sockfd,(struct sockaddr*) &clientInfo, &addrlen);
-        send(forClientSockfd,message,sizeof(message),0);
-        recv(forClientSockfd,inputBuffer,sizeof(inputBuffer),0);
-        printf("Get:%s\n",inputBuffer);
+        
+        pthread_create(&t,NULL,a,&forClientSockfd);
     }
     return 0;
 }
