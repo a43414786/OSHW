@@ -23,7 +23,7 @@ void* service(void*args){
     char message[] = {"Hi,this is server.\n"};
     strcpy(smsg.key,"123");
     strcpy(smsg.value,"456");
-    recv(*forClientSockfd,(void*)&rmsg,sizeof(rmsg),0);
+    recv(*forClientSockfd,&rmsg,sizeof(rmsg),0);
     send(*forClientSockfd,&smsg,sizeof(smsg),0);
     printf("%s\n%s",rmsg->key,rmsg->value);
     pthread_exit(0);
