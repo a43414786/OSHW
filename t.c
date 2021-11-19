@@ -15,6 +15,7 @@ int decode(char*input,struct msg* smsg){
             cmd[cmdc] = '\0';
             break;
         }else{
+            printf("%c",input[i]);
             cmd[cmdc++] = input[i];
             counter++;
         }
@@ -25,6 +26,7 @@ int decode(char*input,struct msg* smsg){
             key[kc] = '\0';
             break;
         }else{
+            printf("%c",input[i]);
             key[kc++] = input[i];
             counter++;
         }
@@ -35,6 +37,7 @@ int decode(char*input,struct msg* smsg){
             value[vc] = '\0';
             break;
         }else{
+            printf("%c",input[i]);
             value[vc++] = input[i];
             counter++;
         }
