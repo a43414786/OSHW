@@ -56,7 +56,7 @@ int main(int argc, char **argv)
         char cmd[10];
         char key[101];
         char value[101];
-        scanf("\n%s %s %s",cmd,key,value);
+        scanf("%s %s %s",cmd,key,value);
         strcpy(smsg.cmd,cmd);
         strcpy(smsg.key,key);
         strcpy(smsg.value,value);
