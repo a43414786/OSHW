@@ -20,8 +20,8 @@ struct msg{
 void* service(void*args){
     int* forClientSockfd = (int*)args;
     struct msg smsg,rmsg;
+    bzeros(&smsg,sizeof(smsg));
     recv(*forClientSockfd,&rmsg,sizeof(rmsg),0);
-
     send(*forClientSockfd,&smsg,sizeof(smsg),0);
     printf("%s\n%s\n%s\n",rmsg.cmd,rmsg.key,rmsg.value);
     close(*forClientSockfd);
@@ -62,6 +62,7 @@ int main(int argc, char **argv)
     pthread_t t;
     while(1){
         t = malloc(sizeof(pthread_t));
+        
         forClientSockfd = accept(listenfd,(struct sockaddr*) &clientInfo, &addrlen);
         pthread_create(&t,NULL,service,(void*)&forClientSockfd);
     }
