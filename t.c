@@ -37,7 +37,7 @@ int decode(char*input,struct msg* smsg){
         }
     }
 
-    print("%s\n%s\n%s\n",cmd,key,value);
+    printf("%s\n%s\n%s\n",cmd,key,value);
 }
 int main(){
     
