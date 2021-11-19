@@ -30,7 +30,7 @@ int decode(char*input,struct msg* smsg){
         }
     }
     for(int i = counter ; i < strlen(input);i++){
-        if(input[i] == ' '){
+        if(input[i] == '\0'){
             counter += 1;
             value[vc] = '\0';
             break;
