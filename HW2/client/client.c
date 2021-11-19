@@ -8,42 +8,10 @@
 #include "sock.h"
 
 struct msg{
+    char cmd[10];
     char key[101];
     char value[101];
 };
-
-int decode(char*input,(struct msg*)smsg){
-    char cmd[7],key[101],value[101];
-    int counter = 0;
-    int cmdc = 0,kc = 0,vc = 0
-    for(int i = 0 ; i < strlen(input),i++){
-        if(input[i] == ' '){
-            counter += 2;
-            break
-        }else{
-            cmd[cmdc++] = input[i];
-            counter++;
-        }
-    }
-    for(int i = counter ; i < strlen(input),i++){
-        if(input[i] == ' '){
-            counter += 2;
-            break
-        }else{
-            key[kc++] = input[i];
-            counter++;
-        }
-    }
-    for(int i = counter ; i < strlen(input),i++){
-        if(input[i] == ' '){
-            counter += 2;
-            break
-        }else{
-            value[vc++] = input[i];
-            counter++;
-        }
-    }
-}
 
 int main(int argc, char **argv)
 {
@@ -85,13 +53,17 @@ int main(int argc, char **argv)
 
     while(1){
         struct msg smsg,rmsg;
-        char input[300];
-        scanf("%s",&input);
-        decode(input,&smsg);
-        strcpy(smsg.key,"123");
-        strcpy(smsg.value,"456");
-
+        char cmd[10];
+        char key[101];
+        char value[101];
+        scanf("\n%s %s %s",cmd,key,value);
+        printf("%s\n%s\n%s\n",cmd,key,value);
+        
+        strcpy(smsg.cmd,cmd);
+        strcpy(smsg.key,key);
+        strcpy(smsg.value,value);
         send(clientfd,&smsg,sizeof(smsg),0);
+
         recv(clientfd,&rmsg,sizeof(rmsg),0);
 
         printf("%s\n%s",rmsg.key,rmsg.value);
