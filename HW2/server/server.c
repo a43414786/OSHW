@@ -37,15 +37,11 @@ int main(int argc, char **argv)
     int listenfd __attribute__((unused)) = open_listenfd(server_port);
 
     /* Start coding your server code here! */
-    struct sockaddr_in serverInfo,clientInfo;
-    int addrlen = sizeof(clientInfo);
     int forClientSockfd;
+    struct sockaddr clientInfo;
+    int addrlen = sizeof(clientInfo);
     char inputBuffer[256] = {};
     char message[] = {"Hi,this is server.\n"};
-    bzero(&serverInfo,sizeof(serverInfo));
-    serverInfo.sin_family = PF_INET;
-    serverInfo.sin_addr.s_addr = INADDR_ANY;
-    serverInfo.sin_port = htons(atoi(server_port));
     forClientSockfd = accept(listenfd,(struct sockaddr*) &clientInfo, &addrlen);
     send(forClientSockfd,message,sizeof(message),0);
     recv(forClientSockfd,inputBuffer,sizeof(inputBuffer),0);

@@ -52,6 +52,6 @@ int main(int argc, char **argv)
 
     printf("%s",receiveMessage);
     printf("close Socket\n");
-    close(sockfd);
+    close(clientfd);
     return 0;
 }
