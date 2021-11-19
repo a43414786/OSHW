@@ -9,6 +9,17 @@
 
 #include "types.h"
 #include "sock.h"
+#include <pthread.h>
+
+void* service(void*args){
+    int* forClientSockfd = (int*)args;
+    char inputBuffer[256] = {};
+    char message[] = {"Hi,this is server.\n"};
+    send(*forClientSockfd,message,sizeof(message),0);
+    recv(*forClientSockfd,inputBuffer,sizeof(inputBuffer),0);
+    printf("Get:%s\n",inputBuffer);
+    pthread_exit(0);
+}
 
 int main(int argc, char **argv)
 {
@@ -37,15 +48,14 @@ int main(int argc, char **argv)
     int listenfd __attribute__((unused)) = open_listenfd(server_port);
 
     /* Start coding your server code here! */
+
     int forClientSockfd;
     struct sockaddr clientInfo;
     int addrlen = sizeof(clientInfo);
-    char inputBuffer[256] = {};
-    char message[] = {"Hi,this is server.\n"};
-    forClientSockfd = accept(listenfd,(struct sockaddr*) &clientInfo, &addrlen);
-    send(forClientSockfd,message,sizeof(message),0);
-    recv(forClientSockfd,inputBuffer,sizeof(inputBuffer),0);
-    printf("Get:%s\n",inputBuffer);
+    while(1)
+        pthread_t t;
+        forClientSockfd = accept(listenfd,(struct sockaddr*) &clientInfo, &addrlen);
+        pthread_create(&t,NULL,service,(void*)&forClientSockfd);
     return 0;
 }
 
