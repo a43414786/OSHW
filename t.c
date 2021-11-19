@@ -49,8 +49,10 @@ int decode(char*input,struct msg* smsg){
 int main(){
     
     struct msg smsg,rmsg;
-    char input[300];
-    scanf("%s",input);
-    decode(input,&smsg);
+    char cmd[10];
+    char key[101];
+    char value[101];
+    scanf("\n%s %s %s",cmd,key,value);
+    printf("%s\n%s\n%s\n",cmd,key,value);
     return 0;
 }
