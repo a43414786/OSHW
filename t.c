@@ -8,11 +8,11 @@ struct msg{
 int decode(char*input,struct msg* smsg){
     char cmd[7],key[101],value[101];
     int counter = 0;
-    int cmdc = 0,kc = 0,vc = 0
+    int cmdc = 0,kc = 0,vc = 0;
     for(int i = 0 ; i < strlen(input),i++){
         if(input[i] == ' '){
             counter += 2;
-            break
+            break;
         }else{
             cmd[cmdc++] = input[i];
             counter++;
@@ -21,7 +21,7 @@ int decode(char*input,struct msg* smsg){
     for(int i = counter ; i < strlen(input),i++){
         if(input[i] == ' '){
             counter += 2;
-            break
+            break;
         }else{
             key[kc++] = input[i];
             counter++;
@@ -30,7 +30,7 @@ int decode(char*input,struct msg* smsg){
     for(int i = counter ; i < strlen(input),i++){
         if(input[i] == ' '){
             counter += 2;
-            break
+            break;
         }else{
             value[vc++] = input[i];
             counter++;
