@@ -5,7 +5,7 @@ struct msg{
     char key[101];
     char value[101];
 };
-int decode(char*input,(struct msg*)smsg){
+int decode(char*input,struct msg* smsg){
     char cmd[7],key[101],value[101];
     int counter = 0;
     int cmdc = 0,kc = 0,vc = 0
