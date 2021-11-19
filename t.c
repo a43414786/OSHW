@@ -6,6 +6,7 @@ struct msg{
     char value[101];
 };
 int decode(char*input,struct msg* smsg){
+    printf("%s",input);
     char cmd[7],key[101],value[101];
     int counter = 0;
     int cmdc = 0,kc = 0,vc = 0;
