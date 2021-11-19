@@ -7,6 +7,11 @@
 
 #include "sock.h"
 
+struct msg{
+    char key[101];
+    char value[101];
+};
+
 int main(int argc, char **argv)
 {
     int opt;
@@ -45,13 +50,14 @@ int main(int argc, char **argv)
 
     /* Start your coding client code here! */
 
-
-    char key[] = {"123"};
-    char value[] = {"456"};
+    struct msg smsg,rmsg;
     char receiveMessage[101] = {};
-    send(clientfd,key,sizeof(key),0);
-    send(clientfd,value,sizeof(value),0);
-    recv(clientfd,receiveMessage,sizeof(receiveMessage),0);
+    
+    strncpy(smsg.key,"123");
+    strncpy(smsg.value,"456");
+    
+    recv(*forClientSockfd,(void*)&rmsg,sizeof(rmsg),0);
+    send(*forClientSockfd,&smsg,sizeof(smsg),0);
 
     printf("%s",receiveMessage);
     printf("close Socket\n");
