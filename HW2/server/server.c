@@ -60,10 +60,12 @@ int main(int argc, char **argv)
     int forClientSockfd;
     struct sockaddr clientInfo;
     int addrlen = sizeof(clientInfo);
-    while(1)
-        pthread_t t;
+    pthread_t t;
+    while(1){
+        t = malloc(sizeof(pthread_t));
         forClientSockfd = accept(listenfd,(struct sockaddr*) &clientInfo, &addrlen);
         pthread_create(&t,NULL,service,(void*)&forClientSockfd);
+    }
     return 0;
 }
 
