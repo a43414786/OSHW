@@ -58,7 +58,7 @@ int main(int argc, char **argv)
     send(*forClientSockfd,&smsg,sizeof(smsg),0);
     recv(*forClientSockfd,&rmsg,sizeof(rmsg),0);
 
-    printf("%s\n%s",rmsg->key,rmsg)->value);
+    printf("%s\n%s",rmsg.key,rmsg.value);
     printf("close Socket\n");
     close(clientfd);
     return 0;
