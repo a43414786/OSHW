@@ -45,17 +45,6 @@ int main(int argc, char **argv)
 
     /* Start your coding client code here! */
 
-    struct sockaddr_in info;
-    bzero(&info,sizeof(info));
-    info.sin_family = PF_INET;
-    info.sin_addr.s_addr = inet_addr(server_host_name);
-    info.sin_port = htons(atoi(server_port));
-
-    int err = connect(clientfd,(struct sockaddr *)&info,sizeof(info));
-    if(err==-1){
-        printf("Connection error");
-    }
-
     char message[] = {"Hi there"};
     char receiveMessage[100] = {};
     send(clientfd,message,sizeof(message),0);
