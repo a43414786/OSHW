@@ -17,7 +17,6 @@ int decode(char*input,struct msg* smsg){
             break;
         }else{
             printf("%c",input[i]);
-            printf("%d",counter);
             cmd[cmdc++] = input[i];
             counter++;
         }
