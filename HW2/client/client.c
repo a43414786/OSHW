@@ -51,15 +51,14 @@ int main(int argc, char **argv)
     /* Start your coding client code here! */
 
     struct msg smsg,rmsg;
-    char receiveMessage[101] = {};
-    
+
     strncpy(smsg.key,"123");
     strncpy(smsg.value,"456");
-    
-    recv(*forClientSockfd,(void*)&rmsg,sizeof(rmsg),0);
-    send(*forClientSockfd,&smsg,sizeof(smsg),0);
 
-    printf("%s",receiveMessage);
+    send(*forClientSockfd,&smsg,sizeof(smsg),0);
+    recv(*forClientSockfd,(void*)&rmsg,sizeof(rmsg),0);
+
+    printf("%s\n%s",((struct msg*)rmsg)->key,((struct msg*)rmsg)->value);
     printf("close Socket\n");
     close(clientfd);
     return 0;
