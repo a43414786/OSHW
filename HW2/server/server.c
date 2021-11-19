@@ -24,6 +24,7 @@ void* service(void*args){
 
     send(*forClientSockfd,&smsg,sizeof(smsg),0);
     printf("%s\n%s\n%s\n",rmsg.cmd,rmsg.key,rmsg.value);
+    close(*forClientSockfd);
     pthread_exit(0);
 }
 
