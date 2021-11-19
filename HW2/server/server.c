@@ -21,9 +21,9 @@ void* service(void*args){
     int* forClientSockfd = (int*)args;
     struct msg smsg,rmsg;
     recv(*forClientSockfd,&rmsg,sizeof(rmsg),0);
-    smsg = rmsg;
+
     send(*forClientSockfd,&smsg,sizeof(smsg),0);
-    //printf("%s\n%s\n%s\n",rmsg.cmd,rmsg.key,rmsg.value);
+    printf("%s\n%s\n%s\n",rmsg.cmd,rmsg.key,rmsg.value);
     pthread_exit(0);
 }
 
