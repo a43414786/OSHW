@@ -13,11 +13,13 @@
 
 void* service(void*args){
     int* forClientSockfd = (int*)args;
-    char inputBuffer[256] = {};
+    char key[101] = {};
+    char value[101] = {};
     char message[] = {"Hi,this is server.\n"};
+    recv(*forClientSockfd,key,sizeof(key),0);
+    recv(*forClientSockfd,value,sizeof(value),0);
     send(*forClientSockfd,message,sizeof(message),0);
-    recv(*forClientSockfd,inputBuffer,sizeof(inputBuffer),0);
-    printf("Get:%s\n",inputBuffer);
+    printf("Get:%s\n%s\n",key,value);
     pthread_exit(0);
 }
 

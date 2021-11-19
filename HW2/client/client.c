@@ -45,9 +45,12 @@ int main(int argc, char **argv)
 
     /* Start your coding client code here! */
 
-    char message[] = {"Hi there"};
-    char receiveMessage[100] = {};
-    send(clientfd,message,sizeof(message),0);
+
+    char key[] = {"123"};
+    char value[] = {"456"};
+    char receiveMessage[101] = {};
+    send(clientfd,key,sizeof(key),0);
+    send(clientfd,value,sizeof(value),0);
     recv(clientfd,receiveMessage,sizeof(receiveMessage),0);
 
     printf("%s",receiveMessage);
