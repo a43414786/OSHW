@@ -9,7 +9,7 @@ int decode(char*input,struct msg* smsg){
     char cmd[7],key[101],value[101];
     int counter = 0;
     int cmdc = 0,kc = 0,vc = 0;
-    for(int i = 0 ; i < strlen(input),i++){
+    for(int i = 0 ; i < strlen(input);i++){
         if(input[i] == ' '){
             counter += 2;
             break;
@@ -18,7 +18,7 @@ int decode(char*input,struct msg* smsg){
             counter++;
         }
     }
-    for(int i = counter ; i < strlen(input),i++){
+    for(int i = counter ; i < strlen(input);i++){
         if(input[i] == ' '){
             counter += 2;
             break;
@@ -27,7 +27,7 @@ int decode(char*input,struct msg* smsg){
             counter++;
         }
     }
-    for(int i = counter ; i < strlen(input),i++){
+    for(int i = counter ; i < strlen(input);i++){
         if(input[i] == ' '){
             counter += 2;
             break;
