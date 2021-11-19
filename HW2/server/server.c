@@ -20,7 +20,7 @@ struct msg{
 void* service(void*args){
     int* forClientSockfd = (int*)args;
     struct msg smsg,rmsg;
-    bzeros(&smsg,sizeof(smsg));
+    bzero(&smsg,sizeof(smsg));
     recv(*forClientSockfd,&rmsg,sizeof(rmsg),0);
     send(*forClientSockfd,&smsg,sizeof(smsg),0);
     printf("%s\n%s\n%s\n",rmsg.cmd,rmsg.key,rmsg.value);
