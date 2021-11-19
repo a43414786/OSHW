@@ -21,8 +21,8 @@ void* service(void*args){
     int* forClientSockfd = (int*)args;
     struct msg smsg,rmsg;
     char message[] = {"Hi,this is server.\n"};
-    strncpy(smsg.key,"123");
-    strncpy(smsg.value,"456");
+    strcpy(smsg.key,"123");
+    strcpy(smsg.value,"456");
     recv(*forClientSockfd,(void*)&rmsg,sizeof(rmsg),0);
     send(*forClientSockfd,&smsg,sizeof(smsg),0);
     printf("%s\n%s",((struct msg*)rmsg)->key,((struct msg*)rmsg)->value);

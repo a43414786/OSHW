@@ -52,8 +52,8 @@ int main(int argc, char **argv)
 
     struct msg smsg,rmsg;
 
-    strncpy(smsg.key,"123");
-    strncpy(smsg.value,"456");
+    strcpy(smsg.key,"123");
+    strcpy(smsg.value,"456");
 
     send(*forClientSockfd,&smsg,sizeof(smsg),0);
     recv(*forClientSockfd,(void*)&rmsg,sizeof(rmsg),0);
