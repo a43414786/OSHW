@@ -57,16 +57,12 @@ int main(int argc, char **argv)
         char key[101];
         char value[101];
         scanf("\n%s %s %s",cmd,key,value);
-        printf("%s\n%s\n%s\n",cmd,key,value);
-        
         strcpy(smsg.cmd,cmd);
         strcpy(smsg.key,key);
         strcpy(smsg.value,value);
         send(clientfd,&smsg,sizeof(smsg),0);
-
         recv(clientfd,&rmsg,sizeof(rmsg),0);
-
-        printf("%s\n%s",rmsg.key,rmsg.value);
+        printf("%s\n%s\n%s\n",rmsg.cmd,rmsg.key,rmsg.value);
         close(clientfd);
     }
     return 0;
