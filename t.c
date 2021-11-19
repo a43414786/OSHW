@@ -43,7 +43,7 @@ int main(){
     
     struct msg smsg,rmsg;
     char input[300];
-    scanf("%s",&input);
+    scanf("%s",input);
     decode(input,&smsg);
     return 0;
 }
