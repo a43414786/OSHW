@@ -106,10 +106,10 @@ int main(int argc, char **argv)
                     printf("%s\n",inputs[i]);
                 }
             }else{
-                printf("invalid\n");
+                printf("unknown/invalid\n");
             }
         }else{
-            printf("invalid\n");
+            printf("unknown/invalid\n");
         }
         
         /*
