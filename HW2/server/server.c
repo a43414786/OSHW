@@ -28,6 +28,15 @@ struct node{
 
 Node* database[26] = {NULL};
 
+int tblidx(char key){
+    char head = key[0];
+    if('A'<=head<='Z'){
+        return head - 'A';
+    }else{
+        return head - 'a';
+    }
+}
+
 Node* cnode(char*key,char*value){
     Node*temp;
     strcpy(temp->key,key);
@@ -36,12 +45,18 @@ Node* cnode(char*key,char*value){
     return temp;
 }
 
-void addnode(char*key,char*value){
-    Node*temp = cnode(key,value);
-}
-
 void set(char*key,char*value){
-    
+    int index = tblidx(key);
+    Node*temp = cnode(key,value);
+    Node*temp2 = database[tblidx];
+    if(!temp2){
+        database[tblidx] = temp;
+    }else{
+        while(temp2->next){
+            temp2 = temp2->next;
+        }
+        temp2->next = temp;
+    }
 }
 
 void get(char*key,char*value){
