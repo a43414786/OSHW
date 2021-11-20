@@ -93,17 +93,19 @@ int main(int argc, char **argv)
                 counter++;
                 if(counter == 3){
                     flag = 0;
-                    printf("invalid");
-                    break;
                 }
                 continue;
             }
-            inputs[counter][inputc[counter]++] = word;
+            if(flag){
+                inputs[counter][inputc[counter]++] = word;
+            }
         }
         if(flag){
             for(int i = 0 ; i < 3 ; i++){
                 printf("%s\n",inputs[i]);
             }
+        }else{
+            printf("invalid");
         }
         
         /*
