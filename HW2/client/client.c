@@ -31,6 +31,7 @@ Node* cnode(char c){
 void addnode(Node** root,Node* new){
     Node*temp = *root;
     printf("a");
+    /*
     if(temp){
         *root = new;
     }else{
@@ -38,7 +39,7 @@ void addnode(Node** root,Node* new){
             temp = temp->next;
         }
         temp->next = new;
-    }
+    }*/
 }
 
 
