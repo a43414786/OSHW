@@ -28,7 +28,7 @@ struct node{
 
 Node* database[26] = {NULL};
 
-int tblidx(char key){
+int tblidx(char* key){
     char head = key[0];
     if('A'<=head<='Z'){
         return head - 'A';
