@@ -47,7 +47,7 @@ Node* cnode(char*key,char*value){
     return temp;
 }
 
-void set(char*key,char*value){
+char* set(char*key,char*value){
     int index = tblidx(key);
     Node*temp = cnode(key,value);
     Node*pre = database[index];
@@ -79,7 +79,7 @@ char* get(char*key){
     return "error";
 }
 
-void delete(char*key){
+char* delete(char*key){
     int index = tblidx(key);
     Node*temp = database[index];
     while(temp){
