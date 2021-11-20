@@ -66,7 +66,6 @@ char* set(char*key,char*value){
             post = post->next;
         }
         pre->next = temp;
-        printf("%s ",pre->next->value);
         return "success";
     }
 }
