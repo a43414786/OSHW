@@ -66,12 +66,12 @@ char* set(char*key,char*value){
             }
             temp2 = temp2->next;
         }
-        /*
+        
         while(temp3->next){
             temp3 = temp3->next;
         }
         temp3->next = temp;
-        */
+        
     }
     return "success";
 }
