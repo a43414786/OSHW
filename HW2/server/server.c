@@ -26,7 +26,7 @@ struct node{
     Node* next;
 };
 
-Node* database[26] = {};
+Node* database[26] = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
 
 int tblidx(char* key){
     char head = key[0];
