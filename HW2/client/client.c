@@ -52,11 +52,13 @@ int main(int argc, char **argv)
 
     while(1){
         int clientfd __attribute__((unused)) = open_clientfd(server_host_name, server_port);
+        int err;
         struct msg smsg,rmsg;
         char cmd[10];
         char key[101];
         char value[101];
-        scanf("%s %s %s",cmd,key,value);
+        err = scanf("%s %s %s",cmd,key,value);
+        printf("%d",err);
         strcpy(smsg.cmd,cmd);
         strcpy(smsg.key,key);
         strcpy(smsg.value,value);
