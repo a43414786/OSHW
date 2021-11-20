@@ -83,11 +83,11 @@ void* service(void*args){
     bzero(&smsg,sizeof(smsg));
     recv(*forClientSockfd,&rmsg,sizeof(rmsg),0);
     if(strcmp(rmsg.cmd,"SET") == 0){
-        set(smsg.key,smsg.value);
+        set(rmsg.key,rmsg.value);
         strcpy(smsg.value,"SET");
     }
     else if(strcmp(rmsg.cmd,"GET") == 0){
-        strcpy(smsg.value,get(smsg.key));
+        strcpy(smsg.value,get(rmsg.key));
     }
     else if(strcmp(rmsg.cmd,"DELETE") == 0){
         strcpy(smsg.value,"DELETE");
