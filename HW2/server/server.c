@@ -11,14 +11,46 @@
 #include "sock.h"
 #include <pthread.h>
 
+typedef struct msg Msg;
+
+typedef struct node Node;
+
 struct msg{
     char cmd[10];
     char key[101];
     char value[101];
 };
+struct node{
+    char key[101];
+    char value[101];
+    Node* next;
+};
 
-struct msg* database[26] = {NULL};
+Node* database[26] = {NULL};
 
+Node* cnode(char*key,char*value){
+    Node*temp;
+    strcpy(temp->key,key);
+    strcpy(temp->value,value);
+    temp->next = NULL;
+    return temp;
+}
+
+void addnode(char*key,char*value){
+    Node*temp = cnode(key,value);
+}
+
+void set(char*key,char*value){
+    
+}
+
+void get(char*key,char*value){
+    
+}
+
+void delete(char*key,char*value){
+    
+}
 
 void* service(void*args){
     int* forClientSockfd = (int*)args;
