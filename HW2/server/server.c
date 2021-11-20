@@ -61,7 +61,7 @@ char* set(char*key,char*value){
     }else{
         while(temp2){
             if(strcmp(temp2->key,key) == 0){
-                printf("%s\n",post->value);
+                printf("%s\n",temp2->value);
                 return "error";
             }
             temp2 = temp2->next;
