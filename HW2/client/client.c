@@ -63,7 +63,6 @@ int main(int argc, char **argv)
         send(clientfd,&smsg,sizeof(smsg),0);
         recv(clientfd,&rmsg,sizeof(rmsg),0);
         printf("%s\n%s\n%s\n",rmsg.cmd,rmsg.key,rmsg.value);
-        close(clientfd);
     }
     return 0;
 }
