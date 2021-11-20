@@ -53,7 +53,7 @@ char* set(char*key,char*value){
     Node*pre = database[index];
     Node*post = pre;
     if(!post){
-        printf("%s\n",temp->value);
+        //printf("%s\n",temp->value);
         database[index] = temp;
         return "success";
     }else{
@@ -75,7 +75,7 @@ char* get(char*key){
     Node*post = pre;
     while(post){
         if(strcmp(post->key,key) == 0){
-            //printf("%s\n",post->value);
+            printf("%s\n",post->value);
             return post->value;
         }
         pre = post;
