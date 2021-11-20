@@ -155,8 +155,8 @@ int main(int argc, char **argv)
     int addrlen = sizeof(clientInfo);
     pthread_t t;
     while(1){
-        forClientSockfd* = (int*)malloc(sizeof(int));
-        forClientSockfd* = accept(listenfd,(struct sockaddr*) &clientInfo, &addrlen);
+        forClientSockfd = (int*)malloc(sizeof(int));
+        *forClientSockfd = accept(listenfd,(struct sockaddr*) &clientInfo, &addrlen);
         pthread_create(&t,NULL,service,(void*)forClientSockfd);
         pthread_detach(t);
     }
