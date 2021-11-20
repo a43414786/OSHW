@@ -7,11 +7,39 @@
 
 #include "sock.h"
 
+typedef struct msg Msg;
+
+typedef struct node Node;
+
 struct msg{
     char cmd[10];
     char key[101];
     char value[101];
 };
+
+struct node
+{
+    char c;
+    Node* next;
+};
+Node* cnode(char c){
+    Node*temp = malloc(sizeof(Node*));
+    temp->c = c;
+    temp->next = NULL;
+    return temp;
+}
+void addnode(Node** root,Node* new){
+    Node*temp = *root;
+    if(temp){
+        *root = new;
+    }else{
+        while(temp->next){
+            temp = temp->next;
+        }
+        temp->next = new;
+    }
+}
+
 
 int main(int argc, char **argv)
 {
@@ -53,11 +81,19 @@ int main(int argc, char **argv)
     while(1){
         int clientfd __attribute__((unused)) = open_clientfd(server_host_name, server_port);
         int err;
-        struct msg smsg,rmsg;
+        Node* root = NULL;
+        Msg smsg,rmsg;
+        char word;
         char cmd[10];
         char key[101];
         char value[101];
-        err = scanf("%s %s %s",cmd,key,value);
+        while((word = getc()) != '\n'){
+            addnode(&root,cnode(word));
+        }
+        while(root){
+            printf("%c",root->c);
+            root = root->next;
+        }
         printf("%d",err);
         strcpy(smsg.cmd,cmd);
         strcpy(smsg.key,key);
