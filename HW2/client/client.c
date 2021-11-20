@@ -101,7 +101,7 @@ int main(int argc, char **argv)
             }
         }
         if(flag){
-            if((strcmp(inputs[0],"SET") == 0) || (strcmp(inputs[0],"SET") == 0) || (strcmp(inputs[0],"SET") == 0)){
+            if((strcmp(inputs[0],"SET") == 0) || (strcmp(inputs[0],"GET") == 0) || (strcmp(inputs[0],"DELETE") == 0)){
                 for(int i = 0 ; i < 3 ; i++){
                     printf("%s\n",inputs[i]);
                 }
