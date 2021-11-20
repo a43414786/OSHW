@@ -103,7 +103,6 @@ char* delete(char*key){
 }
 
 void* service(void*args){
-    while(1){
     int* forClientSockfd = (int*)args;
     struct msg smsg,rmsg;
     bzero(&smsg,sizeof(smsg));
@@ -120,7 +119,7 @@ void* service(void*args){
         strcpy(smsg.value,delete(rmsg.key));
     }
     send(*forClientSockfd,&smsg,sizeof(smsg),0);
-    }
+
 }
 
 int main(int argc, char **argv)
@@ -151,13 +150,14 @@ int main(int argc, char **argv)
 
     /* Start coding your server code here! */
 
-    int forClientSockfd;
+    int* forClientSockfd;
     struct sockaddr clientInfo;
     int addrlen = sizeof(clientInfo);
     pthread_t t;
     while(1){
-        forClientSockfd = accept(listenfd,(struct sockaddr*) &clientInfo, &addrlen);
-        pthread_create(&t,NULL,service,(void*)&forClientSockfd);
+        forClientSockfd* = (int*)malloc(sizeof(int));
+        forClientSockfd* = accept(listenfd,(struct sockaddr*) &clientInfo, &addrlen);
+        pthread_create(&t,NULL,service,(void*)forClientSockfd);
         pthread_detach(t);
     }
     return 0;
