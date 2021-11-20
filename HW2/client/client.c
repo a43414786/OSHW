@@ -47,11 +47,11 @@ int main(int argc, char **argv)
     }
 
     /* Open a client socket fd */
-    int clientfd __attribute__((unused)) = open_clientfd(server_host_name, server_port);
 
     /* Start your coding client code here! */
 
     while(1){
+        int clientfd __attribute__((unused)) = open_clientfd(server_host_name, server_port);
         struct msg smsg,rmsg;
         char cmd[10];
         char key[101];
@@ -63,6 +63,7 @@ int main(int argc, char **argv)
         send(clientfd,&smsg,sizeof(smsg),0);
         recv(clientfd,&rmsg,sizeof(rmsg),0);
         printf("%s\n%s\n%s\n",rmsg.cmd,rmsg.key,rmsg.value);
+        close(clientfd);
     }
     return 0;
 }
