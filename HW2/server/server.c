@@ -54,6 +54,7 @@ char* set(char*key,char*value){
     Node*post = pre;
     if(!post){
         database[index] = temp;
+        printf("%s ",database[index]->value);
         return "success";
     }else{
         while(post){
