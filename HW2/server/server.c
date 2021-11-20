@@ -61,8 +61,16 @@ void set(char*key,char*value){
     }
 }
 
-void get(char*key,char*value){
-    
+char* get(char*key){
+    int index = tblidx(key);
+    Node*temp = database[index];
+    while(temp){
+        if(strcmp(temp->key,key) == 0){
+            return temp->value;
+        }
+        temp->next
+    }
+    return "Not Found";
 }
 
 void delete(char*key,char*value){
