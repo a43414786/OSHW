@@ -75,7 +75,7 @@ char* get(char*key){
     Node*post = pre;
     while(post){
         if(strcmp(post->key,key) == 0){
-            printf("a %s\n",post->value);
+            printf("%s %s\n",post->key,post->value);
             return post->value;
         }
         pre = post;
