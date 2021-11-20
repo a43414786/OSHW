@@ -105,7 +105,7 @@ int main(int argc, char **argv)
                 printf("%s\n",inputs[i]);
             }
         }else{
-            printf("invalid");
+            printf("invalid\n");
         }
         
         /*
