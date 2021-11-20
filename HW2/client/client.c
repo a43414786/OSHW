@@ -89,7 +89,7 @@ int main(int argc, char **argv)
         char value[101];
         while((word = getchar()) != '\n'){
             printf("%c",word);
-            addnode(&root,cnode(word));
+            //addnode(&root,cnode(word));
         }
         while(root){
             printf("%c",root->c);
