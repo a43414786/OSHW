@@ -47,6 +47,8 @@ Node* cnode(char*key,char*value){
     return temp;
 }
 
+
+
 char* set(char*key,char*value){
     int index = tblidx(key);
     Node*temp = cnode(key,value);
@@ -62,11 +64,11 @@ char* set(char*key,char*value){
                 printf("%s\n",post->value);
                 return "error";
             }else{
-                pre = post;
-                post = post->next;
+                //pre = post;
+                //post = post->next;
             }
         }
-        pre->next = temp;
+        //pre->next = temp;
         return "success";
     }
 }
