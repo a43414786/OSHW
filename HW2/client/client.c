@@ -81,7 +81,7 @@ int main(int argc, char **argv)
 
     while(1){
         int clientfd __attribute__((unused)) = open_clientfd(server_host_name, server_port);
-        Node* root = NULL;
+        Node* root = NULL,temp = NULL;
         Msg smsg,rmsg;
         char word;
         char cmd[10];
@@ -89,7 +89,8 @@ int main(int argc, char **argv)
         char value[101];
         while((word = getchar()) != '\n'){
             printf("%c",word);
-            //addnode(&root,cnode(word));
+            temp = cnode(word);
+            addnode(&root,temp);
         }
         while(root){
             printf("%c",root->c);
