@@ -82,7 +82,7 @@ int main(int argc, char **argv)
     while(1){
         int clientfd __attribute__((unused)) = open_clientfd(server_host_name, server_port);
         int counter = 0;
-        int inputc[3];
+        int inputc[3] = {0,0,0};
         short flag = 1;
         Node* root = NULL,*temp = NULL;
         Msg smsg,rmsg;
