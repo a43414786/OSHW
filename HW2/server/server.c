@@ -68,7 +68,7 @@ char* get(char*key){
         if(strcmp(temp->key,key) == 0){
             return temp->value;
         }
-        temp->next
+        temp->next;
     }
     return "Not Found";
 }
