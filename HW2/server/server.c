@@ -50,14 +50,20 @@ Node* cnode(char*key,char*value){
 void set(char*key,char*value){
     int index = tblidx(key);
     Node*temp = cnode(key,value);
-    Node*temp2 = database[index];
-    if(!temp2){
+    Node*pre = database[index];
+    Node*post = pre;
+    if(!post){
         database[index] = temp;
     }else{
-        while(temp2->next){
-            temp2 = temp2->next;
+        while(post){
+            if(strcmp(post->key,key) == 0){
+                return "error";
+            }
+            pre = post;
+            post = post->next;
         }
-        temp2->next = temp;
+        pre->next = temp;
+        return "success";
     }
 }
 
@@ -70,11 +76,19 @@ char* get(char*key){
         }
         temp->next;
     }
-    return "Not Found";
+    return "error";
 }
 
-void delete(char*key,char*value){
-    
+void delete(char*key){
+    int index = tblidx(key);
+    Node*temp = database[index];
+    while(temp){
+        if(strcmp(temp->key,key) == 0){
+            return temp->value;
+        }
+        temp->next;
+    }
+    return "DELETE";
 }
 
 void* service(void*args){
@@ -83,14 +97,13 @@ void* service(void*args){
     bzero(&smsg,sizeof(smsg));
     recv(*forClientSockfd,&rmsg,sizeof(rmsg),0);
     if(strcmp(rmsg.cmd,"SET") == 0){
-        set(rmsg.key,rmsg.value);
-        strcpy(smsg.value,"SET");
+        strcpy(smsg.value,set(rmsg.key,rmsg.value));
     }
     else if(strcmp(rmsg.cmd,"GET") == 0){
         strcpy(smsg.value,get(rmsg.key));
     }
     else if(strcmp(rmsg.cmd,"DELETE") == 0){
-        strcpy(smsg.value,"DELETE");
+        strcpy(smsg.value,delete(rmsg.key));
     }
     send(*forClientSockfd,&smsg,sizeof(smsg),0);
     printf("%s\n%s\n%s\n",rmsg.cmd,rmsg.key,rmsg.value);
