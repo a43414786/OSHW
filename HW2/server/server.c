@@ -40,7 +40,7 @@ int tblidx(char* key){
 }
 
 Node* cnode(char*key,char*value){
-    Node*temp;
+    Node*temp = malloc(sizeof(Node*));
     strcpy(temp->key,key);
     strcpy(temp->value,value);
     temp->next = NULL;
@@ -51,7 +51,6 @@ void set(char*key,char*value){
     int index = tblidx(key);
     Node*temp = cnode(key,value);
     Node*temp2 = database[index];
-    printf("a");
     if(!temp2){
         database[index] = temp;
     }else{
