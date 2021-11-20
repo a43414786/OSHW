@@ -82,33 +82,37 @@ int main(int argc, char **argv)
     while(1){
         int clientfd __attribute__((unused)) = open_clientfd(server_host_name, server_port);
         int counter = 0;
+        int inputc[3];
+        short flag = 1;
         Node* root = NULL,*temp = NULL;
         Msg smsg,rmsg;
         char word;
-        char cmd[10];
-        char key[101];
-        char value[101];
+        char inputs[3][101] = {};
         while((word = getchar()) != '\n'){
             if(word == ' '){
                 counter++;
                 if(counter == 3){
+                    flag = 0;
                     printf("invalid");
+                    break
                 }
             }
-            temp = cnode(word);
-            addnode(&root,temp);
+            inputs[counter][inputc[counter]++] = word;
         }
-        while(root){
-            printf("%c",root->c);
-            root = root->next;
+        if(flag){
+            for(int i = 0 ; i < 3 ; i++){
+                printf("%s\n",inputs[i]);
+            }
         }
+        
+        /*
         strcpy(smsg.cmd,cmd);
         strcpy(smsg.key,key);
         strcpy(smsg.value,value);
         send(clientfd,&smsg,sizeof(smsg),0);
         recv(clientfd,&rmsg,sizeof(rmsg),0);
         printf("%s\n%s\n%s\n",rmsg.cmd,rmsg.key,rmsg.value);
-        close(clientfd);
+        close(clientfd);*/
     }
     return 0;
 }
