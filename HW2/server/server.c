@@ -120,7 +120,8 @@ void* service(void*args){
     }
     send(*forClientSockfd,&smsg,sizeof(smsg),0);
     free(forClientSockfd);
-    pthread_exit(0);
+    return 0;
+    //pthread_exit(0);
 }
 
 int main(int argc, char **argv)
@@ -158,7 +159,7 @@ int main(int argc, char **argv)
     while(1){
         forClientSockfd = (int*)malloc(sizeof(int));
         *forClientSockfd = accept(listenfd,(struct sockaddr*) &clientInfo, &addrlen);
-        pthread_create(&t,NULL,service,(void*)forClientSockfd);
+        pthread_create(&t,0,service,(void*)forClientSockfd);
         pthread_detach(t);
     }
     return 0;
