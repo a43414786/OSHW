@@ -34,6 +34,7 @@ void addnode(Node** root,Node* new){
         *root = new;
     }else{
         while(temp->next){
+            printf("a");
             temp = temp->next;
         }
         temp->next = new;
