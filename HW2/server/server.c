@@ -103,6 +103,7 @@ char* delete(char*key){
 }
 
 void* service(void*args){
+    while(1){
     int* forClientSockfd = (int*)args;
     struct msg smsg,rmsg;
     bzero(&smsg,sizeof(smsg));
@@ -119,6 +120,7 @@ void* service(void*args){
         strcpy(smsg.value,delete(rmsg.key));
     }
     send(*forClientSockfd,&smsg,sizeof(smsg),0);
+    }
 }
 
 int main(int argc, char **argv)
