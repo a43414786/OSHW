@@ -102,6 +102,7 @@ void* service(void*args){
     recv(*forClientSockfd,&rmsg,sizeof(rmsg),0);
     printf("%s\n%s\n%s\n",rmsg.cmd,rmsg.key,rmsg.value);
     if(strcmp(rmsg.cmd,"SET") == 0){
+        printf("%s\n",rmsg.value);
         strcpy(smsg.value,set(rmsg.key,rmsg.value));
     }
     else if(strcmp(rmsg.cmd,"GET") == 0){
