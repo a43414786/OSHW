@@ -43,7 +43,6 @@ Node* cnode(char*key,char*value){
     Node*temp = malloc(sizeof(Node*));
     strcpy(temp->key,key);
     strcpy(temp->value,value);
-    printf("%s \n",value);
     temp->next = NULL;
     return temp;
 }
@@ -54,12 +53,12 @@ char* set(char*key,char*value){
     Node*pre = database[index];
     Node*post = pre;
     if(!post){
-        //printf("%s\n",temp->value);
         database[index] = temp;
         return "success";
     }else{
         while(post){
             if(strcmp(post->key,key) == 0){
+                printf("%s\n",post->value);
                 return "error";
             }
             pre = post;
