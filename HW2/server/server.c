@@ -17,11 +17,24 @@ struct msg{
     char value[101];
 };
 
+struct msg* 
+
+
+
 void* service(void*args){
     int* forClientSockfd = (int*)args;
     struct msg smsg,rmsg;
     bzero(&smsg,sizeof(smsg));
     recv(*forClientSockfd,&rmsg,sizeof(rmsg),0);
+    if(strcmp(inputs[0],"SET") == 0){
+        strcpy(smsg,"SET");
+    }
+    else if(strcmp(inputs[0],"GET") == 0){
+        strcpy(smsg,"a");
+    }
+    else if(strcmp(inputs[0],"DELETE") == 0){
+        strcpy(smsg,"DELETE");
+    }
     send(*forClientSockfd,&smsg,sizeof(smsg),0);
     printf("%s\n%s\n%s\n",rmsg.cmd,rmsg.key,rmsg.value);
     close(*forClientSockfd);

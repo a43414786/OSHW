@@ -9,38 +9,11 @@
 
 typedef struct msg Msg;
 
-typedef struct node Node;
-
 struct msg{
     char cmd[10];
     char key[101];
     char value[101];
 };
-
-struct node
-{
-    char c;
-    Node* next;
-};
-Node* cnode(char c){
-    Node*temp = malloc(sizeof(Node*));
-    temp->c = c;
-    temp->next = NULL;
-    return temp;
-}
-void addnode(Node** root,Node* new){
-    Node*temp = *root;
-
-    if(!temp){
-        *root = new;
-    }else{
-        while(temp->next){
-            temp = temp->next;
-        }
-        temp->next = new;
-    }
-}
-
 
 int main(int argc, char **argv)
 {
@@ -84,7 +57,6 @@ int main(int argc, char **argv)
         int counter = 0;
         int inputc[3] = {0,0,0};
         short flag = 1;
-        Node* root = NULL,*temp = NULL;
         Msg smsg,rmsg;
         char word;
         char inputs[3][101] = {};
@@ -107,7 +79,7 @@ int main(int argc, char **argv)
                 strcpy(smsg.value,inputs[2]);
                 send(clientfd,&smsg,sizeof(smsg),0);
                 recv(clientfd,&rmsg,sizeof(rmsg),0);
-                printf("%s\n%s\n%s\n",rmsg.cmd,rmsg.key,rmsg.value);
+                printf("%s\n",rmsg.value);
                 close(clientfd);
             }else{
                 printf("unknown/invalid\n");
@@ -115,9 +87,7 @@ int main(int argc, char **argv)
         }else{
             printf("unknown/invalid\n");
         }
-        
-        /*
-        */
+
     }
     return 0;
 }
