@@ -48,6 +48,7 @@ Node* cnode(char*key,char*value){
 }
 
 void set(char*key,char*value){
+    printf("a");
     int index = tblidx(key);
     printf("a");
     Node*temp = cnode(key,value);
