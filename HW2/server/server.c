@@ -97,7 +97,7 @@ char* delete(char*key){
             return "succcess";
         }
         pre = temp;
-        temp->next;
+        temp = temp->next;
     }
     return "error";
 }
