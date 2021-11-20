@@ -17,6 +17,9 @@ struct msg{
     char value[101];
 };
 
+struct msg* database[26] = {NULL};
+
+
 void* service(void*args){
     int* forClientSockfd = (int*)args;
     struct msg smsg,rmsg;
