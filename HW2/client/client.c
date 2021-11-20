@@ -31,14 +31,14 @@ Node* cnode(char c){
 void addnode(Node** root,Node* new){
     Node*temp = *root;
 
-    if(temp){
-        *root = new;}
-    /*}else{
+    if(!temp){
+        *root = new;
+    }else{
         while(temp->next){
             temp = temp->next;
         }
         temp->next = new;
-    }*/
+    }
 }
 
 
