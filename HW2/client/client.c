@@ -94,7 +94,7 @@ int main(int argc, char **argv)
                 if(counter == 3){
                     flag = 0;
                     printf("invalid");
-                    break
+                    break;
                 }
             }
             inputs[counter][inputc[counter]++] = word;
