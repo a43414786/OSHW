@@ -87,14 +87,13 @@ int main(int argc, char **argv)
         char cmd[10];
         char key[101];
         char value[101];
-        while((word = getc()) != '\n'){
+        while((word = getchar()) != '\n'){
             addnode(&root,cnode(word));
         }
         while(root){
             printf("%c",root->c);
             root = root->next;
         }
-        printf("%d",err);
         strcpy(smsg.cmd,cmd);
         strcpy(smsg.key,key);
         strcpy(smsg.value,value);
