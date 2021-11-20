@@ -101,8 +101,12 @@ int main(int argc, char **argv)
             }
         }
         if(flag){
-            for(int i = 0 ; i < 3 ; i++){
-                printf("%s\n",inputs[i]);
+            if((strcmp(inputs[0],"SET") == 0) || (strcmp(inputs[0],"SET") == 0) || (strcmp(inputs[0],"SET") == 0)){
+                for(int i = 0 ; i < 3 ; i++){
+                    printf("%s\n",inputs[i]);
+                }
+            }else{
+                printf("invalid\n");
             }
         }else{
             printf("invalid\n");
