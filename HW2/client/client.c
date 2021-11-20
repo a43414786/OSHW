@@ -92,6 +92,7 @@ int main(int argc, char **argv)
             temp = cnode(word);
             addnode(&root,temp);
         }
+        printf("%p",root);
         while(root){
             printf("%c",root->c);
             root = root->next;
