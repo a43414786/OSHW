@@ -102,9 +102,13 @@ int main(int argc, char **argv)
         }
         if(flag){
             if((strcmp(inputs[0],"SET") == 0) || (strcmp(inputs[0],"GET") == 0) || (strcmp(inputs[0],"DELETE") == 0)){
-                for(int i = 0 ; i < 3 ; i++){
-                    printf("%s\n",inputs[i]);
-                }
+                strcpy(smsg.cmd,inputs[0]);
+                strcpy(smsg.key,inputs[1]);
+                strcpy(smsg.value,inputs[2]);
+                send(clientfd,&smsg,sizeof(smsg),0);
+                recv(clientfd,&rmsg,sizeof(rmsg),0);
+                printf("%s\n%s\n%s\n",rmsg.cmd,rmsg.key,rmsg.value);
+                close(clientfd);
             }else{
                 printf("unknown/invalid\n");
             }
@@ -113,13 +117,7 @@ int main(int argc, char **argv)
         }
         
         /*
-        strcpy(smsg.cmd,cmd);
-        strcpy(smsg.key,key);
-        strcpy(smsg.value,value);
-        send(clientfd,&smsg,sizeof(smsg),0);
-        recv(clientfd,&rmsg,sizeof(rmsg),0);
-        printf("%s\n%s\n%s\n",rmsg.cmd,rmsg.key,rmsg.value);
-        close(clientfd);*/
+        */
     }
     return 0;
 }
