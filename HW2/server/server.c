@@ -102,7 +102,7 @@ void* service(void*args){
         strcpy(smsg.value,set(rmsg.key,rmsg.value));
     }
     else if(strcmp(rmsg.cmd,"GET") == 0){
-        printf("a");
+        printf("%s",get(rmsg.key));
         strcpy(smsg.value,get(rmsg.key));
     }
     else if(strcmp(rmsg.cmd,"DELETE") == 0){
