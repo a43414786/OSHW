@@ -56,22 +56,18 @@ char* set(char*key,char*value){
     Node*temp3 = database[index];
     if(!temp2){
         database[index] = temp;
-        printf("%s ",database[index]->value);
         return "success";
     }else{
         while(temp2){
             if(strcmp(temp2->key,key) == 0){
-                printf("%s\n",temp2->value);
                 return "error";
             }
             temp2 = temp2->next;
         }
-        
         while(temp3->next){
             temp3 = temp3->next;
         }
         temp3->next = temp;
-        
     }
     return "success";
 }
@@ -82,7 +78,6 @@ char* get(char*key){
     Node*post = pre;
     while(post){
         if(strcmp(post->key,key) == 0){
-            printf("%s %s\n",post->key,post->value);
             return post->value;
         }
         pre = post;
@@ -94,13 +89,17 @@ char* get(char*key){
 char* delete(char*key){
     int index = tblidx(key);
     Node*temp = database[index];
+    Node*pre = database[index];
     while(temp){
         if(strcmp(temp->key,key) == 0){
-            return temp->value;
+            pre->next = temp->next;
+            free(temp);
+            return "succcess";
         }
+        pre = temp;
         temp->next;
     }
-    return "DELETE";
+    return "error";
 }
 
 void* service(void*args){
