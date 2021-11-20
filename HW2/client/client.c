@@ -30,11 +30,10 @@ Node* cnode(char c){
 }
 void addnode(Node** root,Node* new){
     Node*temp = *root;
-    printf("a");
-    /*
+
     if(temp){
-        *root = new;
-    }else{
+        *root = new;}
+    /*}else{
         while(temp->next){
             temp = temp->next;
         }
