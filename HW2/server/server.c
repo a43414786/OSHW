@@ -50,7 +50,6 @@ Node* cnode(char*key,char*value){
 char* set(char*key,char*value){
     int index = tblidx(key);
     Node*temp = cnode(key,value);
-    printf("%s ",temp->value);
     Node*pre = database[index];
     Node*post = pre;
     if(!post){
@@ -66,6 +65,7 @@ char* set(char*key,char*value){
             post = post->next;
         }
         pre->next = temp;
+        printf("%s ",pre->next->value);
         return "success";
     }
 }
