@@ -52,23 +52,24 @@ Node* cnode(char*key,char*value){
 char* set(char*key,char*value){
     int index = tblidx(key);
     Node*temp = cnode(key,value);
-    Node*pre = database[index];
-    Node*post = pre;
-    if(!post){
+    Node*temp2 = database[index];
+    Node*temp3 = database[index];
+    if(!temp2){
         database[index] = temp;
         printf("%s ",database[index]->value);
         return "success";
     }else{
-        while(post){
-            if(strcmp(post->key,key) == 0){
+        while(temp2){
+            if(strcmp(temp2->key,key) == 0){
                 printf("%s\n",post->value);
                 return "error";
-            }else{
-                //pre = post;
-                //post = post->next;
             }
+            temp2 = temp2->next;
         }
-        //pre->next = temp;
+        while(temp3->next){
+            temp3 = temp3->next;
+        }
+        temp3->next = temp;
         return "success";
     }
 }
