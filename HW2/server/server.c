@@ -119,8 +119,6 @@ void* service(void*args){
         strcpy(smsg.value,delete(rmsg.key));
     }
     send(*forClientSockfd,&smsg,sizeof(smsg),0);
-    //close(*forClientSockfd);
-    //pthread_exit(0);
 }
 
 int main(int argc, char **argv)
