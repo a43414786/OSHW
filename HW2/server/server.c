@@ -65,11 +65,11 @@ char* set(char*key,char*value){
                 return "error";
             }
             temp2 = temp2->next;
-        }
+        }'''
         while(temp3->next){
             temp3 = temp3->next;
         }
-        temp3->next = temp;
+        temp3->next = temp;'''
     }
     return "success";
 }
