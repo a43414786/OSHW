@@ -23,13 +23,13 @@ void* service(void*args){
     bzero(&smsg,sizeof(smsg));
     recv(*forClientSockfd,&rmsg,sizeof(rmsg),0);
     if(strcmp(inputs[0],"SET") == 0){
-        strcpy(smsg,"SET");
+        strcpy(smsg.value,"SET");
     }
     else if(strcmp(inputs[0],"GET") == 0){
-        strcpy(smsg,"a");
+        strcpy(smsg.value,"a");
     }
     else if(strcmp(inputs[0],"DELETE") == 0){
-        strcpy(smsg,"DELETE");
+        strcpy(smsg.value,"DELETE");
     }
     send(*forClientSockfd,&smsg,sizeof(smsg),0);
     printf("%s\n%s\n%s\n",rmsg.cmd,rmsg.key,rmsg.value);
