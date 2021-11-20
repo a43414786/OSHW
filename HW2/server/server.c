@@ -70,8 +70,8 @@ char* set(char*key,char*value){
             temp3 = temp3->next;
         }
         temp3->next = temp;
-        return "success";
     }
+    return "success";
 }
 
 char* get(char*key){
@@ -118,7 +118,7 @@ void* service(void*args){
         strcpy(smsg.value,delete(rmsg.key));
     }
     send(*forClientSockfd,&smsg,sizeof(smsg),0);
-    //close(*forClientSockfd);
+    close(*forClientSockfd);
     pthread_exit(0);
 }
 
