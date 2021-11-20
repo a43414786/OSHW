@@ -88,11 +88,9 @@ int main(int argc, char **argv)
         char key[101];
         char value[101];
         while((word = getchar()) != '\n'){
-            printf("%c",word);
             temp = cnode(word);
             addnode(&root,temp);
         }
-        printf("%p",root);
         while(root){
             printf("%c",root->c);
             root = root->next;
