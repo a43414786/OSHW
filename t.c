@@ -1,58 +1,55 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-struct msg{
+
+typedef struct node Node;
+
+struct node{
     char key[101];
     char value[101];
+    Node* next;
 };
-int decode(char*input,struct msg* smsg){
-    printf("%s",input);
-    char cmd[7],key[101],value[101];
-    int counter = 0;
-    int cmdc = 0,kc = 0,vc = 0;
-    for(int i = 0 ; i < strlen(input);i++){
-        if(input[i] == ' '){
-            counter += 1;
-            cmd[cmdc] = '\0';
-            break;
-        }else{
-            printf("%c",input[i]);
-            cmd[cmdc++] = input[i];
-            counter++;
-        }
-    }
-    for(int i = counter ; i < strlen(input);i++){
-        if(input[i] == ' '){
-            counter += 1;
-            key[kc] = '\0';
-            break;
-        }else{
-            printf("%c",input[i]);
-            key[kc++] = input[i];
-            counter++;
-        }
-    }
-    for(int i = counter ; i < strlen(input);i++){
-        if(input[i] == '\0'){
-            counter += 1;
-            value[vc] = '\0';
-            break;
-        }else{
-            printf("%c",input[i]);
-            value[vc++] = input[i];
-            counter++;
-        }
-    }
 
-    printf("%s\n%s\n%s\n",cmd,key,value);
+Node* database[26] = {};
+
+int tblidx(char* key){
+    char head = key[0];
+    if('A'<=head<='Z'){
+        return head - 'A';
+    }else if('a'<=head<='z'){
+        return head - 'a';
+    }else{
+        return head - '0';
+    }
+}
+
+Node* cnode(char*key,char*value){
+    Node*temp = malloc(sizeof(Node*));
+    strcpy(temp->key,key);
+    strcpy(temp->value,value);
+    temp->next = NULL;
+    return temp;
+}
+
+void set(char*key,char*value){
+    int index = tblidx(key);
+    Node*temp = cnode(key,value);
+    Node*temp2 = database[index];
+    if(!temp2){
+        database[index] = temp;
+    }else{
+        while(temp2->next){
+            temp2 = temp2->next;
+        }
+        temp2->next = temp;
+    }
 }
 int main(){
-    
-    struct msg smsg,rmsg;
+
     char cmd[10];
     char key[101];
     char value[101];
     scanf("\n%s %s %s",cmd,key,value);
-    printf("%s\n%s\n%s\n",cmd,key,value);
+    set(key,value);
     return 0;
 }
