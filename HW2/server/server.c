@@ -43,6 +43,7 @@ Node* cnode(char*key,char*value){
     Node*temp = malloc(sizeof(Node*));
     strcpy(temp->key,key);
     strcpy(temp->value,value);
+    printf("%s \n",value);
     temp->next = NULL;
     return temp;
 }
