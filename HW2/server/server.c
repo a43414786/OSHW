@@ -70,12 +70,14 @@ char* set(char*key,char*value){
 
 char* get(char*key){
     int index = tblidx(key);
-    Node*temp = database[index];
-    while(temp){
-        if(strcmp(temp->key,key) == 0){
-            return temp->value;
+    Node*pre = database[index];
+    Node*post = pre;
+    while(post){
+        if(strcmp(post->key,key) == 0){
+            return post->value;
         }
-        temp = temp->next;
+        pre = post;
+        post = post->next;
     }
     return "error";
 }
