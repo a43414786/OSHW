@@ -120,7 +120,7 @@ void* service(void*args){
     }
     send(*forClientSockfd,&smsg,sizeof(smsg),0);
     free(forClientSockfd);
-    return 0;
+    pthread_exit(0);
 }
 
 int main(int argc, char **argv)
