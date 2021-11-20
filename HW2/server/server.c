@@ -97,6 +97,7 @@ void* service(void*args){
     struct msg smsg,rmsg;
     bzero(&smsg,sizeof(smsg));
     recv(*forClientSockfd,&rmsg,sizeof(rmsg),0);
+    printf("%s\n%s\n%s\n",rmsg.cmd,rmsg.key,rmsg.value);
     if(strcmp(rmsg.cmd,"SET") == 0){
         strcpy(smsg.value,set(rmsg.key,rmsg.value));
     }
@@ -107,7 +108,6 @@ void* service(void*args){
         strcpy(smsg.value,delete(rmsg.key));
     }
     send(*forClientSockfd,&smsg,sizeof(smsg),0);
-    printf("%s\n%s\n%s\n",rmsg.cmd,rmsg.key,rmsg.value);
     close(*forClientSockfd);
     pthread_exit(0);
 }
