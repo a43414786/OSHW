@@ -61,11 +61,12 @@ char* set(char*key,char*value){
             if(strcmp(post->key,key) == 0){
                 printf("%s\n",post->value);
                 return "error";
+            }else{
+                pre = post;
+                post = post->next;
             }
-            pre = post;
-            post = post->next;
         }
-        //pre->next = temp;
+        pre->next = temp;
         return "success";
     }
 }
