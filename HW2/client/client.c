@@ -97,7 +97,7 @@ int main(int argc, char **argv)
                     printf("unknown/invalid\n");
                 }
             }
-            else if (strcmp(inputs[0],"DELETE") == 0)){
+            else if (strcmp(inputs[0],"DELETE") == 0){
                 if(inputc[1] > 0 && inputc[2] == 0){
                     strcpy(smsg.cmd,inputs[0]);
                     strcpy(smsg.key,inputs[1]);
