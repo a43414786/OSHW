@@ -52,9 +52,9 @@ Node* cnode(char*key,char*value){
 char* set(char*key,char*value){
     int index = tblidx(key);
     Node*temp = cnode(key,value);
-    /*
     Node*temp2 = database[index];
     Node*temp3 = database[index];
+    /*
     if(!temp2){
         database[index] = temp;
         return "success";
