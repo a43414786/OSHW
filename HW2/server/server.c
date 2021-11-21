@@ -54,7 +54,7 @@ char* set(char*key,char*value){
     Node*temp = cnode(key,value);
     Node*temp2 = database[index];
     Node*temp3 = database[index];
-    
+    printf("%d",index);
     if(!temp2){
         database[index] = temp;
         return "success1";
