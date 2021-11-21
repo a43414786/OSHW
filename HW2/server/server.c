@@ -26,7 +26,7 @@ struct node{
     Node* next;
 };
 
-Node* database[26] = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+Node* database[26];
 
 int tblidx(char* key){
     char head = key[0];
@@ -154,6 +154,7 @@ int main(int argc, char **argv)
     struct sockaddr clientInfo;
     int addrlen = sizeof(clientInfo);
     pthread_t t;
+    bzero(&database,sizeof(database));
     while(1){
         forClientSockfd = (int*)malloc(sizeof(int));
         *forClientSockfd = accept(listenfd,(struct sockaddr*) &clientInfo, &addrlen);
