@@ -54,11 +54,11 @@ char* set(char*key,char*value){
     Node*temp = cnode(key,value);
     Node*temp2 = database[index];
     Node*temp3 = database[index];
-    /*
+    
     if(!temp2){
         database[index] = temp;
         return "success";
-    }else{
+    }/*else{
         while(temp2){
             if(strcmp(temp2->key,key) == 0){
                 return "error";
