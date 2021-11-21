@@ -51,6 +51,7 @@ Node* cnode(char*key,char*value){
 
 char* set(char*key,char*value){
     int index = tblidx(key);
+    printf("%d",index);
     Node*temp = cnode(key,value);
     Node*temp2 = database[index];
     Node*temp3 = database[index];
