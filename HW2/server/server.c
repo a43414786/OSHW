@@ -31,11 +31,11 @@ Node* database[26] = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NUL
 int tblidx(char* key){
     char head = key[0];
     if('A'<=head<='Z'){
-        return head - 'A';
+        return (head - 'A');
     }else if('a'<=head<='z'){
-        return head - 'a';
+        return (head - 'a');
     }else if('0'<=head<='9'){
-        return head - '0';
+        return (head - '0');
     }
 }
 
