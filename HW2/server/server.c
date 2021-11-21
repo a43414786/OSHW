@@ -26,16 +26,16 @@ struct node{
     Node* next;
 };
 
-Node* database[26];
+Node* database[26] = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
 
 int tblidx(char* key){
     char head = key[0];
     if('A'<=head<='Z'){
-        return (head - 'A');
+        return head - 'A';
     }else if('a'<=head<='z'){
-        return (head - 'a');
+        return head - 'a';
     }else if('0'<=head<='9'){
-        return (head - '0');
+        return head - '0';
     }
 }
 
@@ -47,18 +47,18 @@ Node* cnode(char*key,char*value){
     return temp;
 }
 
+
+
 char* set(char*key,char*value){
     int index = tblidx(key);
-    index = 0;
     Node*temp = cnode(key,value);
     Node*temp2 = database[index];
     Node*temp3 = database[index];
-    printf("%p",temp2);
     if(!temp2){
         database[index] = temp;
-        return "success1";
+        return "success";
     }else{
-        /*while(temp2){
+        while(temp2){
             if(strcmp(temp2->key,key) == 0){
                 return "error";
             }
@@ -67,9 +67,9 @@ char* set(char*key,char*value){
         while(temp3->next){
             temp3 = temp3->next;
         }
-        temp3->next = temp;*/
+        temp3->next = temp;
     }
-    return "success2";
+    return "success";
 }
 
 char* get(char*key){
@@ -154,7 +154,6 @@ int main(int argc, char **argv)
     struct sockaddr clientInfo;
     int addrlen = sizeof(clientInfo);
     pthread_t t;
-    bzero(&database,sizeof(database));
     while(1){
         forClientSockfd = (int*)malloc(sizeof(int));
         *forClientSockfd = accept(listenfd,(struct sockaddr*) &clientInfo, &addrlen);
