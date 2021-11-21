@@ -26,7 +26,7 @@ struct node{
     Node* next;
 };
 
-Node* database[26] = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+Node* database[36] = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
 
 int tblidx(char* key){
     char head = key[0];
@@ -35,7 +35,7 @@ int tblidx(char* key){
     }else if('a'<=head<='z'){
         return (head - 'a');
     }else if('0'<=head<='9'){
-        return (head - '0');
+        return ((head - '0') + 26);
     }
 }
 
