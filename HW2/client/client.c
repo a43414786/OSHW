@@ -73,14 +73,43 @@ int main(int argc, char **argv)
             }
         }
         if(flag){
-            if((strcmp(inputs[0],"SET") == 0) || (strcmp(inputs[0],"GET") == 0) || (strcmp(inputs[0],"DELETE") == 0)){
-                strcpy(smsg.cmd,inputs[0]);
-                strcpy(smsg.key,inputs[1]);
-                strcpy(smsg.value,inputs[2]);
-                send(clientfd,&smsg,sizeof(smsg),0);
-                recv(clientfd,&rmsg,sizeof(rmsg),0);
-                printf("%s\n",rmsg.value);
-            }else{
+            if(strcmp(inputs[0],"SET") == 0){
+                if(inputc[1] > 0 && inputc[2] > 0){
+                    strcpy(smsg.cmd,inputs[0]);
+                    strcpy(smsg.key,inputs[1]);
+                    strcpy(smsg.value,inputs[2]);
+                    send(clientfd,&smsg,sizeof(smsg),0);
+                    recv(clientfd,&rmsg,sizeof(rmsg),0);
+                    printf("%s\n",rmsg.value);
+                }else{
+                    printf("unknown/invalid\n");
+                }
+            }
+            else if (strcmp(inputs[0],"GET") == 0){
+                if(inputc[1] > 0 && inputc[2] == 0){
+                    strcpy(smsg.cmd,inputs[0]);
+                    strcpy(smsg.key,inputs[1]);
+                    strcpy(smsg.value,inputs[2]);
+                    send(clientfd,&smsg,sizeof(smsg),0);
+                    recv(clientfd,&rmsg,sizeof(rmsg),0);
+                    printf("%s\n",rmsg.value);
+                }else{
+                    printf("unknown/invalid\n");
+                }
+            }
+            else if (strcmp(inputs[0],"DELETE") == 0)){
+                if(inputc[1] > 0 && inputc[2] == 0){
+                    strcpy(smsg.cmd,inputs[0]);
+                    strcpy(smsg.key,inputs[1]);
+                    strcpy(smsg.value,inputs[2]);
+                    send(clientfd,&smsg,sizeof(smsg),0);
+                    recv(clientfd,&rmsg,sizeof(rmsg),0);
+                    printf("%s\n",rmsg.value);
+                }else{
+                    printf("unknown/invalid\n");
+                }
+            }
+            else{
                 printf("unknown/invalid\n");
             }
         }else{
