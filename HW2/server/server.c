@@ -35,7 +35,7 @@ int tblidx(char* key){
     }else if('a'<=head<='z'){
         return (head - 'a');
     }else if('0'<=head<='9'){
-        return ((head - '0') + 26);
+        return 26;
     }
 }
 
