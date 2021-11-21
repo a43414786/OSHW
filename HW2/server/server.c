@@ -34,8 +34,8 @@ int tblidx(char* key){
         return head - 'A';
     }else if('a'<=head<='z'){
         return head - 'a';
-    }else{
-        return 0;
+    }else if('0'<=head<='9'){
+        return head - '0';
     }
 }
 
@@ -52,6 +52,7 @@ Node* cnode(char*key,char*value){
 char* set(char*key,char*value){
     int index = tblidx(key);
     Node*temp = cnode(key,value);
+    /*
     Node*temp2 = database[index];
     Node*temp3 = database[index];
     if(!temp2){
@@ -68,7 +69,7 @@ char* set(char*key,char*value){
             temp3 = temp3->next;
         }
         temp3->next = temp;
-    }
+    }*/
     return "success";
 }
 
