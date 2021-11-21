@@ -110,7 +110,9 @@ int main(int argc, char **argv)
                 }
             }
             else{
-                printf("unknown/invalid\n");
+                if(inputc[0] != 0){
+                    printf("unknown/invalid\n");
+                }
             }
         }else{
             printf("unknown/invalid\n");
