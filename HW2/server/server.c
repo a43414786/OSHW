@@ -58,18 +58,18 @@ char* set(char*key,char*value){
     if(!temp2){
         database[index] = temp;
         return "success";
-    }/*else{
+    }else{
         while(temp2){
             if(strcmp(temp2->key,key) == 0){
                 return "error";
             }
             temp2 = temp2->next;
         }
-        while(temp3->next){
+        /*while(temp3->next){
             temp3 = temp3->next;
         }
-        temp3->next = temp;
-    }*/
+        temp3->next = temp;*/
+    }
     return "success";
 }
 
