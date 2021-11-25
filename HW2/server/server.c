@@ -21,7 +21,7 @@ typedef struct msg{
 typedef struct node{
     char key[101];
     char value[101];
-    Node* next;
+    struct node* next;
 }Node;
 
 Node* database[23] = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
