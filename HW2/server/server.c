@@ -120,29 +120,42 @@ char* delete(char*key)
     return "error";
 }
 
+pthread_mutex_t mutex;
+
 void* service(void*args)
 {
     int* forClientSockfd = (int*)args;
     struct msg smsg,rmsg;
+    char *getmsg = NULL;
     bzero(&smsg,sizeof(smsg));
     recv(*forClientSockfd,&rmsg,sizeof(rmsg),0);
     if(strcmp(rmsg.cmd,"SET") == 0)
-    {
-        strcpy(smsg.value,set(rmsg.key,rmsg.value));
+    {   
+        pthread_mutex_lock(&mutex);
+        getmsg = set(rmsg.key,rmsg.value);
+        pthread_mutex_unlock(&mutex);
+        strcpy(smsg.value,getmsg);
     }
     else if(strcmp(rmsg.cmd,"GET") == 0)
     {
-        strcpy(smsg.value,get(rmsg.key));
+        pthread_mutex_lock(&mutex);
+        getmsg = get(rmsg.key);
+        pthread_mutex_unlock(&mutex);
+        strcpy(smsg.value,getmsg);
     }
     else if(strcmp(rmsg.cmd,"DELETE") == 0)
     {
-        strcpy(smsg.value,delete(rmsg.key));
+        pthread_mutex_lock(&mutex);
+        getmsg = delete(rmsg.key);
+        pthread_mutex_unlock(&mutex);
+        strcpy(smsg.value,getmsg);
     }
     send(*forClientSockfd,&smsg,sizeof(smsg),0);
     free(forClientSockfd);
     return 0;
-    //pthread_exit(0);
 }
+
+
 
 int main(int argc, char **argv)
 {
@@ -179,6 +192,7 @@ int main(int argc, char **argv)
     struct sockaddr clientInfo;
     int addrlen = sizeof(clientInfo);
     pthread_t t;
+    pthread_mutex_init(&mutex, 0);
     while(1)
     {
         forClientSockfd = (int*)malloc(sizeof(int));
