@@ -9,7 +9,8 @@
 
 typedef struct msg Msg;
 
-struct msg{
+struct msg
+{
     char cmd[10];
     char key[101];
     char value[101];
@@ -21,8 +22,10 @@ int main(int argc, char **argv)
     char *server_host_name = NULL, *server_port = NULL;
 
     /* Parsing args */
-    while ((opt = getopt(argc, argv, "h:p:")) != -1) {
-        switch (opt) {
+    while ((opt = getopt(argc, argv, "h:p:")) != -1)
+    {
+        switch (opt)
+        {
         case 'h':
             server_host_name = malloc(strlen(optarg) + 1);
             strncpy(server_host_name, optarg, strlen(optarg));
@@ -38,21 +41,24 @@ int main(int argc, char **argv)
         }
     }
 
-    if (!server_host_name) {
+    if (!server_host_name)
+    {
         fprintf(stderr, "Error!, No host name provided!\n");
         exit(1);
     }
 
-    if (!server_port) {
+    if (!server_port)
+    {
         fprintf(stderr, "Error!, No port number provided!\n");
         exit(1);
     }
 
     /* Open a client socket fd */
-    
+
     /* Start your coding client code here! */
 
-    while(1){
+    while(1)
+    {
         int clientfd __attribute__((unused)) = open_clientfd(server_host_name, server_port);
         int counter = 0;
         int inputc[3] = {0,0,0};
@@ -60,61 +66,82 @@ int main(int argc, char **argv)
         Msg smsg,rmsg;
         char word;
         char inputs[3][101] = {};
-        while((word = getchar()) != '\n'){
-            if(word == ' '){
+        while((word = getchar()) != '\n')
+        {
+            if(word == ' ')
+            {
                 counter++;
-                if(counter == 3){
+                if(counter == 3)
+                {
                     flag = 0;
                 }
                 continue;
             }
-            if(flag){
+            if(flag)
+            {
                 inputs[counter][inputc[counter]++] = word;
             }
         }
-        if(flag){
-            if(strcmp(inputs[0],"SET") == 0){
-                if(inputc[1] > 0 && inputc[2] > 0){
+        if(flag)
+        {
+            if(strcmp(inputs[0],"SET") == 0)
+            {
+                if(inputc[1] > 0 && inputc[2] > 0)
+                {
                     strcpy(smsg.cmd,inputs[0]);
                     strcpy(smsg.key,inputs[1]);
                     strcpy(smsg.value,inputs[2]);
                     send(clientfd,&smsg,sizeof(smsg),0);
                     recv(clientfd,&rmsg,sizeof(rmsg),0);
                     printf("%s\n",rmsg.value);
-                }else{
+                }
+                else
+                {
                     printf("unknown/invalid\n");
                 }
             }
-            else if (strcmp(inputs[0],"GET") == 0){
-                if(inputc[1] > 0 && inputc[2] == 0){
+            else if (strcmp(inputs[0],"GET") == 0)
+            {
+                if(inputc[1] > 0 && inputc[2] == 0)
+                {
                     strcpy(smsg.cmd,inputs[0]);
                     strcpy(smsg.key,inputs[1]);
                     strcpy(smsg.value,inputs[2]);
                     send(clientfd,&smsg,sizeof(smsg),0);
                     recv(clientfd,&rmsg,sizeof(rmsg),0);
                     printf("%s\n",rmsg.value);
-                }else{
+                }
+                else
+                {
                     printf("unknown/invalid\n");
                 }
             }
-            else if (strcmp(inputs[0],"DELETE") == 0){
-                if(inputc[1] > 0 && inputc[2] == 0){
+            else if (strcmp(inputs[0],"DELETE") == 0)
+            {
+                if(inputc[1] > 0 && inputc[2] == 0)
+                {
                     strcpy(smsg.cmd,inputs[0]);
                     strcpy(smsg.key,inputs[1]);
                     strcpy(smsg.value,inputs[2]);
                     send(clientfd,&smsg,sizeof(smsg),0);
                     recv(clientfd,&rmsg,sizeof(rmsg),0);
                     printf("%s\n",rmsg.value);
-                }else{
+                }
+                else
+                {
                     printf("unknown/invalid\n");
                 }
             }
-            else{
-                if(inputc[0] != 0){
+            else
+            {
+                if(inputc[0] != 0)
+                {
                     printf("unknown/invalid\n");
                 }
             }
-        }else{
+        }
+        else
+        {
             printf("unknown/invalid\n");
         }
 

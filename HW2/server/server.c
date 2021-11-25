@@ -11,30 +11,34 @@
 #include "sock.h"
 #include <pthread.h>
 
+typedef struct msg Msg;
 
+typedef struct node Node;
 
-typedef struct msg{
+struct msg
+{
     char cmd[10];
     char key[101];
     char value[101];
-}Msg;
-typedef struct node{
+};
+struct node
+{
     char key[101];
     char value[101];
-    struct node* next;
-}Node;
+    Node* next;
+};
 
 Node* database[23] = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
 
-//pthread_mutex_t mutex;
-
-int tblidx(char* key){
-    int idx;
-    idx = strlen(key) % 23;
-    return idx;
+int tblidx(char* key)
+{
+    int idx = 0;
+    idx = strlen(key);
+    return idx%23
 }
 
-Node* cnode(char*key,char*value){
+Node* cnode(char*key,char*value)
+{
     Node*temp = malloc(sizeof(Node*));
     strcpy(temp->key,key);
     strcpy(temp->value,value);
@@ -44,22 +48,29 @@ Node* cnode(char*key,char*value){
 
 
 
-char* set(char*key,char*value){
+char* set(char*key,char*value)
+{
     int index = tblidx(key);
     Node*temp = cnode(key,value);
     Node*temp2 = database[index];
     Node*temp3 = database[index];
-    if(!temp2){
+    if(!temp2)
+    {
         database[index] = temp;
         return "success";
-    }else{
-        while(temp2){
-            if(strcmp(temp2->key,key) == 0){
+    }
+    else
+    {
+        while(temp2)
+        {
+            if(strcmp(temp2->key,key) == 0)
+            {
                 return "error";
             }
             temp2 = temp2->next;
         }
-        while(temp3->next){
+        while(temp3->next)
+        {
             temp3 = temp3->next;
         }
         temp3->next = temp;
@@ -67,12 +78,15 @@ char* set(char*key,char*value){
     return "success";
 }
 
-char* get(char*key){
+char* get(char*key)
+{
     int index = tblidx(key);
     Node*pre = database[index];
     Node*post = pre;
-    while(post){
-        if(strcmp(post->key,key) == 0){
+    while(post)
+    {
+        if(strcmp(post->key,key) == 0)
+        {
             return post->value;
         }
         pre = post;
@@ -81,17 +95,20 @@ char* get(char*key){
     return "error";
 }
 
-char* delete(char*key){
+char* delete(char*key)
+{
     int index = tblidx(key);
     int counter = 0;
     Node*temp = database[index];
     Node*pre = database[index];
-    while(temp){
-        if(strcmp(temp->key,key) == 0){
-            if(!counter){
-                database[index] = temp->next;
-            }else{
+    while(temp)
+    {
+        if(strcmp(temp->key,key) == 0)
+        {
+            if(counter){
                 pre->next = temp->next;
+            }else{
+                database[index] = temp->next;
             }
             free(temp);
             return "succcess";
@@ -103,29 +120,28 @@ char* delete(char*key){
     return "error";
 }
 
-void* service(void*args){
+void* service(void*args)
+{
     int* forClientSockfd = (int*)args;
     struct msg smsg,rmsg;
     bzero(&smsg,sizeof(smsg));
     recv(*forClientSockfd,&rmsg,sizeof(rmsg),0);
-    if(strcmp(rmsg.cmd,"SET") == 0){
-        //pthread_mutex_lock(&mutex);
+    if(strcmp(rmsg.cmd,"SET") == 0)
+    {
         strcpy(smsg.value,set(rmsg.key,rmsg.value));
-        //pthread_mutex_unlock(&mutex);
     }
-    else if(strcmp(rmsg.cmd,"GET") == 0){
-        //pthread_mutex_lock(&mutex);
+    else if(strcmp(rmsg.cmd,"GET") == 0)
+    {
         strcpy(smsg.value,get(rmsg.key));
-        //pthread_mutex_unlock(&mutex);
     }
-    else if(strcmp(rmsg.cmd,"DELETE") == 0){
-        //pthread_mutex_lock(&mutex);
+    else if(strcmp(rmsg.cmd,"DELETE") == 0)
+    {
         strcpy(smsg.value,delete(rmsg.key));
-        //pthread_mutex_unlock(&mutex);
     }
     send(*forClientSockfd,&smsg,sizeof(smsg),0);
     free(forClientSockfd);
-    pthread_exit(0);
+    return 0;
+    //pthread_exit(0);
 }
 
 int main(int argc, char **argv)
@@ -133,8 +149,10 @@ int main(int argc, char **argv)
     char *server_port = 0;
     int opt = 0;
     /* Parsing args */
-    while ((opt = getopt(argc, argv, "p:")) != -1) {
-        switch (opt) {
+    while ((opt = getopt(argc, argv, "p:")) != -1)
+    {
+        switch (opt)
+        {
         case 'p':
             server_port = malloc(strlen(optarg) + 1);
             strncpy(server_port, optarg, strlen(optarg));
@@ -146,7 +164,8 @@ int main(int argc, char **argv)
         }
     }
 
-    if (!server_port) {
+    if (!server_port)
+    {
         fprintf(stderr, "Error! No port number provided!\n");
         exit(1);
     }
@@ -160,9 +179,8 @@ int main(int argc, char **argv)
     struct sockaddr clientInfo;
     int addrlen = sizeof(clientInfo);
     pthread_t t;
-    //pthread_mutex_init(&mutex, 0);
-
-    while(1){
+    while(1)
+    {
         forClientSockfd = (int*)malloc(sizeof(int));
         *forClientSockfd = accept(listenfd,(struct sockaddr*) &clientInfo, &addrlen);
         pthread_create(&t,0,service,(void*)forClientSockfd);
