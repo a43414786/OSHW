@@ -83,16 +83,22 @@ char* get(char*key){
 
 char* delete(char*key){
     int index = tblidx(key);
+    int counter = 0;
     Node*temp = database[index];
     Node*pre = database[index];
     while(temp){
         if(strcmp(temp->key,key) == 0){
-            pre->next = temp->next;
+            if(!counter){
+                database[index] = temp->next;
+            }else{
+                pre->next = temp->next;
+            }
             free(temp);
             return "succcess";
         }
         pre = temp;
         temp = temp->next;
+        counter++;
     }
     return "error";
 }
@@ -155,6 +161,7 @@ int main(int argc, char **argv)
     int addrlen = sizeof(clientInfo);
     pthread_t t;
     pthread_mutex_init(&mutex, 0);
+
     while(1){
         forClientSockfd = (int*)malloc(sizeof(int));
         *forClientSockfd = accept(listenfd,(struct sockaddr*) &clientInfo, &addrlen);
