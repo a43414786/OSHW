@@ -34,7 +34,7 @@ int tblidx(char* key)
 {
     int idx = 0;
     idx = strlen(key);
-    return idx%23
+    return idx%23;
 }
 
 Node* cnode(char*key,char*value)
