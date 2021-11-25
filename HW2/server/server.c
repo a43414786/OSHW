@@ -11,22 +11,22 @@
 #include "sock.h"
 #include <pthread.h>
 
-typedef struct msg Msg;
 
-typedef struct node Node;
 
-struct msg{
+typedef struct msg{
     char cmd[10];
     char key[101];
     char value[101];
-};
-struct node{
+}Msg;
+typedef struct node{
     char key[101];
     char value[101];
     Node* next;
-};
+}Node;
 
 Node* database[23] = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+
+pthread_mutex_t mutex;
 
 int tblidx(char* key){
     int idx;
@@ -103,18 +103,23 @@ void* service(void*args){
     bzero(&smsg,sizeof(smsg));
     recv(*forClientSockfd,&rmsg,sizeof(rmsg),0);
     if(strcmp(rmsg.cmd,"SET") == 0){
+        pthread_mutex_lock(&mutex);
         strcpy(smsg.value,set(rmsg.key,rmsg.value));
+        pthread_mutex_unlock(&mutex);
     }
     else if(strcmp(rmsg.cmd,"GET") == 0){
+        pthread_mutex_lock(&mutex);
         strcpy(smsg.value,get(rmsg.key));
+        pthread_mutex_unlock(&mutex);
     }
     else if(strcmp(rmsg.cmd,"DELETE") == 0){
+        pthread_mutex_lock(&mutex);
         strcpy(smsg.value,delete(rmsg.key));
+        pthread_mutex_unlock(&mutex);
     }
     send(*forClientSockfd,&smsg,sizeof(smsg),0);
     free(forClientSockfd);
     return 0;
-    //pthread_exit(0);
 }
 
 int main(int argc, char **argv)
@@ -149,6 +154,7 @@ int main(int argc, char **argv)
     struct sockaddr clientInfo;
     int addrlen = sizeof(clientInfo);
     pthread_t t;
+    pthread_mutex_init(&mutex, 0);
     while(1){
         forClientSockfd = (int*)malloc(sizeof(int));
         *forClientSockfd = accept(listenfd,(struct sockaddr*) &clientInfo, &addrlen);
