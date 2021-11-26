@@ -105,9 +105,12 @@ char* delete(char*key)
     {
         if(strcmp(temp->key,key) == 0)
         {
-            if(counter){
+            if(counter)
+            {
                 pre->next = temp->next;
-            }else{
+            }
+            else
+            {
                 database[index] = temp->next;
             }
             free(temp);
@@ -130,7 +133,7 @@ void* service(void*args)
     bzero(&smsg,sizeof(smsg));
     recv(*forClientSockfd,&rmsg,sizeof(rmsg),0);
     if(strcmp(rmsg.cmd,"SET") == 0)
-    {   
+    {
         pthread_mutex_lock(&mutex);
         getmsg = set(rmsg.key,rmsg.value);
         pthread_mutex_unlock(&mutex);
