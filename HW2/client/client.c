@@ -86,7 +86,7 @@ int main(int argc, char **argv)
         {
             if(strcmp(inputs[0],"SET") == 0)
             {
-                if(inputc[1] > 0 && inputc[2] > 0)
+                if(inputc[1] > 0 && counter == 2)
                 {
                     strcpy(smsg.cmd,inputs[0]);
                     strcpy(smsg.key,inputs[1]);
@@ -102,7 +102,7 @@ int main(int argc, char **argv)
             }
             else if (strcmp(inputs[0],"GET") == 0)
             {
-                if(inputc[1] > 0 && inputc[2] == 0)
+                if(inputc[1] > 0 && counter == 1)
                 {
                     strcpy(smsg.cmd,inputs[0]);
                     strcpy(smsg.key,inputs[1]);
@@ -118,7 +118,7 @@ int main(int argc, char **argv)
             }
             else if (strcmp(inputs[0],"DELETE") == 0)
             {
-                if(inputc[1] > 0 && inputc[2] == 0)
+                if(inputc[1] > 0 && counter == 1)
                 {
                     strcpy(smsg.cmd,inputs[0]);
                     strcpy(smsg.key,inputs[1]);
@@ -134,7 +134,7 @@ int main(int argc, char **argv)
             }
             else
             {
-                if(inputc[0] != 0)
+                if(inputc[0] || counter)
                 {
                     printf("unknown/invalid\n");
                 }
@@ -144,7 +144,7 @@ int main(int argc, char **argv)
         {
             printf("unknown/invalid\n");
         }
-
+        close(clientfd);
     }
     return 0;
 }
