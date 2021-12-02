@@ -85,18 +85,34 @@ Thread*getthreads(){
     counter = 0;
     while(root){
         Thread* temp = malloc(sizeof(Thread));
-        root = root->next;
-        strcpy(temp->name,root->in);
-        root = root->next;
-        root = root->next;
-        strcpy(temp->function,root->in);
-        root = root->next;
-        root = root->next;
-        strcpy(temp->priority,root->in);
-        root = root->next;
-        root = root->next;
-        strcpy(temp->cancelmode,root->in);
-        root = root->next;
+        for(int i = 0 ; i < 4 ; i++){
+            if(strcmp(root->in,"name") == 0){
+                
+                root = root->next;
+        
+                strcpy(temp->name,root->in);
+            
+            }else if(strcmp(root->in,"entry function") == 0){
+                
+                root = root->next;
+        
+                strcpy(temp->function,root->in);
+            
+            }else if(strcmp(root->in,"priority") == 0){
+        
+                root = root->next;
+        
+                strcpy(temp->priority,root->in);
+            
+            }else if(strcmp(root->in,"cancel mode") == 0){
+                
+                root = root->next;
+        
+                strcpy(temp->cancelmode,root->in);
+            
+            }
+            root = root->next;
+        }
         link_thread(&thread_root,temp);
     }
 //    while(thread_root){
