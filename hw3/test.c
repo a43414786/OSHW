@@ -8,8 +8,8 @@ int main(){
     while(thread_root){
         printf("%s\n",thread_root->name);
         printf("%s\n",thread_root->function);
-        printf("%s\n",thread_root->priority);
-        printf("%s\n",thread_root->cancelmode);
+        printf("%d\n",thread_root->priority);
+        printf("%d\n",thread_root->cancelmode);
         printf("\n");
         thread_root = thread_root->next;
     }

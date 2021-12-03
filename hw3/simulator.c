@@ -1,26 +1,25 @@
-//#include "os2021_thread_api.h"
+#include "os2021_thread_api.h"
 #include <string.h>
 #include <stdio.h>
-
-typedef struct node{
-	char name[10];
-	char function[10];
-	int priority;
-	int cancel_mode;
-}Node;
-
+#include <signal.h>
+#include "t.h"
+void handler(){
+    printf("a");
+}
 int main(int argc,char** argv)
 {
+    signal(SIGTSTP,handler);
     //StartSchedulingSimulation();
-    Node a;
-    strcpy(a.name,"123");
-
-    strcpy(a.function,"456");
-
-    a.priority = 1;
     
-    a.cancel_mode = 1;
+    Thread *root = getthreads();
+    while(root){
+        OS2021_ThreadCreate(root->name,root->function,root->priority,root->cancelmode);
+        root = root->next;
+    }
+    while(1){
+        printf("a\n");
+        sleep(1);
+    }
 
-    printf("%s %s %d %d\n",a.name,a.function,a.priority,a.cancel_mode);
     return 0;
 }

@@ -6,6 +6,10 @@ ucontext_t timer_context;
 
 int OS2021_ThreadCreate(char *job_name, char *p_function, int priority, int cancel_mode)
 {
+    printf("%s\n",job_name);
+    printf("%s\n",p_function);
+    printf("%d\n",priority);
+    printf("%d\n",cancel_mode);
     return -1;
 }
 

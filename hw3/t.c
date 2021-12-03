@@ -5,22 +5,12 @@
 typedef struct thread_status{
     char name[10];
     char function[10];
-    char priority[10];
-    char cancelmode[10];
+    int priority;
+    int cancelmode;
     struct thread_status *next;
 }Thread;
 
-Thread *cthread(char*name,char*function,char*priority,char*cancelmode){
-    Thread*temp = malloc(sizeof(Thread));
-    strcpy(temp->name,name);
-    strcpy(temp->function,function);
-    strcpy(temp->priority,priority);
-    strcpy(temp->cancelmode,cancelmode);
-    temp->next = NULL;
-    return temp;
-}
-
-void link_thread(Thread**inroot,Thread*input){
+void addnode_thread(Thread**inroot,Thread*input){
     Thread* temp = *inroot;
     if(!temp){
         *inroot = input;
@@ -45,7 +35,7 @@ Node* cnode(char*input){
     return temp;
 }
 
-void link(Node**inroot,Node*input){
+void addnode(Node**inroot,Node*input){
     Node* temp = *inroot;
     if(!temp){
         *inroot = input;
@@ -70,7 +60,7 @@ Thread*getthreads(){
     while((word = getc(fp)) != EOF){
         if(word == '\"'){
             if(input[0]){
-                link(&root,cnode(input));
+                addnode(&root,cnode(input));
             }
             flag = !flag;
             memset(input,0,sizeof(input));
@@ -84,36 +74,36 @@ Thread*getthreads(){
     root = root->next;
     counter = 0;
     while(root){
-        Thread* temp = malloc(sizeof(Thread));
+        Thread*temp = malloc(sizeof(Thread));
+        memset(temp,0,sizeof(Thread));
         for(int i = 0 ; i < 4 ; i++){
             if(strcmp(root->in,"name") == 0){
-                
                 root = root->next;
-        
-                strcpy(temp->name,root->in);
-            
-            }else if(strcmp(root->in,"entry function") == 0){
-                
+                strcpy(temp->name,root->in);    
+            }
+            else if(strcmp(root->in,"entry function") == 0){
                 root = root->next;
-        
                 strcpy(temp->function,root->in);
-            
-            }else if(strcmp(root->in,"priority") == 0){
-        
+            }
+            else if(strcmp(root->in,"priority") == 0){
                 root = root->next;
-        
-                strcpy(temp->priority,root->in);
-            
-            }else if(strcmp(root->in,"cancel mode") == 0){
-                
+                if(strcmp(root->in,"H") == 0){
+                    temp->priority = 2;
+                }else if(strcmp(root->in,"M") == 0){
+                    temp->priority = 1;
+                }else if(strcmp(root->in,"L") == 0){
+                    temp->priority = 0;
+                }
+            }
+            else if(strcmp(root->in,"cancel mode") == 0){
                 root = root->next;
-        
-                strcpy(temp->cancelmode,root->in);
-            
+                temp->cancelmode = root->in[0] - '0';
             }
             root = root->next;
         }
-        link_thread(&thread_root,temp);
+        temp->next = NULL;
+        addnode_thread(&thread_root,temp);
+        
     }
 //    while(thread_root){
 //        printf("%s\n",thread_root->name);
