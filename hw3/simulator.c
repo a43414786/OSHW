@@ -20,13 +20,13 @@ int main(int argc,char** argv)
     Thread *root = getthreads();
     while(root){
         puts(root->name);
-        if(root->priority == 0){
-            addnode_thread(&L_queue,root);
-        }else if(root->priority == 1){
-            addnode_thread(&M_queue,root);
-        }else if(root->priority == 2){
-            addnode_thread(&H_queue,root);
-        }
+        //if(root->priority == 0){
+        //    addnode_thread(&L_queue,root);
+        //}else if(root->priority == 1){
+        //    addnode_thread(&M_queue,root);
+        //}else if(root->priority == 2){
+        //    addnode_thread(&H_queue,root);
+        //}
         root = root->next;
     }
 
