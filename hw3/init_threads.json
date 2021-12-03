@@ -11,6 +11,18 @@
             "entry function" : "Function5",
             "priority" : "M",
             "cancel mode" : "0"
+        },
+        {
+            "name" : "f1",
+            "entry function" : "Function2",
+            "priority" : "L",
+            "cancel mode" : "0"
+        },
+        {
+            "name" : "f2",
+            "entry function" : "Function1",
+            "priority" : "H",
+            "cancel mode" : "0"
         }
     ]
 }
