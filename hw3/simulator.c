@@ -13,6 +13,7 @@ Thread*L_queuer = NULL;
 
 void enqueue(Thread**front,Thread**rear,Thread*input){
     Thread *f = *front;
+    input->front = input->next = NULL;
     if(!f){
         *front = input;
         *rear = input;
@@ -49,7 +50,6 @@ int main(int argc,char** argv)
     
     Thread *root = getthreads();
     Thread *temp = NULL;
-    int counter = 0;
     while(root){
         temp = root;
         root = root->next;
@@ -60,9 +60,7 @@ int main(int argc,char** argv)
         }else if(temp->priority == 2){
             enqueue(&H_queuef,&H_queuer,temp);
         }
-        counter++;
     }
-    printf("%d\n",counter);
     puts("H");
     while(H_queuef){
         temp = dequeue(&H_queuef,&H_queuer);
