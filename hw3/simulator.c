@@ -63,17 +63,17 @@ int main(int argc,char** argv)
 
     puts("H");
     while(H_queuef){
-        temp = dequeue(H_queuef,H_queuer);
+        temp = dequeue(&H_queuef,&H_queuer);
         printf("%s\n",temp->name);
     }
     puts("M");
     while(M_queuef){
-        temp = dequeue(M_queuef,M_queuer);
+        temp = dequeue(&M_queuef,&M_queuer);
         printf("%s\n",temp->name);
     }
     puts("L");
     while(L_queuef){
-        temp = dequeue(L_queuef,L_queuer);
+        temp = dequeue(&L_queuef,&L_queuer);
         printf("%s\n",temp->name);
     }
     
