@@ -18,16 +18,17 @@ int main(int argc,char** argv)
     //StartSchedulingSimulation();
     
     Thread *root = getthreads();
+    Thread *temp = NULL;
     while(root){
-        puts(root->name);
-        //if(root->priority == 0){
-        //    addnode_thread(&L_queue,root);
-        //}else if(root->priority == 1){
-        //    addnode_thread(&M_queue,root);
-        //}else if(root->priority == 2){
-        //    addnode_thread(&H_queue,root);
-        //}
+        temp = root;
         root = root->next;
+        if(temp->priority == 0){
+            addnode_thread(&L_queue,temp);
+        }else if(temp->priority == 1){
+            addnode_thread(&M_queue,temp);
+        }else if(temp->priority == 2){
+            addnode_thread(&H_queue,temp);
+        }
     }
 
     while(1){
