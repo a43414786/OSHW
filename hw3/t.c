@@ -3,8 +3,8 @@
 #include<string.h>
 
 typedef struct thread_status{
-    char name[10];
-    char function[10];
+    char name[20];
+    char function[20];
     int priority;
     int cancelmode;
     struct thread_status *next;
@@ -23,34 +23,10 @@ void addnode_thread(Thread**inroot,Thread*input){
     return;
 }
 
-typedef struct node{
-    char in[20];
-    struct node*next;
-}Node;
-
-Node* cnode(char*input){
-    Node*temp = malloc(sizeof(Node));
-    strcpy(temp->in,input);
-    temp->next = NULL;
-    return temp;
-}
-
-void addnode(Node**inroot,Node*input){
-    Node* temp = *inroot;
-    if(!temp){
-        *inroot = input;
-        return;
-    }
-    while(temp->next){
-        temp = temp->next;
-    }
-    temp->next = input;
-    return;
-}
-
 Thread*getthreads(){
     FILE*fp=fopen("init_threads.json","r");
-    Node*root = NULL;
+    Thread*root = NULL;
+    Thread*temp = NULL;
     Thread*thread_root = NULL;
     char input[20];
     char word;
@@ -60,7 +36,9 @@ Thread*getthreads(){
     while((word = getc(fp)) != EOF){
         if(word == '\"'){
             if(input[0]){
-                addnode(&root,cnode(input));
+                temp = malloc(sizeof(Thread));
+                strcpy(temp->name,input);
+                addnode_thread(&root,temp);
             }
             flag = !flag;
             memset(input,0,sizeof(input));
@@ -71,48 +49,50 @@ Thread*getthreads(){
             input[counter++] = word;
         }
     }
+    temp = root;
     root = root->next;
-    counter = 0;
+    free(temp);
     while(root){
-        Thread*temp = malloc(sizeof(Thread));
-        memset(temp,0,sizeof(Thread));
+        Thread*temp2 = malloc(sizeof(Thread));
+        memset(temp2,0,sizeof(Thread));
         for(int i = 0 ; i < 4 ; i++){
-            if(strcmp(root->in,"name") == 0){
+            if(strcmp(root->name,"name") == 0){
+                temp = root;
                 root = root->next;
-                strcpy(temp->name,root->in);    
+                free(temp);
+                strcpy(temp2->name,root->name);    
             }
-            else if(strcmp(root->in,"entry function") == 0){
+            else if(strcmp(root->name,"entry function") == 0){
+                temp = root;
                 root = root->next;
-                strcpy(temp->function,root->in);
+                free(temp);
+                strcpy(temp2->function,root->name);
             }
-            else if(strcmp(root->in,"priority") == 0){
+            else if(strcmp(root->name,"priority") == 0){
+                temp = root;
                 root = root->next;
-                if(strcmp(root->in,"H") == 0){
-                    temp->priority = 2;
-                }else if(strcmp(root->in,"M") == 0){
-                    temp->priority = 1;
-                }else if(strcmp(root->in,"L") == 0){
-                    temp->priority = 0;
+                free(temp);
+                if(strcmp(root->name,"H") == 0){
+                    temp2->priority = 2;
+                }else if(strcmp(root->name,"M") == 0){
+                    temp2->priority = 1;
+                }else if(strcmp(root->name,"L") == 0){
+                    temp2->priority = 0;
                 }
             }
-            else if(strcmp(root->in,"cancel mode") == 0){
+            else if(strcmp(root->name,"cancel mode") == 0){
+                temp = root;
                 root = root->next;
-                temp->cancelmode = root->in[0] - '0';
+                free(temp);
+                temp2->cancelmode = root->name[0] - '0';
             }
+            temp = root;
             root = root->next;
+            free(temp);
         }
-        temp->next = NULL;
-        addnode_thread(&thread_root,temp);
-        
+        temp2->next = NULL;
+        addnode_thread(&thread_root,temp2);        
     }
-//    while(thread_root){
-//        printf("%s\n",thread_root->name);
-//        printf("%s\n",thread_root->function);
-//        printf("%s\n",thread_root->priority);
-//        printf("%s\n",thread_root->cancelmode);
-//        printf("\n");
-//        thread_root = thread_root->next;
-//    }
 
     return thread_root;
 }
