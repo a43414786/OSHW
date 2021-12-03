@@ -12,16 +12,14 @@ typedef struct thread_status{
 
 void addnode_thread(Thread**inroot,Thread*input){
     Thread *temp = *inroot;
-    Thread *front = temp;
     if(!temp){
         *inroot = input;
         return;
     }
     while(temp->next){
-        front = temp;
         temp = temp->next;
     }
-    temp->front = front;
+    input->front = temp;
     temp->next = input;
     return;
 }
