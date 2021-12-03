@@ -6,18 +6,22 @@ typedef struct thread_status{
     char function[20];
     int priority;
     int cancelmode;
+    struct thread_status *front;
     struct thread_status *next;
 }Thread;
 
 void addnode_thread(Thread**inroot,Thread*input){
-    Thread* temp = *inroot;
+    Thread *temp = *inroot;
+    Thread *front = temp;
     if(!temp){
         *inroot = input;
         return;
     }
     while(temp->next){
+        front = temp;
         temp = temp->next;
     }
+    temp->front = front;
     temp->next = input;
     return;
 }
@@ -53,6 +57,7 @@ Thread*getthreads(){
     free(temp);
     while(root){
         Thread*temp2 = malloc(sizeof(Thread));
+        temp2->front = NULL;
         memset(temp2,0,sizeof(Thread));
         for(int i = 0 ; i < 4 ; i++){
             if(strcmp(root->name,"name") == 0){
