@@ -19,6 +19,7 @@ int main(int argc,char** argv)
     
     Thread *root = getthreads();
     while(root){
+        puts(root->name);
         if(root->priority == 0){
             addnode_thread(&L_queue,root);
         }else if(root->priority == 1){
@@ -28,6 +29,7 @@ int main(int argc,char** argv)
         }
         root = root->next;
     }
+
     while(1){
         printf("a\n");
         sleep(1);
