@@ -4,12 +4,12 @@ struct itimerval Signaltimer;
 ucontext_t dispatch_context;
 ucontext_t timer_context;
 
-extern Thread*H_queuef = NULL;
-extern Thread*H_queuer = NULL;
-extern Thread*M_queuef = NULL;
-extern Thread*M_queuer = NULL;
-extern Thread*L_queuef = NULL;
-extern Thread*L_queuer = NULL;
+extern Thread*H_queuef;
+extern Thread*H_queuer;
+extern Thread*M_queuef;
+extern Thread*M_queuer;
+extern Thread*L_queuef;
+extern Thread*L_queuer;
 
 int pid_counter = 1;
 
