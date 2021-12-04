@@ -1,15 +1,6 @@
 #include "os2021_thread_api.h"
 
-int counter = 0;
-Thread*H_queuef = NULL;
-Thread*H_queuer = NULL;
-Thread*M_queuef = NULL;
-Thread*M_queuer = NULL;
-Thread*L_queuef = NULL;
-Thread*L_queuer = NULL;
-
 void alarm_handler(){
-    printf("%d\n",counter++);
     alarm(1);
 }
 
@@ -23,29 +14,7 @@ int main(int argc,char** argv)
     alarm(1);
     //StartSchedulingSimulation();
     
-    Thread *root = getthreads();
-    Thread *temp = NULL;
-    while(root){
-        OS2021_ThreadCreate(root->name,root->function,root->priority_init,root->cancelmode);
-        temp = root;
-        root = root->next;
-        free(temp);
-    }
-    puts("H");
-    while(H_queuef){
-        temp = dequeue(&H_queuef,&H_queuer);
-        printf("%s\n",temp->name);
-    }
-    puts("M");
-    while(M_queuef){
-        temp = dequeue(&M_queuef,&M_queuer);
-        printf("%s\n",temp->name);
-    }
-    puts("L");
-    while(L_queuef){
-        temp = dequeue(&L_queuef,&L_queuer);
-        printf("%s\n",temp->name);
-    }
+    show_info();
     
 
     while(1){

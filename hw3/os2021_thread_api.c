@@ -4,12 +4,24 @@ struct itimerval Signaltimer;
 ucontext_t dispatch_context;
 ucontext_t timer_context;
 
-extern Thread*H_queuef;
-extern Thread*H_queuer;
-extern Thread*M_queuef;
-extern Thread*M_queuer;
-extern Thread*L_queuef;
-extern Thread*L_queuer;
+typedef struct thread_status{
+    char name[20];
+    char function[20];
+    int priority_init;
+    int priority_cur;
+    int cancelmode;
+    int pid;
+    ucontext_t ctx;
+    struct thread_status *front;
+    struct thread_status *next;
+}Thread;
+
+Thread*H_queuef;
+Thread*H_queuer;
+Thread*M_queuef;
+Thread*M_queuer;
+Thread*L_queuef;
+Thread*L_queuer;
 
 int pid_counter = 1;
 
@@ -131,6 +143,31 @@ Thread*getthreads(){
     return thread_root;
 }
 
+void show_info(){
+    Thread *root = getthreads();
+    Thread *temp = NULL;
+    while(root){
+        OS2021_ThreadCreate(root->name,root->function,root->priority_init,root->cancelmode);
+        temp = root;
+        root = root->next;
+        free(temp);
+    }
+    puts("H");
+    while(H_queuef){
+        temp = dequeue(&H_queuef,&H_queuer);
+        printf("%s\n",temp->name);
+    }
+    puts("M");
+    while(M_queuef){
+        temp = dequeue(&M_queuef,&M_queuer);
+        printf("%s\n",temp->name);
+    }
+    puts("L");
+    while(L_queuef){
+        temp = dequeue(&L_queuef,&L_queuer);
+        printf("%s\n",temp->name);
+    }
+}
 
 int OS2021_ThreadCreate(char *job_name, char *p_function, int priority, int cancel_mode)
 {   
@@ -154,6 +191,8 @@ int OS2021_ThreadCreate(char *job_name, char *p_function, int priority, int canc
     }else if(priority == 2){
         enqueue(&H_queuef,&H_queuer,temp);
     }
+    getcontext(&(temp->ctx));
+    //temp->ctx.
     return pid_counter;
 }
 
