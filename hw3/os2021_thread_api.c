@@ -4,6 +4,13 @@ struct itimerval Signaltimer;
 ucontext_t dispatch_context;
 ucontext_t timer_context;
 
+Thread*H_queuef = NULL;
+Thread*H_queuer = NULL;
+Thread*M_queuef = NULL;
+Thread*M_queuer = NULL;
+Thread*L_queuef = NULL;
+Thread*L_queuer = NULL;
+
 int pid_counter = 1;
 
 void enqueue(Thread**front,Thread**rear,Thread*input){
