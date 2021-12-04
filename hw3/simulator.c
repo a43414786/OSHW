@@ -43,7 +43,7 @@ Thread *dequeue(Thread**front,Thread**rear){
 
 void alarm_handler(){
     printf("%d\n",counter++);
-    alarm(1);
+    alarm(0.01);
 }
 
 void handler(){
