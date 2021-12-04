@@ -4,7 +4,7 @@ struct itimerval Signaltimer;
 ucontext_t dispatch_context;
 ucontext_t timer_context;
 
-extern Thread*H_queuef;
+Thread*H_queuef;
 
 int pid_counter = 1;
 
