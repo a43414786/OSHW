@@ -2,7 +2,7 @@
 
 int counter = 0;
 
-Thread*H_queuef = NULL;
+extern Thread*H_queuef = NULL;
 Thread*H_queuer = NULL;
 Thread*M_queuef = NULL;
 Thread*M_queuer = NULL;
