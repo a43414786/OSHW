@@ -23,13 +23,6 @@ typedef struct thread_status{
     struct thread_status *next;
 }Thread;
 
-Thread*H_queuef = NULL;
-Thread*H_queuer = NULL;
-Thread*M_queuef = NULL;
-Thread*M_queuer = NULL;
-Thread*L_queuef = NULL;
-Thread*L_queuer = NULL;
-
 void enqueue(Thread**front,Thread**rear,Thread*input);
 Thread *dequeue(Thread**front,Thread**rear);
 void addnode_thread(Thread**inroot,Thread*input);
