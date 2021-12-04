@@ -7,7 +7,8 @@ void alarm_handler(){
 
 void handler(){
     
-    show_info();
+    printf("a");
+    //show_info();
     
 }
 int main(int argc,char** argv)
