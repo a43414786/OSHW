@@ -147,19 +147,22 @@ void show_info(){
     
     Thread *temp = NULL;
     puts("H");
-    while(H_queuef){
-        temp = dequeue(&H_queuef,&H_queuer);
+    temp = H_queuef;
+    while(temp){ 
         printf("%s\n",temp->name);
+        temp = temp->next;
     }
     puts("M");
-    while(M_queuef){
-        temp = dequeue(&M_queuef,&M_queuer);
+    temp = M_queuef;
+    while(temp){ 
         printf("%s\n",temp->name);
+        temp = temp->next;
     }
     puts("L");
-    while(L_queuef){
-        temp = dequeue(&L_queuef,&L_queuer);
+    temp = L_queuef;
+    while(temp){ 
         printf("%s\n",temp->name);
+        temp = temp->next;
     }
 }
 
@@ -243,6 +246,7 @@ void ResetTimer()
 void Dispatcher()
 {
     Thread *root = getthreads();
+    Thread *temp = NULL;
     while(root){
         OS2021_ThreadCreate(root->name,root->function,root->priority_init,root->cancelmode);
         temp = root;
