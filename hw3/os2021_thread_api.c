@@ -107,11 +107,11 @@ Thread*getthreads(){
                 root = root->next;
                 free(temp);
                 if(strcmp(root->name,"H") == 0){
-                    temp2->priority = 2;
+                    temp2->priority_init = 2;
                 }else if(strcmp(root->name,"M") == 0){
-                    temp2->priority = 1;
+                    temp2->priority_init = 1;
                 }else if(strcmp(root->name,"L") == 0){
-                    temp2->priority = 0;
+                    temp2->priority_init = 0;
                 }
             }
             else if(strcmp(root->name,"cancel mode") == 0){
@@ -133,12 +133,28 @@ Thread*getthreads(){
 
 
 int OS2021_ThreadCreate(char *job_name, char *p_function, int priority, int cancel_mode)
-{
-    printf("%s\n",job_name);
-    printf("%s\n",p_function);
-    printf("%d\n",priority);
-    printf("%d\n",cancel_mode);
-    return -1;
+{   
+    if(strcmp(p_function,"Function1") && strcmp(p_function,"Function2") && strcmp(p_function,"Function3") && strcmp(p_function,"Function4") && strcmp(p_function,"Function5"))
+    {
+        return -1;
+    }
+    Thread *temp = malloc(sizeof(Thread));
+    strcpy(temp->name,job_name);
+    strcpy(temp->function,p_function);
+    temp->priority_init = priority;
+    temp->priority_cur = priority;
+    temp->cancelmode = cancel_mode;
+    temp->front = NULL;
+    temp->next = NULL;
+    temp->pid = pid_counter++;
+    if(priority == 0){
+        enqueue(&L_queuef,&L_queuer,temp);
+    }else if(priority == 1){
+        enqueue(&M_queuef,&M_queuer,temp);
+    }else if(priority == 2){
+        enqueue(&H_queuef,&H_queuer,temp);
+    }
+    return pid_counter;
 }
 
 void OS2021_ThreadCancel(char *job_name)

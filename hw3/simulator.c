@@ -26,15 +26,10 @@ int main(int argc,char** argv)
     Thread *root = getthreads();
     Thread *temp = NULL;
     while(root){
+        OS2021_ThreadCreate(root->name,root->function,root->priority_init,root->cancelmode);
         temp = root;
         root = root->next;
-        if(temp->priority == 0){
-            enqueue(&L_queuef,&L_queuer,temp);
-        }else if(temp->priority == 1){
-            enqueue(&M_queuef,&M_queuer,temp);
-        }else if(temp->priority == 2){
-            enqueue(&H_queuef,&H_queuer,temp);
-        }
+        free(temp);
     }
     puts("H");
     while(H_queuef){

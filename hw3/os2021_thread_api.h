@@ -16,7 +16,8 @@
 typedef struct thread_status{
     char name[20];
     char function[20];
-    int priority;
+    int priority_init;
+    int priority_cur;
     int cancelmode;
     int pid;
     struct thread_status *front;
