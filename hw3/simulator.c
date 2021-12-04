@@ -11,6 +11,8 @@ Thread*M_queuer = NULL;
 Thread*L_queuef = NULL;
 Thread*L_queuer = NULL;
 
+int counter = 0;
+
 void enqueue(Thread**front,Thread**rear,Thread*input){
     Thread *f = *front;
     input->front = input->next = NULL;
@@ -39,6 +41,10 @@ Thread *dequeue(Thread**front,Thread**rear){
     return r;
 }
 
+void alarm_handler(){
+    printf("%d\n",counter++);
+    alarm(1);
+}
 
 void handler(){
     printf("a");
@@ -46,6 +52,8 @@ void handler(){
 int main(int argc,char** argv)
 {
     signal(SIGTSTP,handler);
+    signal(SIGALRM,alarm_handler);
+    alarm(1);
     //StartSchedulingSimulation();
     
     Thread *root = getthreads();
