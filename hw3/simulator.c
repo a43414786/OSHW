@@ -1,11 +1,14 @@
 #include "os2021_thread_api.h"
 
 void alarm_handler(){
+    
     alarm(1);
 }
 
 void handler(){
-    printf("a");
+    
+    show_info();
+    
 }
 int main(int argc,char** argv)
 {
@@ -13,8 +16,6 @@ int main(int argc,char** argv)
     signal(SIGALRM,alarm_handler);
     alarm(1);
     //StartSchedulingSimulation();
-    
-    show_info();
     
 
     while(1){
