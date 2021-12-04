@@ -1,6 +1,12 @@
 #include "os2021_thread_api.h"
 
 int counter = 0;
+Thread*H_queuef = NULL;
+Thread*H_queuer = NULL;
+Thread*M_queuef = NULL;
+Thread*M_queuer = NULL;
+Thread*L_queuef = NULL;
+Thread*L_queuer = NULL;
 
 void alarm_handler(){
     printf("%d\n",counter++);
