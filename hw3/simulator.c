@@ -1,49 +1,10 @@
 #include "os2021_thread_api.h"
-#include <string.h>
-#include <stdio.h>
-#include <signal.h>
-#include "t.h"
-
-Thread*H_queuef = NULL;
-Thread*H_queuer = NULL;
-Thread*M_queuef = NULL;
-Thread*M_queuer = NULL;
-Thread*L_queuef = NULL;
-Thread*L_queuer = NULL;
 
 int counter = 0;
 
-void enqueue(Thread**front,Thread**rear,Thread*input){
-    Thread *f = *front;
-    input->front = input->next = NULL;
-    if(!f){
-        *front = input;
-        *rear = input;
-        return;
-    }
-    input->next = f;
-    f->front = input;
-    *front = input;
-}
-Thread *dequeue(Thread**front,Thread**rear){
-    Thread *r = *rear;
-    if(!r){
-        return NULL;
-    }
-    Thread *temp = r->front;
-    r->front = NULL;
-    if(!temp){
-        *front = NULL;
-        *rear = NULL;
-    }else{
-        *rear = temp;
-    }
-    return r;
-}
-
 void alarm_handler(){
     printf("%d\n",counter++);
-    alarm(0.01);
+    alarm(1);
 }
 
 void handler(){

@@ -4,6 +4,127 @@ struct itimerval Signaltimer;
 ucontext_t dispatch_context;
 ucontext_t timer_context;
 
+int pid_counter = 1;
+
+void enqueue(Thread**front,Thread**rear,Thread*input){
+    Thread *f = *front;
+    input->front = input->next = NULL;
+    if(!f){
+        *front = input;
+        *rear = input;
+        return;
+    }
+    input->next = f;
+    f->front = input;
+    *front = input;
+}
+
+Thread *dequeue(Thread**front,Thread**rear){
+    Thread *r = *rear;
+    if(!r){
+        return NULL;
+    }
+    Thread *temp = r->front;
+    r->front = NULL;
+    if(!temp){
+        *front = NULL;
+        *rear = NULL;
+    }else{
+        *rear = temp;
+    }
+    return r;
+}
+
+void addnode_thread(Thread**inroot,Thread*input){
+    Thread *temp = *inroot;
+    if(!temp){
+        *inroot = input;
+        return;
+    }
+    while(temp->next){
+        temp = temp->next;
+    }
+    input->front = temp;
+    temp->next = input;
+    return;
+}
+
+Thread*getthreads(){
+    FILE*fp=fopen("init_threads.json","r");
+    Thread*root = NULL;
+    Thread*temp = NULL;
+    Thread*thread_root = NULL;
+    char input[20];
+    char word;
+    int flag = 0;
+    int counter = 0;
+    memset(input,0,sizeof(input));
+    while((word = getc(fp)) != EOF){
+        if(word == '\"'){
+            if(input[0]){
+                temp = malloc(sizeof(Thread));
+                strcpy(temp->name,input);
+                addnode_thread(&root,temp);
+            }
+            flag = !flag;
+            memset(input,0,sizeof(input));
+            counter = 0;
+            continue;
+        }
+        if(flag){
+            input[counter++] = word;
+        }
+    }
+    temp = root;
+    root = root->next;
+    free(temp);
+    while(root){
+        Thread*temp2 = malloc(sizeof(Thread));
+        temp2->front = NULL;
+        memset(temp2,0,sizeof(Thread));
+        for(int i = 0 ; i < 4 ; i++){
+            if(strcmp(root->name,"name") == 0){
+                temp = root;
+                root = root->next;
+                free(temp);
+                strcpy(temp2->name,root->name);    
+            }
+            else if(strcmp(root->name,"entry function") == 0){
+                temp = root;
+                root = root->next;
+                free(temp);
+                strcpy(temp2->function,root->name);
+            }
+            else if(strcmp(root->name,"priority") == 0){
+                temp = root;
+                root = root->next;
+                free(temp);
+                if(strcmp(root->name,"H") == 0){
+                    temp2->priority = 2;
+                }else if(strcmp(root->name,"M") == 0){
+                    temp2->priority = 1;
+                }else if(strcmp(root->name,"L") == 0){
+                    temp2->priority = 0;
+                }
+            }
+            else if(strcmp(root->name,"cancel mode") == 0){
+                temp = root;
+                root = root->next;
+                free(temp);
+                temp2->cancelmode = root->name[0] - '0';
+            }
+            temp = root;
+            root = root->next;
+            free(temp);
+        }
+        temp2->next = NULL;
+        addnode_thread(&thread_root,temp2);        
+    }
+
+    return thread_root;
+}
+
+
 int OS2021_ThreadCreate(char *job_name, char *p_function, int priority, int cancel_mode)
 {
     printf("%s\n",job_name);

@@ -13,6 +13,27 @@
 #include <string.h>
 #include "function_libary.h"
 
+typedef struct thread_status{
+    char name[20];
+    char function[20];
+    int priority;
+    int cancelmode;
+    int pid;
+    struct thread_status *front;
+    struct thread_status *next;
+}Thread;
+
+Thread*H_queuef = NULL;
+Thread*H_queuer = NULL;
+Thread*M_queuef = NULL;
+Thread*M_queuer = NULL;
+Thread*L_queuef = NULL;
+Thread*L_queuer = NULL;
+
+void enqueue(Thread**front,Thread**rear,Thread*input);
+Thread *dequeue(Thread**front,Thread**rear);
+void addnode_thread(Thread**inroot,Thread*input);
+Thread*getthreads();
 
 
 int OS2021_ThreadCreate(char *job_name, char *p_function, int priority, int cancel_mode);
