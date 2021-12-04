@@ -7,20 +7,17 @@ void alarm_handler(){
 
 void handler(){
     
-    printf("a");
-    //show_info();
+    show_info();
     
 }
 int main(int argc,char** argv)
 {
     signal(SIGTSTP,handler);
     signal(SIGALRM,alarm_handler);
-    alarm(1);
+    Dispatcher();
     //StartSchedulingSimulation();
-    
 
     while(1){
-        sleep(1);
     }
 
     return 0;

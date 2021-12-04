@@ -144,14 +144,8 @@ Thread*getthreads(){
 }
 
 void show_info(){
-    Thread *root = getthreads();
+    
     Thread *temp = NULL;
-    while(root){
-        OS2021_ThreadCreate(root->name,root->function,root->priority_init,root->cancelmode);
-        temp = root;
-        root = root->next;
-        free(temp);
-    }
     puts("H");
     while(H_queuef){
         temp = dequeue(&H_queuef,&H_queuer);
@@ -248,7 +242,13 @@ void ResetTimer()
 
 void Dispatcher()
 {
-
+    Thread *root = getthreads();
+    while(root){
+        OS2021_ThreadCreate(root->name,root->function,root->priority_init,root->cancelmode);
+        temp = root;
+        root = root->next;
+        free(temp);
+    }
 }
 
 void StartSchedulingSimulation()
