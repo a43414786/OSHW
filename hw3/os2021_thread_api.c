@@ -46,6 +46,7 @@ Thread *dequeue(Thread**front,Thread**rear){
     }
     Thread *temp = r->front;
     r->front = NULL;
+    r->next = NULL;
     if(!temp){
         *front = NULL;
         *rear = NULL;
