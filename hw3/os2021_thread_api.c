@@ -51,6 +51,7 @@ Thread *dequeue(Thread**front,Thread**rear){
         *front = NULL;
         *rear = NULL;
     }else{
+        temp->next = NULL;
         *rear = temp;
     }
     return r;
@@ -174,7 +175,7 @@ void handler(){
     runnning = NULL;
     enqueue(&H_queuef,&H_queuer,temp);
     alarm(1);
-    swapcontext(&(runnning->ctx),&dispatch_context);
+    swapcontext(&(temp->ctx),&dispatch_context);
 }
 
 void fu1(){
