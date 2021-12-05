@@ -10,7 +10,7 @@ int main(int argc,char** argv)
 {
     signal(SIGTSTP,zhandler);
     signal(SIGALRM,handler);
-    alarm(2);
+    alarm(1);
     Dispatcher();
     //StartSchedulingSimulation();
 
