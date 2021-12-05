@@ -293,6 +293,7 @@ void Dispatcher()
     //while(1);
     while(1){
         temp = dequeue(&H_queuef,&H_queuer);
+        runnning = temp;
         swapcontext(&dispatch_context,&(temp->ctx));
     }
 }
