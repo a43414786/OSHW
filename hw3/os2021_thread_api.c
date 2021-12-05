@@ -181,19 +181,16 @@ void handler(){
 void fu1(){
     while(1){
     printf("fun1");
-    sleep(1);
     }
 }
 void fu2(){
     while(1){
     printf("fun2");
-    sleep(1);
     }
 }
 void fu3(){
     while(1){
     printf("fun3");
-    sleep(1);
     }
 }
 
