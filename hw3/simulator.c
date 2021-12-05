@@ -14,8 +14,5 @@ int main(int argc,char** argv)
     Dispatcher();
     //StartSchedulingSimulation();
 
-    while(1){
-    }
-
     return 0;
 }
