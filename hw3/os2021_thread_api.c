@@ -290,11 +290,11 @@ void Dispatcher()
         root = root->next;
         free(temp);
     }
-    while(1);
-    //while(1){
-    //    temp = dequeue(&H_queuef,&H_queuer);
-    //    swapcontext(&dispatch_context,&(temp->ctx));
-    //}
+    //while(1);
+    while(1){
+        temp = dequeue(&H_queuef,&H_queuer);
+        swapcontext(&dispatch_context,&(temp->ctx));
+    }
 }
 
 void StartSchedulingSimulation()
