@@ -168,6 +168,7 @@ void show_info(){
 }
 
 void handler(){
+    if(!runnning) return;
     Thread *temp = runnning;
     runnning = NULL;
     enqueue(&H_queuef,&H_queuer,temp);
