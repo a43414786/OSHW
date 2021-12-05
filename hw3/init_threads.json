@@ -3,19 +3,19 @@
         {
             "name" : "f4",
             "entry function" : "Function4",
-            "priority" : "M",
+            "priority" : "H",
             "cancel mode" : "0"
         },
         {
             "name" : "f5",
             "entry function" : "Function5",
-            "priority" : "M",
+            "priority" : "H",
             "cancel mode" : "0"
         },
         {
             "name" : "f1",
             "entry function" : "Function2",
-            "priority" : "L",
+            "priority" : "H",
             "cancel mode" : "0"
         },
         {
