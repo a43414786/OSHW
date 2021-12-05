@@ -16,12 +16,13 @@ typedef struct thread_status{
     struct thread_status *next;
 }Thread;
 
-Thread*H_queuef;
-Thread*H_queuer;
-Thread*M_queuef;
-Thread*M_queuer;
-Thread*L_queuef;
-Thread*L_queuer;
+Thread*H_queuef = NULL;
+Thread*H_queuer = NULL;
+Thread*M_queuef = NULL;
+Thread*M_queuer = NULL;
+Thread*L_queuef = NULL;
+Thread*L_queuer = NULL;
+Thread*runnning = NULL;
 
 int pid_counter = 1;
 
@@ -166,6 +167,33 @@ void show_info(){
     }
 }
 
+void handler(){
+    Thread *temp = runnning;
+    runnning = NULL;
+    enqueue(&H_queuef,&H_queuer,temp);
+    alarm(1);
+    swapcontext(&(runnning->ctx),&dispatch_context);
+}
+
+void fu1(){
+    while(1){
+    printf("fun1");
+    sleep(1);
+    }
+}
+void fu2(){
+    while(1){
+    printf("fun2");
+    sleep(1);
+    }
+}
+void fu3(){
+    while(1){
+    printf("fun3");
+    sleep(1);
+    }
+}
+
 int OS2021_ThreadCreate(char *job_name, char *p_function, int priority, int cancel_mode)
 {   
     if(strcmp(p_function,"Function1") && strcmp(p_function,"Function2") && strcmp(p_function,"Function3") && strcmp(p_function,"Function4") && strcmp(p_function,"Function5"))
@@ -188,8 +216,15 @@ int OS2021_ThreadCreate(char *job_name, char *p_function, int priority, int canc
     }else if(priority == 2){
         enqueue(&H_queuef,&H_queuer,temp);
     }
-    getcontext(&(temp->ctx));
-    //temp->ctx.
+    if(pid_counter%3 == 0){
+        CreateContext(&(temp->ctx),&dispatch_context,&fu1);
+    }
+    else if(pid_counter%3 == 1){
+        CreateContext(&(temp->ctx),&dispatch_context,&fu2);
+    }
+    else if(pid_counter%3 == 2){
+        CreateContext(&(temp->ctx),&dispatch_context,&fu3);
+    }
     return pid_counter;
 }
 
@@ -245,6 +280,7 @@ void ResetTimer()
 
 void Dispatcher()
 {
+    getcontext(&dispatch_context);
     Thread *root = getthreads();
     Thread *temp = NULL;
     while(root){
@@ -252,6 +288,10 @@ void Dispatcher()
         temp = root;
         root = root->next;
         free(temp);
+    }
+    while(1){
+        temp = dequeue(&H_queuef,&H_queuer);
+        swapcontext(&dispatch_context,&(temp->ctx));
     }
 }
 

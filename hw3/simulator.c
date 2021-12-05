@@ -1,19 +1,16 @@
 #include "os2021_thread_api.h"
 
-void alarm_handler(){
-    
-    alarm(1);
-}
 
-void handler(){
+void zhandler(){
     
     show_info();
     
 }
 int main(int argc,char** argv)
 {
-    signal(SIGTSTP,handler);
-    signal(SIGALRM,alarm_handler);
+    signal(SIGTSTP,zhandler);
+    signal(SIGALRM,handler);
+    alarm(1);
     Dispatcher();
     //StartSchedulingSimulation();
 
