@@ -174,23 +174,26 @@ void handler(){
     Thread *temp = runnning;
     runnning = NULL;
     enqueue(&H_queuef,&H_queuer,temp);
-    alarm(1);
+    alarm(2);
     swapcontext(&(temp->ctx),&dispatch_context);
 }
 
 void fu1(){
     while(1){
-    printf("fun1");
+        printf("fun1");
+        sleep(1);
     }
 }
 void fu2(){
     while(1){
-    printf("fun2");
+        printf("fun2");
+        sleep(1);
     }
 }
 void fu3(){
     while(1){
-    printf("fun3");
+        printf("fun3");
+        sleep(1);    
     }
 }
 
