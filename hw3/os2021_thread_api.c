@@ -155,17 +155,17 @@ void show_info(){
     Thread *temp = NULL;
     temp = H_queuef;
     while(temp){ 
-        printf("*\t%d\t%s\t\t%s\t%c\t%c\t%d\t%d\t*",temp->pid,temp->name,temp->state,'L','H',temp->queueing_time,temp->waiting_time);
+        printf("*\t%d\t%s\t\t%s\t%c\t%c\t%d\t%d\t*\n",temp->pid,temp->name,temp->state,'L','H',temp->queueing_time,temp->waiting_time);
         temp = temp->next;
     }
     temp = M_queuef;
     while(temp){ 
-        printf("*\t%d\t%s\t\t%s\t%c\t%c\t%d\t%d\t*",temp->pid,temp->name,temp->state,'L','H',temp->queueing_time,temp->waiting_time);
+        printf("*\t%d\t%s\t\t%s\t%c\t%c\t%d\t%d\t*\n",temp->pid,temp->name,temp->state,'L','H',temp->queueing_time,temp->waiting_time);
         temp = temp->next;
     }
     temp = L_queuef;
     while(temp){ 
-        printf("*\t%d\t%s\t\t%s\t%c\t%c\t%d\t%d\t*",temp->pid,temp->name,temp->state,'L','H',temp->queueing_time,temp->waiting_time);
+        printf("*\t%d\t%s\t\t%s\t%c\t%c\t%d\t%d\t*\n",temp->pid,temp->name,temp->state,'L','H',temp->queueing_time,temp->waiting_time);
         temp = temp->next;
     }
 }
