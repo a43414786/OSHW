@@ -150,7 +150,7 @@ Thread*getthreads(){
 
 void show_info(){
     puts("\n************************************************");
-    puts("*\tTID\tName\tState\t");
+    puts("*\tTID\tName\t\tState\tB_Priority\tC_Priority\tQ_Time\tW_Time");
     Thread *temp = NULL;
     puts("H");
     temp = H_queuef;
