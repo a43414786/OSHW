@@ -168,6 +168,8 @@ void show_info(){
         printf("*\t%d\t%s\t\t%s\t%c\t\t%c\t\t%d\t%d\t*\n",temp->pid,temp->name,temp->state,'L','H',temp->queueing_time,temp->waiting_time);
         temp = temp->next;
     }
+    puts("\n****************************************************************************************");
+    
 }
 
 void handler(){
