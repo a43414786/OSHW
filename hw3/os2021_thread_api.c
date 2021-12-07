@@ -11,6 +11,8 @@ typedef struct thread_status{
     int priority_cur;
     int cancelmode;
     int pid;
+    int queueing_time;
+    int waiting_time;
     ucontext_t ctx;
     struct thread_status *front;
     struct thread_status *next;
@@ -147,7 +149,7 @@ Thread*getthreads(){
 }
 
 void show_info(){
-    
+    puts("TID\tName\tState\t");
     Thread *temp = NULL;
     puts("H");
     temp = H_queuef;
@@ -180,17 +182,17 @@ void handler(){
 
 void fu1(){
     while(1){
-    //    printf("fun1");
+        printf("fun1");
     }
 }
 void fu2(){
     while(1){
-    //    printf("fun2");
+        printf("fun2");
     }
 }
 void fu3(){
     while(1){
-    //    printf("fun3");
+        printf("fun3");
     }
 }
 
@@ -201,6 +203,7 @@ int OS2021_ThreadCreate(char *job_name, char *p_function, int priority, int canc
         return -1;
     }
     Thread *temp = malloc(sizeof(Thread));
+    memset(temp,0,sizeof(Thread));
     strcpy(temp->name,job_name);
     strcpy(temp->function,p_function);
     temp->priority_init = priority;
@@ -209,6 +212,9 @@ int OS2021_ThreadCreate(char *job_name, char *p_function, int priority, int canc
     temp->front = NULL;
     temp->next = NULL;
     temp->pid = pid_counter++;
+    temp->queueing_time = 0;
+    temp->waiting_time = 0;
+
     if(priority == 0){
         enqueue(&L_queuef,&L_queuer,temp);
     }else if(priority == 1){
