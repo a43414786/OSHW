@@ -152,30 +152,51 @@ Thread*getthreads(){
 void show_info(){
     puts("\n****************************************************************************************");
     puts("*\tTID\tName\t\tState\tB_Priority\tC_Priority\tQ_Time\tW_Time\t*");
-    Thread *temp = NULL;
-    temp = runnning;
-    while(temp){ 
-        printf("*\t%d\t%s\t\t%s\t%c\t\t%c\t\t%d\t%d\t*\n",temp->pid,temp->name,temp->state,'L','H',temp->queueing_time,temp->waiting_time);
-        temp = temp->next;
-    }
-    temp = L_queuef;
-    while(temp){ 
-        printf("*\t%d\t%s\t\t%s\t%c\t\t%c\t\t%d\t%d\t*\n",temp->pid,temp->name,temp->state,'L','H',temp->queueing_time,temp->waiting_time);
-        temp = temp->next;
-    }
-    temp = M_queuef;
-    while(temp){ 
-        printf("*\t%d\t%s\t\t%s\t%c\t\t%c\t\t%d\t%d\t*\n",temp->pid,temp->name,temp->state,'L','H',temp->queueing_time,temp->waiting_time);
-        temp = temp->next;
-    }
-    temp = H_queuef;
-    while(temp){ 
-        printf("*\t%d\t%s\t\t%s\t%c\t\t%c\t\t%d\t%d\t*\n",temp->pid,temp->name,temp->state,'L','H',temp->queueing_time,temp->waiting_time);
-        temp = temp->next;
-    }
-    
+    pr_info(runnning);
+    pr_info(L_queuef);
+    pr_info(M_queuef);
+    pr_info(H_queuef);   
     puts("****************************************************************************************");
     
+}
+void pr_info(Thread *temp){
+    while(temp){ 
+        char b,c;
+        switch (temp->priority_cur)
+        {
+        case 0:
+            c = 'L';
+            break;
+        
+        case 1:
+            c = 'M';
+            break;
+        
+        case 2:
+            c = 'H';
+            break;
+        default:
+            break;
+        }
+        switch (temp->priority_init)
+        {
+        case 0:
+            b = 'L';
+            break;
+        
+        case 1:
+            b = 'M';
+            break;
+        
+        case 2:
+            b = 'H';
+            break;
+        default:
+            break;
+        }
+        printf("*\t%d\t%s\t\t%s\t%c\t\t%c\t\t%d\t%d\t*\n",temp->pid,temp->name,temp->state,b,c,temp->queueing_time,temp->waiting_time);
+        temp = temp->next;
+    }
 }
 
 void handler(){
