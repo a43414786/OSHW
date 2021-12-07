@@ -13,6 +13,7 @@ typedef struct thread_status{
     int pid;
     int queueing_time;
     int waiting_time;
+    char state[10];
     ucontext_t ctx;
     struct thread_status *front;
     struct thread_status *next;
@@ -152,22 +153,19 @@ void show_info(){
     puts("\n****************************************************************************************");
     puts("*\tTID\tName\t\tState\tB_Priority\tC_Priority\tQ_Time\tW_Time\t*");
     Thread *temp = NULL;
-    puts("H");
     temp = H_queuef;
     while(temp){ 
-        printf("%s\n",temp->name);
+        printf("*\t%d\t%s\t\t%s\t%c\t%c\t%d\t%d\t*",temp->pid,temp->name,temp->state,'L','H',temp->queueing_time,temp->waiting_time);
         temp = temp->next;
     }
-    puts("M");
     temp = M_queuef;
     while(temp){ 
-        printf("%s\n",temp->name);
+        printf("*\t%d\t%s\t\t%s\t%c\t%c\t%d\t%d\t*",temp->pid,temp->name,temp->state,'L','H',temp->queueing_time,temp->waiting_time);
         temp = temp->next;
     }
-    puts("L");
     temp = L_queuef;
     while(temp){ 
-        printf("%s\n",temp->name);
+        printf("*\t%d\t%s\t\t%s\t%c\t%c\t%d\t%d\t*",temp->pid,temp->name,temp->state,'L','H',temp->queueing_time,temp->waiting_time);
         temp = temp->next;
     }
 }
@@ -215,7 +213,8 @@ int OS2021_ThreadCreate(char *job_name, char *p_function, int priority, int canc
     temp->pid = pid_counter++;
     temp->queueing_time = 0;
     temp->waiting_time = 0;
-
+    strcpy(temp->state,"READY");
+    
     if(priority == 0){
         enqueue(&L_queuef,&L_queuer,temp);
     }else if(priority == 1){
