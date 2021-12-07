@@ -149,7 +149,7 @@ Thread*getthreads(){
 }
 
 void show_info(){
-    puts("\n**********************************************************************************************");
+    puts("\n****************************************************************************************");
     puts("*\tTID\tName\t\tState\tB_Priority\tC_Priority\tQ_Time\tW_Time\t*");
     Thread *temp = NULL;
     puts("H");
