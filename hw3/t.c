@@ -18,5 +18,6 @@ int main(){
     Signaltimer.it_value.tv_usec = 500000;
 
     setitimer(ITIMER_VIRTUAL,&Signaltimer,NULL);
+    while(1);
     return 0;
 }
