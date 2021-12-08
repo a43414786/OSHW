@@ -25,6 +25,8 @@ Thread*M_queuef = NULL;
 Thread*M_queuer = NULL;
 Thread*L_queuef = NULL;
 Thread*L_queuer = NULL;
+Thread*waitingf = NULL;
+Thread*waitingr = NULL;
 Thread*runnning = NULL;
 
 int pid_counter = 1;
@@ -196,6 +198,7 @@ void show_info(){
     pr_info(L_queuef);
     pr_info(M_queuef);
     pr_info(H_queuef);   
+    pr_info(waitingf);   
     puts("****************************************************************************************");
     
 }
