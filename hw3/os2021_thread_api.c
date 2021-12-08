@@ -10,6 +10,7 @@ typedef struct thread_status{
     int priority_init;
     int priority_cur;
     int cancelmode;
+    int cancelsig;
     int pid;
     int queueing_time;
     int waiting_time;
@@ -208,7 +209,6 @@ void handler(){
     Thread *temp = runnning;
     runnning = NULL;
     enqueue(&H_queuef,&H_queuer,temp);
-    alarm(1);
     swapcontext(&(temp->ctx),&dispatch_context);
 }
 
@@ -230,7 +230,8 @@ void fu3(){
 
 int OS2021_ThreadCreate(char *job_name, char *p_function, int priority, int cancel_mode)
 {   
-    if(strcmp(p_function,"Function1") && strcmp(p_function,"Function2") && strcmp(p_function,"Function3") && strcmp(p_function,"Function4") && strcmp(p_function,"Function5"))
+    
+    if(strcmp(p_function,"Function1") && strcmp(p_function,"Function2") && strcmp(p_function,"Function3") && strcmp(p_function,"Function4") && strcmp(p_function,"Function5") && strcmp(p_function,"ResourceReclaim"))
     {
         return -1;
     }
@@ -241,6 +242,7 @@ int OS2021_ThreadCreate(char *job_name, char *p_function, int priority, int canc
     temp->priority_init = priority;
     temp->priority_cur = priority;
     temp->cancelmode = cancel_mode;
+    temp->cancelsig = 0;
     temp->front = NULL;
     temp->next = NULL;
     temp->pid = pid_counter++;
@@ -269,7 +271,7 @@ int OS2021_ThreadCreate(char *job_name, char *p_function, int priority, int canc
 
 void OS2021_ThreadCancel(char *job_name)
 {
-
+    
 }
 
 void OS2021_ThreadWaitEvent(int event_id)
@@ -294,7 +296,12 @@ void OS2021_DeallocateThreadResource()
 
 void OS2021_TestCancel()
 {
-
+    Thread *temp = NULL;
+    temp = runnning;
+    if(temp->cancelsig){
+        runnning = NULL;
+        free(temp);
+    }
 }
 
 void CreateContext(ucontext_t *context, ucontext_t *next_context, void *func)
@@ -310,7 +317,7 @@ void CreateContext(ucontext_t *context, ucontext_t *next_context, void *func)
 void ResetTimer()
 {
     Signaltimer.it_value.tv_sec = 0;
-    Signaltimer.it_value.tv_usec = 0;
+    Signaltimer.it_value.tv_usec = 10000;
     if(setitimer(ITIMER_REAL, &Signaltimer, NULL) < 0)
     {
         printf("ERROR SETTING TIME SIGALRM!\n");
@@ -320,8 +327,14 @@ void ResetTimer()
 void Dispatcher()
 {
     getcontext(&dispatch_context);
+
+    Signaltimer.it_interval.tv_usec = 10000;
+    Signaltimer.it_interval.tv_sec = 0;
+    ResetTimer();
+    
     Thread *root = getthreads();
     Thread *temp = NULL;
+    OS2021_ThreadCreate("reclaimer","ResourceReclaim",0,1);
     while(root){
         OS2021_ThreadCreate(root->name,root->function,root->priority_init,root->cancelmode);
         temp = root;
@@ -339,7 +352,7 @@ void Dispatcher()
 void StartSchedulingSimulation()
 {
     /*Set Timer*/
-    Signaltimer.it_interval.tv_usec = 0;
+    Signaltimer.it_interval.tv_usec = 10000;
     Signaltimer.it_interval.tv_sec = 0;
     ResetTimer();
     /*Create Context*/
