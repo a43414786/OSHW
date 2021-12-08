@@ -214,17 +214,17 @@ void handler(){
 
 void fu1(){
     while(1){
-        //printf("fun1");
+        printf("fun1");
     }
 }
 void fu2(){
     while(1){
-        //printf("fun2");
+        printf("fun2");
     }
 }
 void fu3(){
     while(1){
-        //printf("fun3");
+        printf("fun3");
     }
 }
 
