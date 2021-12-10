@@ -13,13 +13,13 @@
             "cancel mode" : "0"
         },
         {
-            "name" : "f123456",
+            "name" : "f1",
             "entry function" : "Function2",
             "priority" : "H",
             "cancel mode" : "0"
         },
         {
-            "name" : "f2345678",
+            "name" : "f2",
             "entry function" : "Function1",
             "priority" : "H",
             "cancel mode" : "0"
