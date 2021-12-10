@@ -114,7 +114,7 @@ void getthreads(){
         }
         if(input_counter == 4){
             input_counter = 0;
-            switch(inputs[2]){
+            switch(inputs[2][0]){
                 case 'H':
                     OS2021_ThreadCreate(inputs[0],inputs[1],2,inputs[3][0] - '0')
                     break;
@@ -178,10 +178,15 @@ void show_info(){
     puts("\n****************************************************************************************");
     puts("*\tTID\tName\t\tState\tB_Priority\tC_Priority\tQ_Time\tW_Time\t*");
     pr_info(runnning);
-    pr_info(L_queuef);
-    pr_info(M_queuef);
-    pr_info(H_queuef);   
-    pr_info(waitingf);   
+    pr_info(readyf[0]);
+    pr_info(readyf[1]);
+    pr_info(readyf[2]);   
+    pr_info(time_waitingf[0]);
+    pr_info(time_waitingf[1]);
+    pr_info(time_waitingf[2]);
+    pr_info(event_waitingf[0]);
+    pr_info(event_waitingf[1]);
+    pr_info(event_waitingf[2]);   
     puts("****************************************************************************************");
     
 }
@@ -190,7 +195,7 @@ void handler(){
     if(!runnning) return;
     Thread *temp = runnning;
     runnning = NULL;
-    enqueue(&H_queuef,&H_queuer,temp);
+    enqueue(&(readyf[2]),&(readyr[2]),temp);
     swapcontext(&(temp->ctx),&dispatch_context);
 }
 
@@ -232,13 +237,8 @@ int OS2021_ThreadCreate(char *job_name, char *p_function, int priority, int canc
     temp->waiting_time = 0;
     strcpy(temp->state,"READY");
     
-    if(priority == 0){
-        enqueue(&L_queuef,&L_queuer,temp);
-    }else if(priority == 1){
-        enqueue(&M_queuef,&M_queuer,temp);
-    }else if(priority == 2){
-        enqueue(&H_queuef,&H_queuer,temp);
-    }
+    enqueue(&(readyf[priority]),&(readyr[priority]),temp);
+    
     if(pid_counter%3 == 0){
         CreateContext(&(temp->ctx),&dispatch_context,&fu1);
     }
@@ -325,7 +325,7 @@ void Dispatcher()
     }
     //while(1);
     while(1){
-        temp = dequeue(&H_queuef,&H_queuer);
+        temp = dequeue(&(readyf[2]),&(readyr[2]));
         runnning = temp;
         swapcontext(&dispatch_context,&(temp->ctx));
     }
