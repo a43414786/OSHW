@@ -69,7 +69,7 @@ void getthreads(){
     Thread*temp = NULL;
     Thread*thread_root = NULL;
     char input[20];
-    char inputs[20][4];
+    char inputs[4][20];
     int input_flag[4] = {0,0,0,0};
     char word;
     int flag = 0;
