@@ -116,13 +116,13 @@ void getthreads(){
             input_counter = 0;
             switch(inputs[2][0]){
                 case 'H':
-                    OS2021_ThreadCreate(inputs[0],inputs[1],2,inputs[3][0] - '0')
+                    OS2021_ThreadCreate(inputs[0],inputs[1],2,inputs[3][0] - '0');
                     break;
                 case 'M':
-                    OS2021_ThreadCreate(inputs[0],inputs[1],1,inputs[3][0] - '0')
+                    OS2021_ThreadCreate(inputs[0],inputs[1],1,inputs[3][0] - '0');
                     break;
                 case 'L':
-                    OS2021_ThreadCreate(inputs[0],inputs[1],0,inputs[3][0] - '0')
+                    OS2021_ThreadCreate(inputs[0],inputs[1],0,inputs[3][0] - '0');
                     break;    
             }
             memset(inputs,0,sizeof(inputs));
@@ -314,16 +314,10 @@ void Dispatcher()
     Signaltimer.it_interval.tv_sec = 0;
     ResetTimer();
     
-    Thread *root = getthreads();
-    Thread *temp = NULL;
     OS2021_ThreadCreate("reclaimer","ResourceReclaim",0,1);
-    while(root){
-        OS2021_ThreadCreate(root->name,root->function,root->priority_init,root->cancelmode);
-        temp = root;
-        root = root->next;
-        free(temp);
-    }
-    //while(1);
+
+    getthreads();
+
     while(1){
         temp = dequeue(&(readyf[2]),&(readyr[2]));
         runnning = temp;
