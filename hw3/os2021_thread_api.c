@@ -93,22 +93,18 @@ void getthreads(){
                         input_counter++;
                         input_flag[0] = 0;
                         strcpy(inputs[0],input);
-                        printf("1 %s\n",inputs[0]);
                     }else if(input_flag[1]){
                         input_counter++;
                         input_flag[1] = 0;
                         strcpy(inputs[1],input);
-                        printf("2 %s\n",inputs[1]);
                     }else if(input_flag[2]){
                         input_counter++;
                         input_flag[2] = 0;
                         strcpy(inputs[2],input);
-                        printf("3 %s\n",inputs[2]);
                     }else if(input_flag[3]){
                         input_counter++;
                         input_flag[3] = 0;
                         strcpy(inputs[3],input);
-                        printf("4 %s\n",inputs[3]);
                     }
                 }
             }
@@ -206,17 +202,17 @@ void handler(){
 
 void fu1(){
     while(1){
-        printf("fun1");
+        //printf("fun1");
     }
 }
 void fu2(){
     while(1){
-        printf("fun2");
+        //printf("fun2");
     }
 }
 void fu3(){
     while(1){
-        printf("fun3");
+        //printf("fun3");
     }
 }
 
