@@ -81,31 +81,31 @@ void getthreads(){
         if(word == '\"'){
             if(input[0]){
                 if(!strcmp(input,"name")){
-                    input_counter++;
                     input_flag[0] = 1;
                 }else if(!strcmp(input,"entry function")){
                     input_flag[1] = 1;
-                    input_counter++;
                 }else if(!strcmp(input,"priority")){
                     input_flag[2] = 1;
-                    input_counter++;
                 }else if(!strcmp(input,"cancel mode")){
                     input_flag[3] = 1;
-                    input_counter++;
                 }else{
                     if(input_flag[0]){
+                        input_counter++;
                         input_flag[0] = 0;
                         strcpy(inputs[0],input);
                         printf("1 %s\n",input);
                     }else if(input_flag[1]){
+                        input_counter++;
                         input_flag[1] = 0;
                         strcpy(inputs[1],input);
                         printf("2 %s\n",input);
                     }else if(input_flag[2]){
+                        input_counter++;
                         input_flag[2] = 0;
                         strcpy(inputs[2],input);
                         printf("3 %s\n",input);
                     }else if(input_flag[3]){
+                        input_counter++;
                         input_flag[3] = 0;
                         strcpy(inputs[3],input);
                         printf("4 %s\n",input);
