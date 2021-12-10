@@ -169,7 +169,7 @@ void pr_info(Thread *temp){
         default:
             break;
         }
-        if(strlen(temp->name) > 8){
+        if(strlen(temp->name) > 7){
             printf("*\t%d\t%s\t%s\t%c\t\t%c\t\t%d\t%d\t*\n",temp->pid,temp->name,temp->state,b,c,temp->queueing_time,temp->waiting_time);
         }else{
             printf("*\t%d\t%s\t\t%s\t%c\t\t%c\t\t%d\t%d\t*\n",temp->pid,temp->name,temp->state,b,c,temp->queueing_time,temp->waiting_time);
