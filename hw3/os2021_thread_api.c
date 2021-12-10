@@ -275,7 +275,17 @@ void OS2021_ThreadWaitTime(int msec)
 
 void OS2021_DeallocateThreadResource()
 {
-
+    if(!terminate){
+        return;
+    }
+    Thread*pre = terminate;
+    Thread*post = pre;
+    terminate = NULL;
+    while(post){
+        pre = post;
+        post = post->next;
+        free(pre);
+    }
 }
 
 void OS2021_TestCancel()
