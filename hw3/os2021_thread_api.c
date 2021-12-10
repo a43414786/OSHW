@@ -73,7 +73,7 @@ void getthreads(){
     char word;
     int flag = 0;
     int counter = 0;
-    int input_counter = 0
+    int input_counter = 0;
     memset(input,0,sizeof(input));
     memset(inputs,0,sizeof(inputs));
     while((word = getc(fp)) != EOF){
@@ -314,6 +314,8 @@ void Dispatcher()
     Signaltimer.it_interval.tv_sec = 0;
     ResetTimer();
     
+    Thread*temp = NULL;
+
     OS2021_ThreadCreate("reclaimer","ResourceReclaim",0,1);
 
     getthreads();
