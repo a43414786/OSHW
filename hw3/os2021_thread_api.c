@@ -106,6 +106,7 @@ void getthreads(){
                         input_flag[3] = !input_flag[3];
                         strcpy(inputs[3],input);
                     }
+                    printf("%s\n",input);
                 }
             }
             flag = !flag;
