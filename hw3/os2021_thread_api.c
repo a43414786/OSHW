@@ -169,7 +169,11 @@ void pr_info(Thread *temp){
         default:
             break;
         }
-        printf("*\t%d\t%s\t\t%s\t%c\t\t%c\t\t%d\t%d\t*\n",temp->pid,temp->name,temp->state,b,c,temp->queueing_time,temp->waiting_time);
+        if(strlen(temp->name) > 8){
+            printf("*\t%d\t%s\t%s\t%c\t\t%c\t\t%d\t%d\t*\n",temp->pid,temp->name,temp->state,b,c,temp->queueing_time,temp->waiting_time);
+        }else{
+            printf("*\t%d\t%s\t\t%s\t%c\t\t%c\t\t%d\t%d\t*\n",temp->pid,temp->name,temp->state,b,c,temp->queueing_time,temp->waiting_time);
+        }
         temp = temp->next;
     }
 }
