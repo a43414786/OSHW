@@ -32,6 +32,7 @@ Thread*terminate = NULL;
 int pid_counter = 1;
 
 void enqueue(Thread**front,Thread**rear,Thread*input){
+    printf("d");
     Thread *f = *front;
     input->front = input->next = NULL;
     if(!f){
@@ -217,7 +218,6 @@ void fu3(){
 
 int OS2021_ThreadCreate(char *job_name, char *p_function, int priority, int cancel_mode)
 {   
-    printf("a");
     if(strcmp(p_function,"Function1") && strcmp(p_function,"Function2") && strcmp(p_function,"Function3") && strcmp(p_function,"Function4") && strcmp(p_function,"Function5") && strcmp(p_function,"ResourceReclaim"))
     {
         return -1;
