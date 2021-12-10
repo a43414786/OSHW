@@ -96,17 +96,20 @@ void getthreads(){
                     if(input_flag[0]){
                         input_flag[0] = !input_flag[0];
                         strcpy(inputs[0],input);
+                        printf("%s\n",input);
                     }else if(input_flag[1]){
                         input_flag[1] = !input_flag[1];
                         strcpy(inputs[1],input);
+                        printf("%s\n",input);
                     }else if(input_flag[2]){
                         input_flag[2] = !input_flag[2];
                         strcpy(inputs[2],input);
+                        printf("%s\n",input);
                     }else if(input_flag[3]){
                         input_flag[3] = !input_flag[3];
                         strcpy(inputs[3],input);
+                        printf("%s\n",input);
                     }
-                    printf("%s\n",input);
                 }
             }
             flag = !flag;
