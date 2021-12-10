@@ -218,7 +218,6 @@ void fu3(){
 
 int OS2021_ThreadCreate(char *job_name, char *p_function, int priority, int cancel_mode)
 {   
-    printf("a");
     if(strcmp(p_function,"Function1") && strcmp(p_function,"Function2") && strcmp(p_function,"Function3") && strcmp(p_function,"Function4") && strcmp(p_function,"Function5") && strcmp(p_function,"ResourceReclaim"))
     {
         return -1;
@@ -237,7 +236,7 @@ int OS2021_ThreadCreate(char *job_name, char *p_function, int priority, int canc
     temp->queueing_time = 0;
     temp->waiting_time = 0;
     strcpy(temp->state,"READY");
-    
+    printf("a");
     enqueue(&(readyf[priority]),&(readyr[priority]),temp);
     
     if(pid_counter%3 == 0){
