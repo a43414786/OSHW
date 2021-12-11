@@ -313,6 +313,7 @@ void OS2021_ThreadWaitEvent(int event_id)
     Thread*temp = running;
     running = NULL;
     temp->event = event_id;
+    printf("%s is waiting for event %d\n",temp->name,temp->event);
     memset(&(temp->state),0,sizeof(temp->state));
     strcpy(temp->state,"WAITING");
     enqueue(&(event_waiting[temp->priority_cur]),temp);
