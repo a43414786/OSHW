@@ -298,7 +298,7 @@ void handler(){
     }
     temp[0] = running;
     running = NULL;
-    enqueue(&(ready[2]),temp);
+    enqueue(&(ready[2]),temp[0]);
     swapcontext(&(temp[0]->ctx),&dispatch_context);
 }
 
