@@ -298,7 +298,7 @@ void handler(){
     if(!(running->qt)){
         temp[0] = running;
         running = NULL;
-        //decrease(&(temp[0]));
+        decrease(&(temp[0]));
         switch(temp[0]->priority_cur[0]){
             case 'H':
                 enqueue(&(ready[2]),temp[0]);
