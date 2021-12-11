@@ -31,6 +31,16 @@ Thread*terminate = NULL;
 int pid_counter = 1;
 
 Thread*find_thread(Thread**root,char*name){
+    Thread*post = *root;
+    while(post){
+        if(!strcmp(post->name,name)){
+            return post;
+        }
+        post = post->next;
+    }
+    return NULL;
+}
+Thread*get_thread(Thread**root,char*name){
     Thread*pre,*post;
     pre = post = *root;
     while(post){
@@ -98,7 +108,7 @@ Thread *dequeue(Thread**root){
     
 }
 
-void getthreads(){
+void init_threads(){
     FILE*fp=fopen("init_threads.json","r");
     Thread*root = NULL;
     Thread*temp = NULL;
@@ -281,6 +291,20 @@ int OS2021_ThreadCreate(char *job_name, char *p_function, int priority, int canc
 
 void OS2021_ThreadCancel(char *job_name)
 {
+    Thread*result = NULL;
+    Thread*temp;
+    temp = ready[0];
+    result = find_thread(&temp,job_name);
+    if(result){
+        if(result->cancelmode){
+            result->cancelsig = 1;
+        }else{
+            result = get_thread(&temp,job_name);
+            memset(&(result->state),0,sizeof(result->state));
+            strcpy(result->state,"TERMINATED");
+            enqueue(&(terminate),result);
+        }
+    }
 
 }
 
@@ -325,7 +349,7 @@ void OS2021_ThreadSetEvent(int event_id)
 
 void OS2021_ThreadWaitTime(int msec)
 {
-
+    
 }
 
 void OS2021_DeallocateThreadResource()
@@ -387,7 +411,7 @@ void Dispatcher()
 
     OS2021_ThreadCreate("reclaimer","ResourceReclaim",0,1);
 
-    getthreads();
+    init_threads();
 
     while(1){
         temp = dequeue(&(ready[2]));
