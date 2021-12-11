@@ -7,8 +7,8 @@ ucontext_t timer_context;
 typedef struct thread_status{
     char name[20];
     char function[20];
-    int priority_init;
-    int priority_cur;
+    char priority_init[2];
+    char priority_cur[2];
     int cancelmode;
     int cancelsig;
     int pid;
@@ -168,17 +168,7 @@ void init_threads(){
         }
         if(input_counter == 4){
             input_counter = 0;
-            switch(inputs[2][0]){
-                case 'H':
-                    OS2021_ThreadCreate(inputs[0],inputs[1],2,inputs[3][0] - '0');
-                    break;
-                case 'M':
-                    OS2021_ThreadCreate(inputs[0],inputs[1],1,inputs[3][0] - '0');
-                    break;
-                case 'L':
-                    OS2021_ThreadCreate(inputs[0],inputs[1],0,inputs[3][0] - '0');
-                    break;    
-            }
+            OS2021_ThreadCreate(inputs[0],inputs[1],inputs[2],inputs[3][0] - '0');
             memset(inputs,0,sizeof(inputs));
         }
         if(flag){
@@ -190,43 +180,10 @@ void init_threads(){
 
 void pr_info(Thread *temp){
     while(temp){ 
-        char b,c;
-        switch (temp->priority_cur)
-        {
-        case 0:
-            c = 'L';
-            break;
-        
-        case 1:
-            c = 'M';
-            break;
-        
-        case 2:
-            c = 'H';
-            break;
-        default:
-            break;
-        }
-        switch (temp->priority_init)
-        {
-        case 0:
-            b = 'L';
-            break;
-        
-        case 1:
-            b = 'M';
-            break;
-        
-        case 2:
-            b = 'H';
-            break;
-        default:
-            break;
-        }
         if(strlen(temp->name) > 7){
-            printf("*\t%d\t%s\t%s\t%c\t\t%c\t\t%d\t%d\t*\n",temp->pid,temp->name,temp->state,b,c,temp->queueing_time,temp->waiting_time);
+            printf("*\t%d\t%s\t%s\t%s\t\t%s\t\t%d\t%d\t*\n",temp->pid,temp->name,temp->state,temp->priority_init,temp->priority_cur,temp->queueing_time,temp->waiting_time);
         }else{
-            printf("*\t%d\t%s\t\t%s\t%c\t\t%c\t\t%d\t%d\t*\n",temp->pid,temp->name,temp->state,b,c,temp->queueing_time,temp->waiting_time);
+            printf("*\t%d\t%s\t\t%s\t%s\t\t%s\t\t%d\t%d\t*\n",temp->pid,temp->name,temp->state,temp->priority_init,temp->priority_cur,temp->queueing_time,temp->waiting_time);
         }
         temp = temp->next;
     }
@@ -302,7 +259,7 @@ void handler(){
     swapcontext(&(temp[0]->ctx),&dispatch_context);
 }
 
-int OS2021_ThreadCreate(char *job_name, char *p_function, int priority, int cancel_mode)
+int OS2021_ThreadCreate(char *job_name, char *p_function, char* priority, int cancel_mode)
 {   
     if(strcmp(p_function,"Function1") && strcmp(p_function,"Function2") && strcmp(p_function,"Function3") && strcmp(p_function,"Function4") && strcmp(p_function,"Function5") && strcmp(p_function,"ResourceReclaim"))
     {   
@@ -312,8 +269,8 @@ int OS2021_ThreadCreate(char *job_name, char *p_function, int priority, int canc
     memset(temp,0,sizeof(Thread));
     strcpy(temp->name,job_name);
     strcpy(temp->function,p_function);
-    temp->priority_init = priority;
-    temp->priority_cur = priority;
+    strcpy(temp->priority_init,priority);
+    strcpy(temp->priority_cur,priority);
     temp->cancelmode = cancel_mode;
     temp->cancelsig = 0;
     temp->next = NULL;
@@ -321,9 +278,20 @@ int OS2021_ThreadCreate(char *job_name, char *p_function, int priority, int canc
     temp->queueing_time = 0;
     temp->waiting_time = 0;
     strcpy(temp->state,"READY");
-    temp->qt = (3-priority)*10;
-    enqueue(&(ready[priority]),temp);
-    
+    switch(temp->priority_init[0]){
+        case 'H':
+            temp->qt = 10;
+            enqueue(&(ready[2]),temp);
+            break;
+        case 'M':
+            temp->qt = 20;
+            enqueue(&(ready[1]),temp);
+            break;
+        case 'L':
+            temp->qt = 30;
+            enqueue(&(ready[0]),temp);
+            break;
+    }
     if(!strcmp(p_function,"Function1")){
         CreateContext(&(temp->ctx),&dispatch_context,&Function1);
     }
@@ -380,7 +348,17 @@ void OS2021_ThreadWaitEvent(int event_id)
     printf("%s is waiting for event %d\n",temp->name,temp->event);
     memset(&(temp->state),0,sizeof(temp->state));
     strcpy(temp->state,"WAITING");
-    enqueue(&(event_waiting[temp->priority_cur]),temp);
+    switch(temp->priority_cur[0]){
+        case 'H':
+            enqueue(&(event_waiting[2]),temp);
+            break;
+        case 'M':
+            enqueue(&(event_waiting[1]),temp);
+            break;
+        case 'L':
+            enqueue(&(event_waiting[0]),temp);
+            break;
+    }
     swapcontext(&(temp->ctx),&dispatch_context);
 }
 
@@ -420,7 +398,17 @@ void OS2021_ThreadWaitTime(int msec)
     printf("%s is waiting for  %d msec\n",temp->name,temp->time);
     memset(&(temp->state),0,sizeof(temp->state));
     strcpy(temp->state,"WAITING");
-    enqueue(&(time_waiting[temp->priority_cur]),temp);
+    switch(temp->priority_cur[0]){
+        case 'H':
+            enqueue(&(time_waiting[2]),temp);
+            break;
+        case 'M':
+            enqueue(&(time_waiting[1]),temp);
+            break;
+        case 'L':
+            enqueue(&(time_waiting[0]),temp);
+            break;
+    }
     swapcontext(&(temp->ctx),&dispatch_context);
 }
 
