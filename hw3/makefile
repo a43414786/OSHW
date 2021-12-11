@@ -24,3 +24,6 @@ function_libary.o: function_libary.c function_libary.h
 .PHONY: clean
 clean:
 	rm *.o
+test:
+	git pull
+	gcc -o t simulator.c os2021_thread_api.c
