@@ -298,7 +298,7 @@ void handler(){
     if(!(running->qt)){
         temp[0] = running;
         running = NULL;
-        decrease(&(temp[0]));
+        //decrease(&(temp[0]));
         switch(temp[0]->priority_cur[0]){
             case 'H':
                 enqueue(&(ready[2]),temp[0]);
@@ -535,11 +535,8 @@ void Dispatcher()
     init_threads();
 
     while(1){
-        temp = dequeue(&(ready[1]));
-        running = temp;
-        swapcontext(&dispatch_context,&(temp->ctx));
-
-        /*if(temp){
+        temp = dequeue(&(ready[2]));
+        if(temp){
             running = temp;
             swapcontext(&dispatch_context,&(temp->ctx));
         }else{
@@ -554,7 +551,7 @@ void Dispatcher()
                     swapcontext(&dispatch_context,&(temp->ctx));
                 }
             }
-        }*/
+        }
     }
 }
 
