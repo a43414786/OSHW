@@ -257,6 +257,9 @@ void OS2021_ThreadWaitEvent(int event_id)
     Thread*temp = running;
     running = NULL;
     temp->event = event_id;
+    memset(&(temp->state),0,sizeof(temp->state));
+    strcpy(temp->state,"WAITING");
+    enqueue(&(event_waitingf[temp->priority_cur]),&(event_waitingr[temp->priority_cur]),temp);
     swapcontext(&(temp->ctx),&dispatch_context);
 }
 
