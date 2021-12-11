@@ -256,7 +256,6 @@ Thread* time_wait(Thread **root){
     pre = post = *root;
     while(post){
         post->time -= 10;
-        printf("%d\n",post->time);
         if(!(post->time)){
             if((post == pre) && !(post->next)){
                 *root = NULL;
