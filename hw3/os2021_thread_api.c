@@ -229,18 +229,15 @@ void increase(Thread**root){
 }
 void decrease(Thread**root){
     Thread*temp = *root;
-    switch((temp->priority_cur)[0]){
+    switch(temp->priority_cur[0]){
         case 'H':
             temp->qt = 200;
-            (temp->priority_cur)[0] = 'M';
             break;
         case 'M':
             temp->qt = 300;
-            (temp->priority_cur)[0] = 'L';
             break;
         case 'L':
             temp->qt = 300;
-            (temp->priority_cur)[0] = 'L';
             break;
         default:
             break;    
