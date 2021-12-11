@@ -14,6 +14,7 @@ typedef struct thread_status{
     int pid;
     int queueing_time;
     int waiting_time;
+    int qt;
     char state[10];
     ucontext_t ctx;
     struct thread_status *front;
@@ -203,22 +204,6 @@ void handler(){
     swapcontext(&(temp->ctx),&dispatch_context);
 }
 
-void fu1(){
-    while(1){
-        //printf("fun1");
-    }
-}
-void fu2(){
-    while(1){
-        //printf("fun2");
-    }
-}
-void fu3(){
-    while(1){
-        //printf("fun3");
-    }
-}
-
 int OS2021_ThreadCreate(char *job_name, char *p_function, int priority, int cancel_mode)
 {   
     if(strcmp(p_function,"Function1") && strcmp(p_function,"Function2") && strcmp(p_function,"Function3") && strcmp(p_function,"Function4") && strcmp(p_function,"Function5") && strcmp(p_function,"ResourceReclaim"))
@@ -239,16 +224,17 @@ int OS2021_ThreadCreate(char *job_name, char *p_function, int priority, int canc
     temp->queueing_time = 0;
     temp->waiting_time = 0;
     strcpy(temp->state,"READY");
+    temp->qt = (3-priority)*10;
     enqueue(&(readyf[priority]),&(readyr[priority]),temp);
     
     if(pid_counter%3 == 0){
-        CreateContext(&(temp->ctx),&dispatch_context,&fu1);
+        CreateContext(&(temp->ctx),&dispatch_context,&p_function);
     }
     else if(pid_counter%3 == 1){
-        CreateContext(&(temp->ctx),&dispatch_context,&fu2);
+        CreateContext(&(temp->ctx),&dispatch_context,&p_function);
     }
     else if(pid_counter%3 == 2){
-        CreateContext(&(temp->ctx),&dispatch_context,&fu3);
+        CreateContext(&(temp->ctx),&dispatch_context,&p_function);
     }
     return pid_counter;
 }
