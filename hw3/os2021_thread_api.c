@@ -184,7 +184,7 @@ void pr_info(Thread *temp){
 void show_info(){
     puts("\n****************************************************************************************");
     puts("*\tTID\tName\t\tState\tB_Priority\tC_Priority\tQ_Time\tW_Time\t*");
-    pr_info(runnning);
+    pr_info(running);
     pr_info(readyf[0]);
     pr_info(readyf[1]);
     pr_info(readyf[2]);   
