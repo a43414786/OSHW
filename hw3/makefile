@@ -26,4 +26,4 @@ clean:
 	rm *.o
 test:
 	git pull
-	gcc -o t simulator.c os2021_thread_api.c
+	gcc -o t simulator.c os2021_thread_api.c function_libary.c
