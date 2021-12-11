@@ -15,6 +15,8 @@ typedef struct thread_status{
     int queueing_time;
     int waiting_time;
     int qt;
+    int time;
+    int event;
     char state[10];
     ucontext_t ctx;
     struct thread_status *front;
@@ -27,7 +29,7 @@ Thread*time_waitingf[3] = {NULL, NULL, NULL};
 Thread*time_waitingr[3] = {NULL, NULL, NULL};
 Thread*event_waitingf[3] = {NULL, NULL, NULL};
 Thread*event_waitingr[3] = {NULL, NULL, NULL};
-Thread*runnning = NULL;
+Thread*running = NULL;
 Thread*terminate = NULL;
 
 int pid_counter = 1;
@@ -197,9 +199,9 @@ void show_info(){
 }
 
 void handler(){
-    if(!runnning) return;
-    Thread *temp = runnning;
-    runnning = NULL;
+    if(!running) return;
+    Thread *temp = running;
+    running = NULL;
     enqueue(&(readyf[2]),&(readyr[2]),temp);
     swapcontext(&(temp->ctx),&dispatch_context);
 }
@@ -252,7 +254,10 @@ void OS2021_ThreadCancel(char *job_name)
 
 void OS2021_ThreadWaitEvent(int event_id)
 {
-
+    Thread*temp = running;
+    running = NULL;
+    temp->event = event_id;
+    swapcontext(&(temp->ctx),&dispatch_context);
 }
 
 void OS2021_ThreadSetEvent(int event_id)
@@ -283,9 +288,9 @@ void OS2021_DeallocateThreadResource()
 void OS2021_TestCancel()
 {
     Thread *temp = NULL;
-    temp = runnning;
+    temp = running;
     if(temp->cancelsig){
-        runnning = NULL;
+        running = NULL;
         free(temp);
     }
 }
@@ -327,7 +332,7 @@ void Dispatcher()
 
     while(1){
         temp = dequeue(&(readyf[2]),&(readyr[2]));
-        runnning = temp;
+        running = temp;
         swapcontext(&dispatch_context,&(temp->ctx));
     }
 }
