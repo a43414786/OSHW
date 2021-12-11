@@ -298,6 +298,7 @@ void handler(){
     running->qt -= 10;
     if(!(running->qt)){
         decrease(&running);
+        printf("a\n");
         temp[0] = running;
         running = NULL;
         switch(temp[0]->priority_cur[0]){
