@@ -19,50 +19,83 @@ typedef struct thread_status{
     int event;
     char state[10];
     ucontext_t ctx;
-    struct thread_status *front;
     struct thread_status *next;
 }Thread;
 
-Thread*readyf[3] = {NULL, NULL, NULL};
-Thread*readyr[3] = {NULL, NULL, NULL};
-Thread*time_waitingf[3] = {NULL, NULL, NULL};
-Thread*time_waitingr[3] = {NULL, NULL, NULL};
-Thread*event_waitingf[3] = {NULL, NULL, NULL};
-Thread*event_waitingr[3] = {NULL, NULL, NULL};
+Thread*ready[3] = {NULL, NULL, NULL};
+Thread*time_waiting[3] = {NULL, NULL, NULL};
+Thread*event_waiting[3] = {NULL, NULL, NULL};
 Thread*running = NULL;
 Thread*terminate = NULL;
 
 int pid_counter = 1;
 
-void enqueue(Thread**front,Thread**rear,Thread*input){
-    Thread *f = *front;
-    input->front = input->next = NULL;
-    if(!f){
-        *front = input;
-        *rear = input;
-        return;
+Thread*find_thread(Thread**root,char*name){
+    Thread*pre,*post;
+    pre = post = *root;
+    while(post){
+        if(!strcmp(post->name,name)){
+            if(post == pre){
+                *root = NULL;
+            }
+            else{
+                pre->next = post->next;
+            }
+            post->next = NULL;
+            return post;
+        }
+        pre = post;
+        post = post->next;
     }
-    input->next = f;
-    f->front = input;
-    *front = input;
+    return NULL;
+}
+Thread*find_waiting_thread(Thread**root,int id){
+    Thread*pre,*post;
+    pre = post = *root;
+    while(post){
+        if(post->event == id){
+            if(post == pre){
+                *root = NULL;
+            }
+            else{
+                pre->next = post->next;
+            }
+            post->next = NULL;
+            return post;
+        }
+        pre = post;
+        post = post->next;
+    }
+    return NULL;
 }
 
-Thread *dequeue(Thread**front,Thread**rear){
-    Thread *r = *rear;
-    if(!r){
+void enqueue(Thread**root,Thread*input){
+    Thread*temp = *root;
+    input->next = temp;
+    *root = input;
+}
+
+Thread *dequeue(Thread**root){
+    Thread*pre,*post;
+    pre = post = *root;
+    if(post){
+        while(post->next){
+            pre = post;
+            post = post->next;
+        }
+    }
+    if(!pre){
         return NULL;
     }
-    Thread *temp = r->front;
-    r->front = NULL;
-    r->next = NULL;
-    if(!temp){
-        *front = NULL;
-        *rear = NULL;
-    }else{
-        temp->next = NULL;
-        *rear = temp;
+    else if(post == pre){
+        *root = NULL;
+        return post;
     }
-    return r;
+    else{
+        pre->next = NULL;
+        return post;
+    }
+    
 }
 
 void getthreads(){
@@ -185,15 +218,15 @@ void show_info(){
     puts("\n****************************************************************************************");
     puts("*\tTID\tName\t\tState\tB_Priority\tC_Priority\tQ_Time\tW_Time\t*");
     pr_info(running);
-    pr_info(readyf[0]);
-    pr_info(readyf[1]);
-    pr_info(readyf[2]);   
-    pr_info(time_waitingf[0]);
-    pr_info(time_waitingf[1]);
-    pr_info(time_waitingf[2]);
-    pr_info(event_waitingf[0]);
-    pr_info(event_waitingf[1]);
-    pr_info(event_waitingf[2]);   
+    pr_info(ready[0]);
+    pr_info(ready[1]);
+    pr_info(ready[2]);   
+    pr_info(time_waiting[0]);
+    pr_info(time_waiting[1]);
+    pr_info(time_waiting[2]);
+    pr_info(event_waiting[0]);
+    pr_info(event_waiting[1]);
+    pr_info(event_waiting[2]);   
     puts("****************************************************************************************");
     
 }
@@ -202,7 +235,7 @@ void handler(){
     if(!running) return;
     Thread *temp = running;
     running = NULL;
-    enqueue(&(readyf[2]),&(readyr[2]),temp);
+    enqueue(&(ready[2]),temp);
     swapcontext(&(temp->ctx),&dispatch_context);
 }
 
@@ -220,14 +253,13 @@ int OS2021_ThreadCreate(char *job_name, char *p_function, int priority, int canc
     temp->priority_cur = priority;
     temp->cancelmode = cancel_mode;
     temp->cancelsig = 0;
-    temp->front = NULL;
     temp->next = NULL;
     temp->pid = pid_counter++;
     temp->queueing_time = 0;
     temp->waiting_time = 0;
     strcpy(temp->state,"READY");
     temp->qt = (3-priority)*10;
-    enqueue(&(readyf[priority]),&(readyr[priority]),temp);
+    enqueue(&(ready[priority]),temp);
     
     if(!strcmp(p_function,"Function1")){
         CreateContext(&(temp->ctx),&dispatch_context,&Function1);
@@ -249,7 +281,7 @@ int OS2021_ThreadCreate(char *job_name, char *p_function, int priority, int canc
 
 void OS2021_ThreadCancel(char *job_name)
 {
-    
+
 }
 
 void OS2021_ThreadWaitEvent(int event_id)
@@ -259,12 +291,29 @@ void OS2021_ThreadWaitEvent(int event_id)
     temp->event = event_id;
     memset(&(temp->state),0,sizeof(temp->state));
     strcpy(temp->state,"WAITING");
-    enqueue(&(event_waitingf[temp->priority_cur]),&(event_waitingr[temp->priority_cur]),temp);
+    enqueue(&(event_waiting[temp->priority_cur]),temp);
     swapcontext(&(temp->ctx),&dispatch_context);
 }
 
 void OS2021_ThreadSetEvent(int event_id)
 {
+    Thread*temp = NULL;
+    temp = find_waiting_thread(&(event_waiting[2]));
+    if(temp){
+        enqueue(&(ready[2]),temp);
+        return;
+    }
+    temp = find_waiting_thread(&(event_waiting[1]));
+    if(temp){
+        enqueue(&(ready[1]),temp);
+        return;
+    }
+    temp = find_waiting_thread(&(event_waiting[0]));
+    if(temp){
+        enqueue(&(ready[0]),temp);
+        return;
+    }
+    return;
 
 }
 
@@ -294,7 +343,8 @@ void OS2021_TestCancel()
     temp = running;
     if(temp->cancelsig){
         running = NULL;
-        free(temp);
+        enqueue(&(terminate),temp);
+        swapcontext(&(temp->ctx),&(dispatch_context));
     }
 }
 
@@ -334,7 +384,7 @@ void Dispatcher()
     getthreads();
 
     while(1){
-        temp = dequeue(&(readyf[2]),&(readyr[2]));
+        temp = dequeue(&(ready[2]));
         running = temp;
         swapcontext(&dispatch_context,&(temp->ctx));
     }
