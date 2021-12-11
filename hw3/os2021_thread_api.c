@@ -207,6 +207,47 @@ void show_info(){
     
 }
 
+void increase(Thread**root){
+    Thread*temp = *root;
+    switch(temp->priority_cur[0]){
+        case 'H':
+            temp->qt = 100;
+            temp->priority_cur[0] = 'H';
+            break;
+        case 'M':
+            temp->qt = 100;
+            temp->priority_cur[0] = 'H';
+            break;
+        case 'L':
+            temp->qt = 200;
+            temp->priority_cur[0] = 'M';
+            break;
+        default:
+            break;    
+    }
+    *root = temp;
+}
+void decrease(Thread**root){
+    Thread*temp = *root;
+    switch(temp->priority_cur[0]){
+        case 'H':
+            temp->qt = 200;
+            temp->priority_cur[0] = 'M';
+            break;
+        case 'M':
+            temp->qt = 300;
+            temp->priority_cur[0] = 'L';
+            break;
+        case 'L':
+            temp->qt = 300;
+            temp->priority_cur[0] = 'L';
+            break;
+        default:
+            break;    
+    }
+    *root = temp;
+}
+
 Thread* time_wait(Thread **root){
     Thread*pre,*post;
     Thread *result = NULL;
@@ -253,10 +294,26 @@ void handler(){
         strcpy(temp[2]->state,"READY");
         enqueue(&(ready[2]),temp[2]);
     }
-    temp[0] = running;
-    running = NULL;
-    enqueue(&(ready[2]),temp[0]);
-    swapcontext(&(temp[0]->ctx),&dispatch_context);
+    running->qt -= 10;
+    if(!(running->qt)){
+        temp[0] = running;
+        running = NULL;
+        decrease(&(temp[0]));
+        switch(temp[0]->priority_cur[0]){
+            case 'H':
+                enqueue(&(ready[2]),temp[0]);
+                break;
+            case 'M':
+                enqueue(&(ready[1]),temp[0]);
+                break;
+            case 'L':
+                enqueue(&(ready[0]),temp[0]);
+                break;
+        }
+        swapcontext(&(temp[0]->ctx),&dispatch_context);
+    }
+
+    
 }
 
 int OS2021_ThreadCreate(char *job_name, char *p_function, char* priority, int cancel_mode)
@@ -280,15 +337,15 @@ int OS2021_ThreadCreate(char *job_name, char *p_function, char* priority, int ca
     strcpy(temp->state,"READY");
     switch(temp->priority_init[0]){
         case 'H':
-            temp->qt = 10;
+            temp->qt = 100;
             enqueue(&(ready[2]),temp);
             break;
         case 'M':
-            temp->qt = 20;
+            temp->qt = 200;
             enqueue(&(ready[1]),temp);
             break;
         case 'L':
-            temp->qt = 30;
+            temp->qt = 300;
             enqueue(&(ready[0]),temp);
             break;
     }
@@ -345,7 +402,7 @@ void OS2021_ThreadWaitEvent(int event_id)
     Thread*temp = running;
     running = NULL;
     temp->event = event_id;
-    printf("%s is waiting for event %d\n",temp->name,temp->event);
+    printf("%s wants to wait for event %d\n",temp->name,temp->event);
     memset(&(temp->state),0,sizeof(temp->state));
     strcpy(temp->state,"WAITING");
     switch(temp->priority_cur[0]){
@@ -370,6 +427,7 @@ void OS2021_ThreadSetEvent(int event_id)
         memset(&(temp->state),0,sizeof(temp->state));
         strcpy(temp->state,"READY");
         enqueue(&(ready[2]),temp);
+        printf("%s changes the status of %s to READY",running->name,temp->name);
         return;
     }
     temp = find_waiting_thread(&(event_waiting[1]),event_id);
@@ -377,6 +435,7 @@ void OS2021_ThreadSetEvent(int event_id)
         memset(&(temp->state),0,sizeof(temp->state));
         strcpy(temp->state,"READY");
         enqueue(&(ready[1]),temp);
+        printf("%s changes the status of %s to READY",running->name,temp->name);
         return;
     }
     temp = find_waiting_thread(&(event_waiting[0]),event_id);
@@ -384,6 +443,7 @@ void OS2021_ThreadSetEvent(int event_id)
         memset(&(temp->state),0,sizeof(temp->state));
         strcpy(temp->state,"READY");
         enqueue(&(ready[0]),temp);
+        printf("%s changes the status of %s to READY",running->name,temp->name);
         return;
     }
     return;
