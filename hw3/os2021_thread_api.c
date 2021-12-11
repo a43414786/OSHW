@@ -232,12 +232,15 @@ void decrease(Thread**root){
     switch(temp->priority_cur[0]){
         case 'H':
             temp->qt = 200;
+            strcpy(temp->priority_cur,"M");
             break;
         case 'M':
             temp->qt = 300;
+            strcpy(temp->priority_cur,"L");
             break;
         case 'L':
             temp->qt = 300;
+            strcpy(temp->priority_cur,"L");
             break;
         default:
             break;    
