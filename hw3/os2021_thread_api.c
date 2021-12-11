@@ -384,10 +384,11 @@ void OS2021_DeallocateThreadResource()
 
 void OS2021_TestCancel()
 {
-    Thread *temp = NULL;
-    temp = running;
+    Thread *temp = running;
     if(temp->cancelsig){
         running = NULL;
+        memset(&(temp->state),0,sizeof(temp->state));
+        strcpy(temp->state,"TERMINATED");
         enqueue(&(terminate),temp);
         swapcontext(&(temp->ctx),&(dispatch_context));
     }
