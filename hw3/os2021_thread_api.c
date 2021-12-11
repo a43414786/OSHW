@@ -417,7 +417,7 @@ void Dispatcher()
 {
     getcontext(&dispatch_context);
 
-    Signaltimer.it_interval.tv_usec = 1000000;
+    Signaltimer.it_interval.tv_usec = 100000;
     Signaltimer.it_interval.tv_sec = 0;
     ResetTimer();
     
@@ -437,7 +437,7 @@ void Dispatcher()
 void StartSchedulingSimulation()
 {
     /*Set Timer*/
-    Signaltimer.it_interval.tv_usec = 1000000;
+    Signaltimer.it_interval.tv_usec = 100000;
     Signaltimer.it_interval.tv_sec = 0;
     ResetTimer();
     /*Create Context*/
