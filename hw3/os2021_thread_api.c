@@ -421,7 +421,7 @@ void OS2021_ThreadWaitTime(int msec)
     printf("%s is waiting for  %d msec\n",temp->name,temp->time);
     memset(&(temp->state),0,sizeof(temp->state));
     strcpy(temp->state,"WAITING");
-    enqueue(&(event_waiting[temp->priority_cur]),temp);
+    enqueue(&(time_waiting[temp->priority_cur]),temp);
     swapcontext(&(temp->ctx),&dispatch_context);
 }
 
