@@ -298,9 +298,9 @@ void handler(){
     running->qt -= 10;
     if(!(running->qt)){
         decrease(&running);
-        printf("a\n");
         temp[0] = running;
         running = NULL;
+        printf("a\n");
         switch(temp[0]->priority_cur[0]){
             case 'H':
                 enqueue(&(ready[2]),temp[0]);
