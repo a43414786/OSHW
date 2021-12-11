@@ -66,8 +66,11 @@ Thread*find_waiting_thread(Thread**root,int id){
     pre = post = *root;
     while(post){
         if(post->event == id){
-            if(post == pre){
+            if((post == pre) && !(post->next)){
                 *root = NULL;
+            }
+            else if(post == pre){
+                *root = post->next;
             }
             else{
                 pre->next = post->next;
