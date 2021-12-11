@@ -40,6 +40,7 @@ Thread*find_thread(Thread**root,char*name){
     }
     return NULL;
 }
+
 Thread*get_thread(Thread**root,char*name){
     Thread*pre,*post;
     pre = post = *root;
@@ -59,6 +60,7 @@ Thread*get_thread(Thread**root,char*name){
     }
     return NULL;
 }
+
 Thread*find_waiting_thread(Thread**root,int id){
     Thread*pre,*post;
     pre = post = *root;
@@ -289,11 +291,9 @@ int OS2021_ThreadCreate(char *job_name, char *p_function, int priority, int canc
     return pid_counter;
 }
 
-void OS2021_ThreadCancel(char *job_name)
-{
+void do_cancel(Thread *root,char *job_name){
     Thread*result = NULL;
-    Thread*temp;
-    temp = ready[0];
+    Thread*temp = root;
     result = find_thread(&temp,job_name);
     if(result){
         if(result->cancelmode){
@@ -305,6 +305,19 @@ void OS2021_ThreadCancel(char *job_name)
             enqueue(&(terminate),result);
         }
     }
+}
+
+void OS2021_ThreadCancel(char *job_name)
+{
+    do_cancel(ready[2],job_name);
+    do_cancel(ready[1],job_name);
+    do_cancel(ready[0],job_name);
+    do_cancel(time_waiting[2],job_name);
+    do_cancel(time_waiting[1],job_name);
+    do_cancel(time_waiting[0],job_name);
+    do_cancel(event_waiting[2],job_name);
+    do_cancel(event_waiting[1],job_name);
+    do_cancel(event_waiting[0],job_name);
 
 }
 
