@@ -471,7 +471,7 @@ void Dispatcher()
     
     Thread*temp = NULL;
 
-    OS2021_ThreadCreate("reclaimer","ResourceReclaim",0,1);
+    OS2021_ThreadCreate("reclaimer","ResourceReclaim","L",1);
 
     init_threads();
 
