@@ -539,7 +539,7 @@ void Dispatcher()
         running = temp;
         swapcontext(&dispatch_context,&(temp->ctx));
 
-        '''if(temp){
+        /*if(temp){
             running = temp;
             swapcontext(&dispatch_context,&(temp->ctx));
         }else{
@@ -554,7 +554,7 @@ void Dispatcher()
                     swapcontext(&dispatch_context,&(temp->ctx));
                 }
             }
-        }'''
+        }*/
     }
 }
 
