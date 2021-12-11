@@ -298,17 +298,17 @@ void OS2021_ThreadWaitEvent(int event_id)
 void OS2021_ThreadSetEvent(int event_id)
 {
     Thread*temp = NULL;
-    temp = find_waiting_thread(&(event_waiting[2]));
+    temp = find_waiting_thread(&(event_waiting[2]),event_id);
     if(temp){
         enqueue(&(ready[2]),temp);
         return;
     }
-    temp = find_waiting_thread(&(event_waiting[1]));
+    temp = find_waiting_thread(&(event_waiting[1]),event_id);
     if(temp){
         enqueue(&(ready[1]),temp);
         return;
     }
-    temp = find_waiting_thread(&(event_waiting[0]));
+    temp = find_waiting_thread(&(event_waiting[0]),event_id);
     if(temp){
         enqueue(&(ready[0]),temp);
         return;
