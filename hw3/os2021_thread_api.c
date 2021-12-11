@@ -528,7 +528,7 @@ void Dispatcher()
     Signaltimer.it_interval.tv_sec = 0;
     ResetTimer();
     
-    Thread*temp = NULL;
+    Thread*temp;
 
     OS2021_ThreadCreate("reclaimer","ResourceReclaim","L",1);
 
@@ -536,8 +536,22 @@ void Dispatcher()
 
     while(1){
         temp = dequeue(&(ready[2]));
-        running = temp;
-        swapcontext(&dispatch_context,&(temp->ctx));
+        if(temp){
+            running = temp;
+            swapcontext(&dispatch_context,&(temp->ctx));
+        }else{
+            temp = dequeue(&(ready[1]));
+            if(temp){
+                running = temp;
+                swapcontext(&dispatch_context,&(temp->ctx));
+            }else{
+                temp = dequeue(&(ready[0]));
+                if(temp){
+                    running = temp;
+                    swapcontext(&dispatch_context,&(temp->ctx));
+                }
+            }
+        }
     }
 }
 
