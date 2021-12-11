@@ -168,7 +168,6 @@ void init_threads(){
         }
         if(input_counter == 4){
             input_counter = 0;
-            printf("%s %s %s %d\n",inputs[0],inputs[1],inputs[2],inputs[3][0] - '0');
             OS2021_ThreadCreate(inputs[0],inputs[1],inputs[2],inputs[3][0] - '0');
             memset(inputs,0,sizeof(inputs));
         }
