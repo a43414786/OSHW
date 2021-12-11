@@ -297,6 +297,7 @@ void handler(){
     if(!running) return;
     running->qt -= 10;
     if(!(running->qt)){
+        printf("a\n");
         decrease(&running);
         temp[0] = running;
         running = NULL;
@@ -311,7 +312,6 @@ void handler(){
                 enqueue(&(ready[0]),temp[0]);
                 break;
         }
-        printf("a\n");
         swapcontext(&(temp[0]->ctx),&dispatch_context);
     }
 
