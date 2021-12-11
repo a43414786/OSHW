@@ -227,14 +227,20 @@ int OS2021_ThreadCreate(char *job_name, char *p_function, int priority, int canc
     temp->qt = (3-priority)*10;
     enqueue(&(readyf[priority]),&(readyr[priority]),temp);
     
-    if(pid_counter%3 == 0){
-        CreateContext(&(temp->ctx),&dispatch_context,&p_function);
+    if(!strcmp(p_function,"Function1")){
+        CreateContext(&(temp->ctx),&dispatch_context,&Function1);
     }
-    else if(pid_counter%3 == 1){
-        CreateContext(&(temp->ctx),&dispatch_context,&p_function);
+    else if(!strcmp(p_function,"Function2")){
+        CreateContext(&(temp->ctx),&dispatch_context,&Function2);
     }
-    else if(pid_counter%3 == 2){
-        CreateContext(&(temp->ctx),&dispatch_context,&p_function);
+    else if(!strcmp(p_function,"Function3")){
+        CreateContext(&(temp->ctx),&dispatch_context,&Function3);
+    }
+    else if(!strcmp(p_function,"Function4")){
+        CreateContext(&(temp->ctx),&dispatch_context,&Function4);
+    }
+    else if(!strcmp(p_function,"Function5")){
+        CreateContext(&(temp->ctx),&dispatch_context,&Function5);
     }
     return pid_counter;
 }
