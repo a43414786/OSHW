@@ -276,7 +276,6 @@ Thread* time_wait(Thread **root){
 void handler(){
     if(!running) return;
     Thread*temp[3];
-    Thread*temp2;
     temp[0] = time_wait(&(time_waiting[0]));
     temp[1] = time_wait(&(time_waiting[1]));
     temp[2] = time_wait(&(time_waiting[2]));
@@ -297,10 +296,10 @@ void handler(){
     }
     running->qt -= 10;
     if(!(running->qt)){
-        temp2 = running;
+        temp[0] = running;
         running = NULL;
-        decrease(&(temp2));
-        switch(temp2->priority_cur[0]){
+        //decrease(&(temp[0]));
+        switch(temp[0]->priority_cur[0]){
             case 'H':
                 enqueue(&(ready[2]),temp[0]);
                 break;
@@ -311,7 +310,7 @@ void handler(){
                 enqueue(&(ready[0]),temp[0]);
                 break;
         }
-        swapcontext(&(temp2->ctx),&dispatch_context);
+        swapcontext(&(temp[0]->ctx),&dispatch_context);
     }
 
     
