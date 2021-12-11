@@ -238,7 +238,8 @@ void show_info(){
     pr_info(time_waiting[2]);
     pr_info(event_waiting[0]);
     pr_info(event_waiting[1]);
-    pr_info(event_waiting[2]);   
+    pr_info(event_waiting[2]);
+    pr_info(terminate);   
     puts("****************************************************************************************");
     
 }
