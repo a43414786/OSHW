@@ -10,3 +10,7 @@ push:
 	git add .
 	git commit . -m 'k'
 	git push
+t:
+	git pull
+	gcc -o t hw3/simulator.c hw3/os2021_thread_api.c
+	./t
