@@ -535,8 +535,11 @@ void Dispatcher()
     init_threads();
 
     while(1){
-        temp = dequeue(&(ready[2]));
-        if(temp){
+        temp = dequeue(&(ready[1]));
+        running = temp;
+        swapcontext(&dispatch_context,&(temp->ctx));
+
+        '''if(temp){
             running = temp;
             swapcontext(&dispatch_context,&(temp->ctx));
         }else{
@@ -551,7 +554,7 @@ void Dispatcher()
                     swapcontext(&dispatch_context,&(temp->ctx));
                 }
             }
-        }
+        }'''
     }
 }
 
