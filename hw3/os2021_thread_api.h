@@ -16,7 +16,7 @@
 void show_info();
 void handler();
 
-int OS2021_ThreadCreate(char *job_name, char *p_function, int priority, int cancel_mode);
+int OS2021_ThreadCreate(char *job_name, char *p_function, char* priority, int cancel_mode);
 void OS2021_ThreadCancel(char *job_name);
 void OS2021_ThreadWaitEvent(int event_id);
 void OS2021_ThreadSetEvent(int event_id);
