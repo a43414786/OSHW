@@ -278,9 +278,9 @@ Thread* time_wait(Thread **root){
 void handler(){
     if(!running) return;
     Thread*temp[3];
-    temp[0] = time_wait(time_waiting[0]);
-    temp[1] = time_wait(time_waiting[1]);
-    temp[2] = time_wait(time_waiting[2]);
+    temp[0] = time_wait(&(time_waiting[0]));
+    temp[1] = time_wait(&(time_waiting[1]));
+    temp[2] = time_wait(&(time_waiting[2]));
     if(temp[0]){
         memset(&(temp[0]->state),0,sizeof(temp[0]->state));
         strcpy(temp[0]->state,"READY");
