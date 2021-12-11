@@ -46,8 +46,11 @@ Thread*get_thread(Thread**root,char*name){
     pre = post = *root;
     while(post){
         if(!strcmp(post->name,name)){
-            if(post == pre){
+            if((post == pre) && !(post->next)){
                 *root = NULL;
+            }
+            else if(post == pre){
+                *root = post->next;
             }
             else{
                 pre->next = post->next;
@@ -247,12 +250,56 @@ void show_info(){
     
 }
 
+Thread* time_wait(Thread **root){
+    Thread*pre,*post;
+    Thread *result = NULL;
+    pre = post = *root;
+    while(post){
+        post->time -= 10;
+        if(!post->time){
+            if((post == pre) && !(post->next)){
+                *root = NULL;
+            }
+            else if(post == pre){
+                *root = post->next;
+            }
+            else{
+                pre->next = post->next;
+            }
+            post->next = NULL;
+            result = post;
+        }
+        pre = post;
+        post = post->next;
+    }
+    return result;
+}
+
 void handler(){
     if(!running) return;
-    Thread *temp = running;
+    Thread*temp[3];
+    temp[0] = time_wait(time_waiting[0]);
+    temp[1] = time_wait(time_waiting[1]);
+    temp[2] = time_wait(time_waiting[2]);
+    if(temp[0]){
+        memset(&(temp[0]->state),0,sizeof(temp[0]->state));
+        strcpy(temp[0]->state,"READY");
+        enqueue(&(ready[0]),temp[0]);
+    }
+    else if(temp[1]){
+        memset(&(temp[1]->state),0,sizeof(temp[1]->state));
+        strcpy(temp[1]->state,"READY");
+        enqueue(&(ready[1]),temp[1]);
+    }
+    else if(temp[2]){
+        memset(&(temp[2]->state),0,sizeof(temp[2]->state));
+        strcpy(temp[2]->state,"READY");
+        enqueue(&(ready[2]),temp[2]);
+    }
+    temp[0] = running;
     running = NULL;
     enqueue(&(ready[2]),temp);
-    swapcontext(&(temp->ctx),&dispatch_context);
+    swapcontext(&(temp[0]->ctx),&dispatch_context);
 }
 
 int OS2021_ThreadCreate(char *job_name, char *p_function, int priority, int cancel_mode)
@@ -367,7 +414,14 @@ void OS2021_ThreadSetEvent(int event_id)
 
 void OS2021_ThreadWaitTime(int msec)
 {
-    
+    Thread*temp = running;
+    running = NULL;
+    temp->time = msec*10;
+    printf("%s is waiting for  %d msec\n",temp->name,temp->time);
+    memset(&(temp->state),0,sizeof(temp->state));
+    strcpy(temp->state,"WAITING");
+    enqueue(&(event_waiting[temp->priority_cur]),temp);
+    swapcontext(&(temp->ctx),&dispatch_context);
 }
 
 void OS2021_DeallocateThreadResource()
