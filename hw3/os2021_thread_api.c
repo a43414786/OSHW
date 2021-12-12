@@ -534,7 +534,6 @@ void ResetTimer()
 
 void Dispatcher()
 {
-    sleep(5);
     getcontext(&dispatch_context);
 
     Signaltimer.it_interval.tv_usec = 10000; //10 ms
