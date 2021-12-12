@@ -311,7 +311,6 @@ void handler(){
                 enqueue(&(ready[0]),temp[0]);
                 break;
         }
-        printf("%s\n",temp[0]->name);
         swapcontext(&(temp[0]->ctx),&dispatch_context);
     }
 
@@ -544,6 +543,7 @@ void Dispatcher()
         }else{
             temp = dequeue(&(ready[1]));
             if(temp){
+                puts("a");
                 running = temp;
                 swapcontext(&dispatch_context,&(temp->ctx));
             }else{
