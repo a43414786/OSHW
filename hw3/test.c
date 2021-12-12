@@ -11,6 +11,7 @@ int main(){
     {
         srand(time(NULL));
         the_num = rand() % (max - min + 1) + min;
+        printf("%d\n",the_num);
         if(the_num == 65409)
         {
             fprintf(stdout,"I found 65409.\n");
