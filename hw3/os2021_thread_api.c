@@ -467,8 +467,7 @@ int OS2021_ThreadCreate(char *job_name, char *p_function, char* priority, int ca
 
 void do_cancel(Thread **root,char *job_name)
 {
-    Thread*result = NULL;
-    result = find_thread(root,job_name);
+    Thread*result = find_thread(root,job_name);
     if(result)
     {
         if(result->cancelmode)
@@ -584,18 +583,10 @@ void OS2021_ThreadWaitTime(int msec)
 
 void OS2021_DeallocateThreadResource()
 {
-    if(!terminate)
-    {
-        return;
-    }
-    Thread*pre = terminate;
-    Thread*post = pre;
-    terminate = NULL;
-    while(post)
-    {
-        pre = post;
-        post = post->next;
-        free(pre);
+    Thread*temp = NULL;
+    while(terminate){
+        temp = dequeue(&terminate);
+        free(temp);
     }
 }
 
