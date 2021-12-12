@@ -593,7 +593,7 @@ void OS2021_DeallocateThreadResource()
 void OS2021_TestCancel()
 {
     Thread *temp = running;
-    if(temp->cancelsig)
+    if(temp->cancelsig == 1)
     {
         running = NULL;
         memset(&(temp->state),0,sizeof(temp->state));
