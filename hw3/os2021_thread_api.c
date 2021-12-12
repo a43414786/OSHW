@@ -414,6 +414,7 @@ void OS2021_ThreadWaitEvent(int event_id)
     printf("%s wants to wait for event %d\n",temp->name,temp->event);
     memset(&(temp->state),0,sizeof(temp->state));
     strcpy(temp->state,"WAITING");
+    increase(&temp);
     switch(temp->priority_cur[0]){
         case 'H':
             enqueue(&(event_waiting[2]),temp);
@@ -425,7 +426,6 @@ void OS2021_ThreadWaitEvent(int event_id)
             enqueue(&(event_waiting[0]),temp);
             break;
     }
-    increase(&temp);
     ResetTimer();
     swapcontext(&(temp->ctx),&dispatch_context);
 }
@@ -468,6 +468,7 @@ void OS2021_ThreadWaitTime(int msec)
     temp->time = msec*10;
     memset(&(temp->state),0,sizeof(temp->state));
     strcpy(temp->state,"WAITING");
+    increase(&temp);
     switch(temp->priority_cur[0]){
         case 'H':
             enqueue(&(time_waiting[2]),temp);
@@ -479,7 +480,6 @@ void OS2021_ThreadWaitTime(int msec)
             enqueue(&(time_waiting[0]),temp);
             break;
     }
-    increase(&temp);
     ResetTimer();
     swapcontext(&(temp->ctx),&dispatch_context);
 }
