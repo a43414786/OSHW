@@ -273,6 +273,7 @@ Thread* time_wait(Thread **root){
 }
 
 void handler(){
+    show_info();
     Thread*temp[3];
     temp[0] = time_wait(&(time_waiting[0]));
     temp[1] = time_wait(&(time_waiting[1]));
