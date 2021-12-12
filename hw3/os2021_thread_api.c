@@ -640,7 +640,7 @@ void OS2021_TestCancel()
         memset(&(temp->state),0,sizeof(temp->state));
         strcpy(temp->state,"TERMINATED");
         enqueue(&(terminate),temp);
-        swapcontext(&(temp->ctx),&(dispatch_context));
+        swapcontext(&(temp->ctx),&scheduler_context);
     }
 }
 
