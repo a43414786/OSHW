@@ -414,6 +414,7 @@ void do_cancel(Thread *root,char *job_name){
 
 void OS2021_ThreadCancel(char *job_name)
 {
+    printf("%s want to cancel %s\n",running->name,job_name);
     do_cancel(ready[2],job_name);
     do_cancel(ready[1],job_name);
     do_cancel(ready[0],job_name);
