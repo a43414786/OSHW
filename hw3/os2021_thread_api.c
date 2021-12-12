@@ -202,7 +202,6 @@ void show_info(){
     pr_info(event_waiting[0]);
     pr_info(event_waiting[1]);
     pr_info(event_waiting[2]);
-    pr_info(terminate);   
     puts("****************************************************************************************");
     
 }
@@ -420,6 +419,8 @@ void OS2021_ThreadWaitEvent(int event_id)
             enqueue(&(event_waiting[0]),temp);
             break;
     }
+    increase(&temp);
+    ResetTimer();
     swapcontext(&(temp->ctx),&dispatch_context);
 }
 
@@ -431,7 +432,7 @@ void OS2021_ThreadSetEvent(int event_id)
         memset(&(temp->state),0,sizeof(temp->state));
         strcpy(temp->state,"READY");
         enqueue(&(ready[2]),temp);
-        printf("%s changes the status of %s to READY",running->name,temp->name);
+        printf("%s changes the status of %s to READY\n",running->name,temp->name);
         return;
     }
     temp = find_waiting_thread(&(event_waiting[1]),event_id);
@@ -439,7 +440,7 @@ void OS2021_ThreadSetEvent(int event_id)
         memset(&(temp->state),0,sizeof(temp->state));
         strcpy(temp->state,"READY");
         enqueue(&(ready[1]),temp);
-        printf("%s changes the status of %s to READY",running->name,temp->name);
+        printf("%s changes the status of %s to READY\n",running->name,temp->name);
         return;
     }
     temp = find_waiting_thread(&(event_waiting[0]),event_id);
@@ -447,7 +448,7 @@ void OS2021_ThreadSetEvent(int event_id)
         memset(&(temp->state),0,sizeof(temp->state));
         strcpy(temp->state,"READY");
         enqueue(&(ready[0]),temp);
-        printf("%s changes the status of %s to READY",running->name,temp->name);
+        printf("%s changes the status of %s to READY\n",running->name,temp->name);
         return;
     }
     return;
@@ -459,7 +460,6 @@ void OS2021_ThreadWaitTime(int msec)
     Thread*temp = running;
     running = NULL;
     temp->time = msec*10;
-    printf("%s is waiting for  %d msec\n",temp->name,temp->time);
     memset(&(temp->state),0,sizeof(temp->state));
     strcpy(temp->state,"WAITING");
     switch(temp->priority_cur[0]){
@@ -473,6 +473,8 @@ void OS2021_ThreadWaitTime(int msec)
             enqueue(&(time_waiting[0]),temp);
             break;
     }
+    increase(&temp);
+    ResetTimer();
     swapcontext(&(temp->ctx),&dispatch_context);
 }
 
