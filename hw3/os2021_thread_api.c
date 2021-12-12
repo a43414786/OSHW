@@ -405,7 +405,7 @@ void Scheduler(){
             decrease(&running);
             memset(&(running->state),0,sizeof(running->state));
             strcpy(running->state,"READY");
-            temp = dequeue(running);
+            temp = dequeue(&running);
             switch(temp->priority_cur[0])
             {
                 case 'H':
