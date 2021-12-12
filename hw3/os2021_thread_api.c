@@ -550,6 +550,7 @@ void Dispatcher()
                 puts("a");
                 temp = dequeue(&(ready[0]));
                 if(temp){
+                    puts("a");
                     running = temp;
                     swapcontext(&dispatch_context,&(temp->ctx));
                 }
