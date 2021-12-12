@@ -256,6 +256,7 @@ Thread* time_wait(Thread **root){
     Thread *result = NULL;
     pre = post = *root;
     while(post){
+        post->waiting_time += 10;
         post->time -= 10;
         if(!(post->time)){
             if((post == pre) && !(post->next)){
@@ -276,8 +277,30 @@ Thread* time_wait(Thread **root){
     return result;
 }
 
+void time_queueing(Thread **root){
+    Thread*temp = *root;
+    while(temp){
+        temp->queueing_time += 10;
+        temp = temp->next;
+    }
+}
+
+void wait_event(Thread **root){
+    Thread*temp = *root;
+    while(temp){
+        temp->waiting_time += 10;
+        temp = temp->next;
+    }
+}
+
 void handler(){
     Thread*temp[3];
+    time_queueing(&(ready[0]));
+    time_queueing(&(ready[1]));
+    time_queueing(&(ready[2]));
+    wait_event(&(event_waiting[0]));
+    wait_event(&(event_waiting[1]));
+    wait_event(&(event_waiting[2]));
     temp[0] = time_wait(&(time_waiting[0]));
     temp[1] = time_wait(&(time_waiting[1]));
     temp[2] = time_wait(&(time_waiting[2]));
