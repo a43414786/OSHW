@@ -402,7 +402,6 @@ void do_cancel(Thread *root,char *job_name){
     result = find_thread(&temp,job_name);
     if(result){
         if(result->cancelmode){
-            puts("a");
             result->cancelsig = 1;
         }else{
             result = get_thread(&temp,job_name);
@@ -524,6 +523,7 @@ void OS2021_TestCancel()
 {
     Thread *temp = running;
     if(temp->cancelsig){
+        printf("del %s",temp->name);
         running = NULL;
         memset(&(temp->state),0,sizeof(temp->state));
         strcpy(temp->state,"TERMINATED");
