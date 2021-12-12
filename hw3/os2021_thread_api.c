@@ -421,7 +421,7 @@ void Scheduler(){
         }
         if(event2){
             event2 = 0;
-            
+            endwait();
         }
 
         temp = dequeue(&(ready[2]));
