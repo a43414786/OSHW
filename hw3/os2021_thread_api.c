@@ -365,6 +365,9 @@ int OS2021_ThreadCreate(char *job_name, char *p_function, char* priority, int ca
     else if(!strcmp(p_function,"Function5")){
         CreateContext(&(temp->ctx),&dispatch_context,&Function5);
     }
+    else if(!strcmp(p_function,"ResourceReclaim")){
+        CreateContext(&(temp->ctx),&dispatch_context,&ResourceReclaim);
+    }
     return pid_counter;
 }
 
@@ -475,7 +478,6 @@ void OS2021_ThreadWaitTime(int msec)
 
 void OS2021_DeallocateThreadResource()
 {
-    
     if(!terminate){
         return;
     }
