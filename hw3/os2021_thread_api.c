@@ -523,7 +523,7 @@ void OS2021_TestCancel()
 {
     Thread *temp = running;
     if(temp->cancelsig){
-        printf("del %s",temp->name);
+        printf("del %s\n",temp->name);
         running = NULL;
         memset(&(temp->state),0,sizeof(temp->state));
         strcpy(temp->state,"TERMINATED");
