@@ -118,9 +118,6 @@ Thread *dequeue(Thread**root){
 
 void init_threads(){
     FILE*fp=fopen("init_threads.json","r");
-    Thread*root = NULL;
-    Thread*temp = NULL;
-    Thread*thread_root = NULL;
     char input[20];
     char inputs[4][20];
     int input_flag[4] = {0,0,0,0};
