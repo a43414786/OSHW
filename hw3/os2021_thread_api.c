@@ -354,7 +354,7 @@ void endwait(){
                     break;
                 }else if(pre == post){
                     time_waiting[i] = post->next;
-                    post->next = NULL
+                    post->next = NULL;
                     wait2ready(&post,post->priority_cur[0]);
                     pre = post = time_waiting[i];
                     continue;
