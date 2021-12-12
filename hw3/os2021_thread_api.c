@@ -341,7 +341,7 @@ void wait2ready(Thread**root,char priority){
 }
 
 void endwait(){ 
-    Thread*pre,*post,*temp;
+    Thread*pre,*post;
     for(int i = 0 ; i < 3 ; i++){
         pre = post = time_waiting[i];
         while(post)
@@ -374,7 +374,7 @@ void endwait(){
 
 void handler()
 {
-    time_waiting();
+    time_calculate();
     
     if(running){
         running->qt -= 10;
