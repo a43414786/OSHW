@@ -1,10 +1,11 @@
 #include "os2021_thread_api.h"
 
 
-void zhandler(){
-    
+void zhandler()
+{
+
     show_info();
-    
+
 }
 int main(int argc,char** argv)
 {

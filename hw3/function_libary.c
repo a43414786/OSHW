@@ -7,12 +7,12 @@ void Function1(void)
     {
         i = OS2021_ThreadCreate("random_1","Function2","L",1);
         ((i>0) ? fprintf(stdout,"Created random_1 successfully\n"):
-        fprintf(stdout,"Failed to create random_1\n"));
+         fprintf(stdout,"Failed to create random_1\n"));
         fflush(stdout);
 
         j = OS2021_ThreadCreate("random_2","Function2","L",1);
         ((j>0) ? fprintf(stdout,"Created random_2 successfully\n"):
-        fprintf(stdout,"Failed to create random_2\n"));
+         fprintf(stdout,"Failed to create random_2\n"));
         fflush(stdout);
 
         OS2021_ThreadWaitEvent(3);

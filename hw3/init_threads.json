@@ -1,28 +1,29 @@
 {
-    "Threads":[
-        {
-            "name" : "f4",
-            "entry function" : "Function4",
-            "priority" : "L",
-            "cancel mode" : "0"
-        },
-        {
-            "name" : "f5",
-            "entry function" : "Function5",
-            "priority" : "L",
-            "cancel mode" : "0"
-        },
-        {
-            "name" : "f1",
-            "entry function" : "Function2",
-            "priority" : "H",
-            "cancel mode" : "0"
-        },
-        {
-            "name" : "f2",
-            "entry function" : "Function1",
-            "priority" : "H",
-            "cancel mode" : "0"
-        }
+"Threads":
+    [
+    {
+"name" : "f4",
+"entry function" : "Function4",
+"priority" : "L",
+"cancel mode" : "0"
+    },
+    {
+"name" : "f5",
+"entry function" : "Function5",
+"priority" : "L",
+"cancel mode" : "0"
+    },
+    {
+"name" : "f1",
+"entry function" : "Function2",
+"priority" : "H",
+"cancel mode" : "0"
+    },
+    {
+"name" : "f2",
+"entry function" : "Function1",
+"priority" : "H",
+"cancel mode" : "0"
+    }
     ]
 }
