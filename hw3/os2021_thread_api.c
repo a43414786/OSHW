@@ -402,6 +402,7 @@ void do_cancel(Thread *root,char *job_name){
     result = find_thread(&temp,job_name);
     if(result){
         if(result->cancelmode){
+            puts("a");
             result->cancelsig = 1;
         }else{
             result = get_thread(&temp,job_name);
