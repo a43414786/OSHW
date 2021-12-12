@@ -396,9 +396,9 @@ int OS2021_ThreadCreate(char *job_name, char *p_function, char* priority, int ca
     return pid_counter;
 }
 
-void do_cancel(Thread *root,char *job_name){
+void do_cancel(Thread **root,char *job_name){
     Thread*result = NULL;
-    Thread*temp = root;
+    Thread*temp = *root;
     result = find_thread(&temp,job_name);
     if(result){
         if(result->cancelmode){
@@ -415,15 +415,15 @@ void do_cancel(Thread *root,char *job_name){
 void OS2021_ThreadCancel(char *job_name)
 {
     printf("%s want to cancel %s\n",running->name,job_name);
-    do_cancel(ready[2],job_name);
-    do_cancel(ready[1],job_name);
-    do_cancel(ready[0],job_name);
-    do_cancel(time_waiting[2],job_name);
-    do_cancel(time_waiting[1],job_name);
-    do_cancel(time_waiting[0],job_name);
-    do_cancel(event_waiting[2],job_name);
-    do_cancel(event_waiting[1],job_name);
-    do_cancel(event_waiting[0],job_name);
+    do_cancel(&(ready[2]),job_name);
+    do_cancel(&(ready[1]),job_name);
+    do_cancel(&(ready[0]),job_name);
+    do_cancel(&(time_waiting[2]),job_name);
+    do_cancel(&(time_waiting[1]),job_name);
+    do_cancel(&(time_waiting[0]),job_name);
+    do_cancel(&(event_waiting[2]),job_name);
+    do_cancel(&(event_waiting[1]),job_name);
+    do_cancel(&(event_waiting[0]),job_name);
 
 }
 
