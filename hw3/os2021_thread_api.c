@@ -551,7 +551,6 @@ void Dispatcher()
             }else{
                 temp = dequeue(&(ready[0]));
                 if(temp){
-                    printf("%s\n",temp->name);
                     running = temp;
                     swapcontext(&dispatch_context,&(temp->ctx));
                 }
