@@ -294,6 +294,7 @@ void wait_event(Thread **root){
 }
 
 void handler(){
+    show_info();
     Thread*temp[3];
     time_queueing(&(ready[0]));
     time_queueing(&(ready[1]));
