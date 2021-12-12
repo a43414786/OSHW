@@ -216,10 +216,12 @@ void increase(Thread**root){
         case 'M':
             temp->qt = 100;
             temp->priority_cur[0] = 'H';
+            printf("The priority of thread %s is changed form M to H\n",temp->name);
             break;
         case 'L':
             temp->qt = 200;
             temp->priority_cur[0] = 'M';
+            printf("The priority of thread %s is changed form L to M\n",temp->name);
             break;
         default:
             break;    
@@ -232,10 +234,12 @@ void decrease(Thread**root){
         case 'H':
             temp->qt = 200;
             strcpy(temp->priority_cur,"M");
+            printf("The priority of thread %s is changed form H to M\n",temp->name);
             break;
         case 'M':
             temp->qt = 300;
             strcpy(temp->priority_cur,"L");
+            printf("The priority of thread %s is changed form M to L\n",temp->name);
             break;
         case 'L':
             temp->qt = 300;
@@ -273,7 +277,6 @@ Thread* time_wait(Thread **root){
 }
 
 void handler(){
-    show_info();
     Thread*temp[3];
     temp[0] = time_wait(&(time_waiting[0]));
     temp[1] = time_wait(&(time_waiting[1]));
