@@ -297,6 +297,8 @@ void handler(){
     running->qt -= 10;
     if(!(running->qt)){
         decrease(&running);
+        memset(&(running->state),0,sizeof(running->state));
+        strcpy(running->state,"READY");
         temp[0] = running;
         running = NULL;
         switch(temp[0]->priority_cur[0]){
@@ -544,16 +546,22 @@ void Dispatcher()
         temp = dequeue(&(ready[2]));
         if(temp){
             running = temp;
+            memset(&(temp->state),0,sizeof(temp->state));
+            strcpy(temp->state,"RUNNING");
             swapcontext(&dispatch_context,&(temp->ctx));
         }else{
             temp = dequeue(&(ready[1]));
             if(temp){
                 running = temp;
+                memset(&(temp->state),0,sizeof(temp->state));
+                strcpy(temp->state,"RUNNING");
                 swapcontext(&dispatch_context,&(temp->ctx));
             }else{
                 temp = dequeue(&(ready[0]));
                 if(temp){
                     running = temp;
+                    memset(&(temp->state),0,sizeof(temp->state));
+                    strcpy(temp->state,"RUNNING");
                     swapcontext(&dispatch_context,&(temp->ctx));
                 }
             }
