@@ -31,21 +31,7 @@ Thread*terminate = NULL;
 
 int pid_counter = 1;
 
-Thread*find_thread(Thread**root,char*name)
-{
-    Thread*post = *root;
-    while(post)
-    {
-        if(!strcmp(post->name,name))
-        {
-            return post;
-        }
-        post = post->next;
-    }
-    return NULL;
-}
-
-Thread*get_thread(Thread**root,char*name)
+Thread*get_thread(Thread**root,char*name,int mode)
 {
     Thread*pre,*post;
     pre = post = *root;
@@ -53,20 +39,24 @@ Thread*get_thread(Thread**root,char*name)
     {
         if(!strcmp(post->name,name))
         {
-            if((post == pre) && !(post->next))
-            {
-                *root = NULL;
+            if(!mode){
+                return post;
+            }else{
+                if((post == pre) && !(post->next))
+                {
+                    *root = NULL;
+                }
+                else if(post == pre)
+                {
+                    *root = post->next;
+                }
+                else
+                {
+                    pre->next = post->next;
+                }
+                post->next = NULL;
+                return post;
             }
-            else if(post == pre)
-            {
-                *root = post->next;
-            }
-            else
-            {
-                pre->next = post->next;
-            }
-            post->next = NULL;
-            return post;
         }
         pre = post;
         post = post->next;
@@ -106,6 +96,7 @@ Thread*find_waiting_thread(Thread**root,int id)
 void enqueue(Thread**root,Thread*input)
 {
     Thread*temp = *root;
+    input->next =NULL;
     if(temp){
         while(temp->next){
             temp=temp->next;
@@ -467,7 +458,7 @@ int OS2021_ThreadCreate(char *job_name, char *p_function, char* priority, int ca
 
 void do_cancel(Thread **root,char *job_name)
 {
-    Thread*result = find_thread(root,job_name);
+    Thread*result = get_thread(root,job_name,0);
     if(result)
     {
         if(result->cancelmode)
@@ -476,7 +467,7 @@ void do_cancel(Thread **root,char *job_name)
         }
         else
         {
-            result = get_thread(root,job_name);
+            result = get_thread(root,job_name,1);
             memset(&(result->state),0,sizeof(result->state));
             strcpy(result->state,"TERMINATED");
             enqueue(&(terminate),result);
@@ -487,16 +478,11 @@ void do_cancel(Thread **root,char *job_name)
 void OS2021_ThreadCancel(char *job_name)
 {
     printf("delete %s\n",job_name);
-    do_cancel(&(ready[2]),job_name);
-    do_cancel(&(ready[1]),job_name);
-    do_cancel(&(ready[0]),job_name);
-    do_cancel(&(time_waiting[2]),job_name);
-    do_cancel(&(time_waiting[1]),job_name);
-    do_cancel(&(time_waiting[0]),job_name);
-    do_cancel(&(event_waiting[2]),job_name);
-    do_cancel(&(event_waiting[1]),job_name);
-    do_cancel(&(event_waiting[0]),job_name);
-
+    for(int i = 0 ; i < 3 ; i++){
+        do_cancel(&(ready[i]),job_name);
+        do_cancel(&(time_waiting[i]),job_name);
+        do_cancel(&(event_waiting[i]),job_name);
+    }
 }
 
 void OS2021_ThreadWaitEvent(int event_id)
@@ -626,24 +612,14 @@ void ResetTimer()
 
 void Dispatcher()
 {
-    getcontext(&dispatch_context);
-
-    Signaltimer.it_interval.tv_usec = 10000; //10 ms
-    Signaltimer.it_interval.tv_sec = 0;
-    ResetTimer();
-
     Thread*temp;
-
-    OS2021_ThreadCreate("reclaimer","ResourceReclaim","L",1);
-
-    init_threads();
 
     while(1)
     {
         temp = dequeue(&(ready[2]));
         if(temp)
         {
-            running = temp;
+            enqueue(&running,temp);
             memset(&(temp->state),0,sizeof(temp->state));
             strcpy(temp->state,"RUNNING");
             swapcontext(&dispatch_context,&(temp->ctx));
@@ -653,7 +629,7 @@ void Dispatcher()
             temp = dequeue(&(ready[1]));
             if(temp)
             {
-                running = temp;
+                enqueue(&running,temp);
                 memset(&(temp->state),0,sizeof(temp->state));
                 strcpy(temp->state,"RUNNING");
                 swapcontext(&dispatch_context,&(temp->ctx));
@@ -663,7 +639,7 @@ void Dispatcher()
                 temp = dequeue(&(ready[0]));
                 if(temp)
                 {
-                    running = temp;
+                    enqueue(&running,temp);
                     memset(&(temp->state),0,sizeof(temp->state));
                     strcpy(temp->state,"RUNNING");
                     swapcontext(&dispatch_context,&(temp->ctx));
@@ -675,6 +651,10 @@ void Dispatcher()
 
 void StartSchedulingSimulation()
 {
+    /*Parsing initial threads*/
+    OS2021_ThreadCreate("reclaimer","ResourceReclaim","L",1);
+
+    init_threads();
     /*Set Timer*/
     Signaltimer.it_interval.tv_usec = 10000;
     Signaltimer.it_interval.tv_sec = 0;
