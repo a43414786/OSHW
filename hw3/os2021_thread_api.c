@@ -475,7 +475,7 @@ void OS2021_ThreadWaitTime(int msec)
 
 void OS2021_DeallocateThreadResource()
 {
-    /*
+    
     if(!terminate){
         return;
     }
@@ -486,7 +486,7 @@ void OS2021_DeallocateThreadResource()
         pre = post;
         post = post->next;
         free(pre);
-    }*/
+    }
 }
 
 void OS2021_TestCancel()
@@ -544,14 +544,12 @@ void Dispatcher()
         }else{
             temp = dequeue(&(ready[1]));
             if(temp){
-                puts("a");
                 running = temp;
                 swapcontext(&dispatch_context,&(temp->ctx));
             }else{
-                puts("a");
                 temp = dequeue(&(ready[0]));
                 if(temp){
-                    puts("a");
+                    printf("%s\n",temp->name);
                     running = temp;
                     swapcontext(&dispatch_context,&(temp->ctx));
                 }
