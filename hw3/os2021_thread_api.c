@@ -391,7 +391,7 @@ void handler()
         if(running){
             swapcontext(&(running->ctx),&scheduler_context);
         }else{
-            setcontext(&scheduler_context)
+            setcontext(&scheduler_context);
         }
     }
 
