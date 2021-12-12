@@ -175,7 +175,6 @@ void init_threads(){
             input[counter++] = word;
         }
     }
-    return;
 }
 
 void pr_info(Thread *temp){
