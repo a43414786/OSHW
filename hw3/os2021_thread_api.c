@@ -106,37 +106,27 @@ Thread*find_waiting_thread(Thread**root,int id)
 void enqueue(Thread**root,Thread*input)
 {
     Thread*temp = *root;
-    input->next = temp;
-    *root = input;
+    if(temp){
+        while(temp->next){
+            temp=temp->next;
+        }
+        temp->next = input;
+    }else{
+        *root = input;
+    }
+
 }
 
 Thread *dequeue(Thread**root)
 {
-    Thread*pre,*post;
-    pre = post = *root;
-    if(post)
-    {
-        while(post->next)
-        {
-            pre = post;
-            post = post->next;
-        }
-    }
-    if(!pre)
-    {
+    Thread*temp = *root;
+    if(temp){
+        *root = temp->next;
+        temp->next = NULL;
+        return temp;
+    }else{
         return NULL;
     }
-    else if(post == pre)
-    {
-        *root = NULL;
-        return post;
-    }
-    else
-    {
-        pre->next = NULL;
-        return post;
-    }
-
 }
 
 void init_threads()
