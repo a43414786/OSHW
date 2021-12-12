@@ -17,7 +17,7 @@ typedef struct thread_status{
     int qt;
     int time;
     int event;
-    char state[10];
+    char state[20];
     ucontext_t ctx;
     struct thread_status *next;
 }Thread;
