@@ -278,6 +278,7 @@ void increase(Thread**root)
     }
     *root = temp;
 }
+
 void decrease(Thread**root)
 {
     Thread*temp = *root;
@@ -477,8 +478,7 @@ int OS2021_ThreadCreate(char *job_name, char *p_function, char* priority, int ca
 void do_cancel(Thread **root,char *job_name)
 {
     Thread*result = NULL;
-    Thread*temp = *root;
-    result = find_thread(&temp,job_name);
+    result = find_thread(root,job_name);
     if(result)
     {
         if(result->cancelmode)
@@ -487,7 +487,7 @@ void do_cancel(Thread **root,char *job_name)
         }
         else
         {
-            result = get_thread(&temp,job_name);
+            result = get_thread(root,job_name);
             memset(&(result->state),0,sizeof(result->state));
             strcpy(result->state,"TERMINATED");
             enqueue(&(terminate),result);
@@ -641,7 +641,6 @@ void ResetTimer()
         printf("ERROR SETTING TIME SIGALRM!\n");
     }
 }
-
 
 void Dispatcher()
 {
