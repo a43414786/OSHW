@@ -535,7 +535,6 @@ void do_cancel(Thread **root,char *job_name)
 
 void OS2021_ThreadCancel(char *job_name)
 {
-    printf("delete %s\n",job_name);
     for(int i = 0 ; i < 3 ; i++){
         do_cancel(&(ready[i]),job_name);
         do_cancel(&(time_waiting[i]),job_name);
