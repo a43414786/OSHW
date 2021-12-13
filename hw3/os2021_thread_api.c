@@ -376,6 +376,7 @@ void endwait(){
 
 void handler()
 {
+    show_info();
     time_calculate();
     
     if(running){
