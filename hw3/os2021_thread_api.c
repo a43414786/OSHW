@@ -432,8 +432,9 @@ void Scheduler(){
             temp = dequeue(&(ready[2]));
             if(temp)
             {
-                enqueue(&next_run,temp);
-                setcontext(&dispatch_context);
+                enqueue(&running,temp);
+                swapcontext(&scheduler_context,&running);
+                //enqueue(&next_run,temp);
                 //swapcontext(&scheduler_context,&dispatch_context);
             }
             else
@@ -441,8 +442,9 @@ void Scheduler(){
                 temp = dequeue(&(ready[1]));
                 if(temp)
                 {
-                    enqueue(&next_run,temp);
-                    setcontext(&dispatch_context);
+                    enqueue(&running,temp);
+                    swapcontext(&scheduler_context,&running);
+                    //enqueue(&next_run,temp);
                     //swapcontext(&scheduler_context,&dispatch_context);  
                 }
                 else
@@ -450,9 +452,9 @@ void Scheduler(){
                     temp = dequeue(&(ready[0]));
                     if(temp)
                     {
-                        enqueue(&next_run,temp);
-                        
-                        setcontext(&dispatch_context);
+                        enqueue(&running,temp);
+                        swapcontext(&scheduler_context,&running);
+                        //enqueue(&next_run,temp);
                         //swapcontext(&scheduler_context,&dispatch_context);
                     }
                 }
@@ -516,27 +518,27 @@ int OS2021_ThreadCreate(char *job_name, char *p_function, char* priority, int ca
     }
     if(!strcmp(p_function,"Function1"))
     {
-        CreateContext(&(temp->ctx),&dispatch_context,&Function1);
+        CreateContext(&(temp->ctx),&timer_context,&Function1);
     }
     else if(!strcmp(p_function,"Function2"))
     {
-        CreateContext(&(temp->ctx),&dispatch_context,&Function2);
+        CreateContext(&(temp->ctx),&timer_context,&Function2);
     }
     else if(!strcmp(p_function,"Function3"))
     {
-        CreateContext(&(temp->ctx),&dispatch_context,&Function3);
+        CreateContext(&(temp->ctx),&timer_context,&Function3);
     }
     else if(!strcmp(p_function,"Function4"))
     {
-        CreateContext(&(temp->ctx),&dispatch_context,&Function4);
+        CreateContext(&(temp->ctx),&timer_context,&Function4);
     }
     else if(!strcmp(p_function,"Function5"))
     {
-        CreateContext(&(temp->ctx),&dispatch_context,&Function5);
+        CreateContext(&(temp->ctx),&timer_context,&Function5);
     }
     else if(!strcmp(p_function,"ResourceReclaim"))
     {
-        CreateContext(&(temp->ctx),&dispatch_context,&ResourceReclaim);
+        CreateContext(&(temp->ctx),&timer_context,&ResourceReclaim);
     }
     return pid_counter;
 }
@@ -682,8 +684,6 @@ void Dispatcher()
     Thread*temp;
 
     swapcontext(&dispatch_context,&scheduler_context);
-    
-    getcontext(&dispatch_context);
 
     while(1)
     {
@@ -691,8 +691,7 @@ void Dispatcher()
         memset(&(temp->state),0,sizeof(temp->state));
         strcpy(temp->state,"RUNNING");
         enqueue(&running,temp);
-        setcontext(&(running->ctx));
-        //swapcontext(&dispatch_context,&(running->ctx));
+        swapcontext(&dispatch_context,&(running->ctx));
     }
 }
 
