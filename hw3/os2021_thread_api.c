@@ -655,7 +655,6 @@ void OS2021_TestCancel()
         enqueue(&(terminate),temp);
         setcontext(&scheduler_context);
     }
-    return;
 }
 
 void CreateContext(ucontext_t *context, ucontext_t *next_context, void *func)
