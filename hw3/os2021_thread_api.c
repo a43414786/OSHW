@@ -433,7 +433,7 @@ void Scheduler(){
             if(temp)
             {
                 enqueue(&running,temp);
-                swapcontext(&scheduler_context,&running);
+                swapcontext(&scheduler_context,&running->ctx);
                 //enqueue(&next_run,temp);
                 //swapcontext(&scheduler_context,&dispatch_context);
             }
@@ -443,7 +443,7 @@ void Scheduler(){
                 if(temp)
                 {
                     enqueue(&running,temp);
-                    swapcontext(&scheduler_context,&running);
+                    swapcontext(&scheduler_context,&running->ctx);
                     //enqueue(&next_run,temp);
                     //swapcontext(&scheduler_context,&dispatch_context);  
                 }
@@ -453,7 +453,7 @@ void Scheduler(){
                     if(temp)
                     {
                         enqueue(&running,temp);
-                        swapcontext(&scheduler_context,&running);
+                        swapcontext(&scheduler_context,&running->ctx);
                         //enqueue(&next_run,temp);
                         //swapcontext(&scheduler_context,&dispatch_context);
                     }
