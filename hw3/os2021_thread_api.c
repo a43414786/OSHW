@@ -632,7 +632,6 @@ void OS2021_DeallocateThreadResource()
 void OS2021_TestCancel()
 {
     Thread *temp;
-    printf("%s\n",running->name);
     if(running->cancelsig == 1)
     {
         temp = dequeue(&running);
