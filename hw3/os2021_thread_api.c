@@ -641,6 +641,7 @@ void OS2021_TestCancel()
     if(running->cancelsig == 1)
     {
         printf("%s\n",running->name);
+        
         /*
         temp = dequeue(&running);
         memset(&(temp->state),0,sizeof(temp->state));
