@@ -42,13 +42,28 @@ void Function2(void)
         puts("Function2");
     }
 }
+ucontext_t test[3];
+int counter = 0;
+void h(){
+    
+    int temp = counter;
+
+    counter++;
+
+    swapcontext(&test[temp%3],&test[counter%3]);
+    
+}
 
 int main(){
-    ucontext_t test[3];
+
+    signal(SIGALRM,h);
+
+    alarm(1);
 
     CreateContext(&test[0],NULL,&Function2);
     CreateContext(&test[1],NULL,&Function2);
     CreateContext(&test[2],NULL,&Function2);
+    setcontext(&test[0]);
 
     return 0;
 }
