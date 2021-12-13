@@ -50,6 +50,8 @@ void h(){
 
     counter++;
 
+    alarm(1);
+
     swapcontext(&test[temp%3],&test[counter%3]);
     
 }
