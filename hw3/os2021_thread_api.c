@@ -390,8 +390,6 @@ void handler()
         }
     }
 
-    ResetTimer();
-
     if(event1 || event2 || (!running)){
         if(running){
             swapcontext(&(running->ctx),&scheduler_context);
@@ -573,7 +571,6 @@ void OS2021_ThreadWaitEvent(int event_id)
         enqueue(&(event_waiting[0]),temp);
         break;
     }
-    ResetTimer();
     swapcontext(&(temp->ctx),&scheduler_context);
 }
 
@@ -630,7 +627,6 @@ void OS2021_ThreadWaitTime(int msec)
         enqueue(&(time_waiting[0]),temp);
         break;
     }
-    ResetTimer();
     swapcontext(&(temp->ctx),&scheduler_context);
 }
 
