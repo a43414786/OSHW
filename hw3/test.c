@@ -39,13 +39,14 @@ void Function2(void)
             fflush(stdout);
             min = 0;
             max = 0;
-            printf("%d\n",counter%3);
         }
+        fprintf(stdout,"%d\n",counter%3);
     }
 }
 ucontext_t test[3];
 void h(){
     
+
     int temp = counter;
 
     counter++;
