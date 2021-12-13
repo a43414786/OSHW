@@ -646,16 +646,13 @@ void OS2021_DeallocateThreadResource()
 void OS2021_TestCancel()
 {
     Thread *temp;
-    printf("%s",running->name);
     if(running->cancelsig == 1)
     {
-        //printf("%s\n",running->name);
-        /*
         temp = dequeue(&running);
         memset(&(temp->state),0,sizeof(temp->state));
         strcpy(temp->state,"TERMINATED");
         enqueue(&(terminate),temp);
-        setcontext(&scheduler_context);*/
+        setcontext(&scheduler_context);
     }
 }
 
