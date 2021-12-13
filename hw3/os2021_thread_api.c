@@ -213,11 +213,13 @@ void pr_info(Thread *temp)
     {
         if(strlen(temp->name) > 7)
         {
-            printf("*\t%d\t%s\t%s\t%s\t\t%s\t\t%d\t%d\t*\n",temp->pid,temp->name,temp->state,temp->priority_init,temp->priority_cur,temp->queueing_time,temp->waiting_time);
+            fprintf(stdout,"*\t%d\t%s\t%s\t%s\t\t%s\t\t%d\t%d\t*\n",temp->pid,temp->name,temp->state,temp->priority_init,temp->priority_cur,temp->queueing_time,temp->waiting_time);
+            fflush(stdout);
         }
         else
         {
-            printf("*\t%d\t%s\t\t%s\t%s\t\t%s\t\t%d\t%d\t*\n",temp->pid,temp->name,temp->state,temp->priority_init,temp->priority_cur,temp->queueing_time,temp->waiting_time);
+            fprintf(stdout,"*\t%d\t%s\t\t%s\t%s\t\t%s\t\t%d\t%d\t*\n",temp->pid,temp->name,temp->state,temp->priority_init,temp->priority_cur,temp->queueing_time,temp->waiting_time);
+            fflush(stdout);
         }
         temp = temp->next;
     }
@@ -225,8 +227,10 @@ void pr_info(Thread *temp)
 
 void show_info()
 {
-    puts("\n****************************************************************************************");
-    puts("*\tTID\tName\t\tState\tB_Priority\tC_Priority\tQ_Time\tW_Time\t*");
+    fprintf(stdout,"\n****************************************************************************************\n");
+    fflush(stdout);
+    fprintf(stdout,"*\tTID\tName\t\tState\tB_Priority\tC_Priority\tQ_Time\tW_Time\t*\n");
+    fflush(stdout);
     pr_info(running);
     pr_info(ready[0]);
     pr_info(ready[1]);
@@ -237,8 +241,8 @@ void show_info()
     pr_info(event_waiting[0]);
     pr_info(event_waiting[1]);
     pr_info(event_waiting[2]);
-    puts("****************************************************************************************");
-
+    fprintf(stdout,"****************************************************************************************\n");
+    fflush(stdout);
 }
 
 void increase(Thread**root)
@@ -254,12 +258,14 @@ void increase(Thread**root)
     case 'M':
         temp->qt = 100;
         temp->priority_cur[0] = 'H';
-        printf("The priority of thread %s is changed form M to H\n",temp->name);
+        fprintf(stdout,"The priority of thread %s is changed form M to H\n",temp->name);
+        fflush(stdout);
         break;
     case 'L':
         temp->qt = 200;
         temp->priority_cur[0] = 'M';
-        printf("The priority of thread %s is changed form L to M\n",temp->name);
+        fprintf(stdout,"The priority of thread %s is changed form L to M\n",temp->name);
+        fflush(stdout);
         break;
     default:
         break;
@@ -276,12 +282,14 @@ void decrease(Thread**root)
     case 'H':
         temp->qt = 200;
         strcpy(temp->priority_cur,"M");
-        printf("The priority of thread %s is changed form H to M\n",temp->name);
+        fprintf(stdout,"The priority of thread %s is changed form H to M\n",temp->name);
+        fflush(stdout);
         break;
     case 'M':
         temp->qt = 300;
         strcpy(temp->priority_cur,"L");
-        printf("The priority of thread %s is changed form M to L\n",temp->name);
+        fprintf(stdout,"The priority of thread %s is changed form M to L\n",temp->name);
+        fflush(stdout);
         break;
     case 'L':
         temp->qt = 300;
@@ -545,7 +553,8 @@ void OS2021_ThreadWaitEvent(int event_id)
     Thread*temp = running;
     running = NULL;
     temp->event = event_id;
-    printf("%s wants to wait for event %d\n",temp->name,temp->event);
+    fprintf(stdout,"%s wants to wait for event %d\n",temp->name,temp->event);
+    fflush(stdout);
     memset(&(temp->state),0,sizeof(temp->state));
     strcpy(temp->state,"WAITING");
     increase(&temp);
@@ -573,7 +582,8 @@ void OS2021_ThreadSetEvent(int event_id)
         memset(&(temp->state),0,sizeof(temp->state));
         strcpy(temp->state,"READY");
         enqueue(&(ready[2]),temp);
-        printf("%s changes the status of %s to READY\n",running->name,temp->name);
+        fprintf(stdout,"%s changes the status of %s to READY\n",running->name,temp->name);
+        fflush(stdout);
         return;
     }
     temp = find_waiting_thread(&(event_waiting[1]),event_id);
@@ -582,7 +592,8 @@ void OS2021_ThreadSetEvent(int event_id)
         memset(&(temp->state),0,sizeof(temp->state));
         strcpy(temp->state,"READY");
         enqueue(&(ready[1]),temp);
-        printf("%s changes the status of %s to READY\n",running->name,temp->name);
+        fprintf(stdout,"%s changes the status of %s to READY\n",running->name,temp->name);
+        fflush(stdout);
         return;
     }
     temp = find_waiting_thread(&(event_waiting[0]),event_id);
@@ -591,7 +602,8 @@ void OS2021_ThreadSetEvent(int event_id)
         memset(&(temp->state),0,sizeof(temp->state));
         strcpy(temp->state,"READY");
         enqueue(&(ready[0]),temp);
-        printf("%s changes the status of %s to READY\n",running->name,temp->name);
+        fprintf(stdout,"%s changes the status of %s to READY\n",running->name,temp->name);
+        fflush(stdout);
         return;
     }
     return;
