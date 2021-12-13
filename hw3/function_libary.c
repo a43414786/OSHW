@@ -41,6 +41,7 @@ void Function2(void)
             min = 0;
             max = 0;
         }
+        puts("Function2");
         OS2021_TestCancel();
     }
 }
