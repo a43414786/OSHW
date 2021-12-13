@@ -399,6 +399,10 @@ void handler()
 void Scheduler(){
     Thread *temp = NULL;
     while(1){
+        if(event2){
+            event2 = 0;
+            endwait();
+        }
         if(event1){
             event1 = 0;
             decrease(&running);
@@ -418,11 +422,6 @@ void Scheduler(){
                     break;
             }
         }
-        if(event2){
-            event2 = 0;
-            endwait();
-        }
-
         temp = dequeue(&(ready[2]));
         if(temp)
         {
@@ -640,7 +639,7 @@ void OS2021_TestCancel()
         memset(&(temp->state),0,sizeof(temp->state));
         strcpy(temp->state,"TERMINATED");
         enqueue(&(terminate),temp);
-        swapcontext(&(temp->ctx),&scheduler_context);
+        setcontext(&scheduler_context);
     }
 }
 
