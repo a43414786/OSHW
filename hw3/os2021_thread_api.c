@@ -214,12 +214,10 @@ void pr_info(Thread *temp)
         if(strlen(temp->name) > 7)
         {
             printf("*\t%d\t%s\t%s\t%s\t\t%s\t\t%d\t%d\t*\n",temp->pid,temp->name,temp->state,temp->priority_init,temp->priority_cur,temp->queueing_time,temp->waiting_time);
-            //printf("%d %d\n",temp->cancelsig,temp->qt);
         }
         else
         {
             printf("*\t%d\t%s\t\t%s\t%s\t\t%s\t\t%d\t%d\t*\n",temp->pid,temp->name,temp->state,temp->priority_init,temp->priority_cur,temp->queueing_time,temp->waiting_time);
-            //printf("%d %d\n",temp->cancelsig,temp->qt);
         }
         temp = temp->next;
     }
@@ -378,8 +376,6 @@ void endwait(){
 
 void handler()
 {
-    //show_info();
-
     time_calculate();
     
     if(running){
@@ -431,9 +427,7 @@ void Scheduler(){
             if(temp)
             {
                 enqueue(&running,temp);
-                swapcontext(&scheduler_context,&running->ctx);
-                //enqueue(&next_run,temp);
-                //swapcontext(&scheduler_context,&dispatch_context);
+                swapcontext(&scheduler_context,&dispatch_context);
             }
             else
             {
@@ -441,9 +435,7 @@ void Scheduler(){
                 if(temp)
                 {
                     enqueue(&running,temp);
-                    swapcontext(&scheduler_context,&running->ctx);
-                    //enqueue(&next_run,temp);
-                    //swapcontext(&scheduler_context,&dispatch_context);  
+                    swapcontext(&scheduler_context,&dispatch_context);
                 }
                 else
                 {
@@ -451,9 +443,7 @@ void Scheduler(){
                     if(temp)
                     {
                         enqueue(&running,temp);
-                        swapcontext(&scheduler_context,&running->ctx);
-                        //enqueue(&next_run,temp);
-                        //swapcontext(&scheduler_context,&dispatch_context);
+                        swapcontext(&scheduler_context,&dispatch_context);
                     }
                 }
             }
