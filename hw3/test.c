@@ -40,7 +40,6 @@ void Function2(void)
             min = 0;
             max = 0;
         }
-        printf("%d Function2\n",counter%3);
     }
 }
 ucontext_t test[3];
