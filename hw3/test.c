@@ -39,7 +39,7 @@ void Function2(void)
             fflush(stdout);
             min = 0;
             max = 0;
-            printf("%d",counter%3);
+            printf("%d\n",counter%3);
         }
     }
 }
