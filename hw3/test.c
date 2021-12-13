@@ -11,6 +11,7 @@
 
 #define STACK_SIZE 8192
 
+int counter = 0;
 void CreateContext(ucontext_t *context, ucontext_t *next_context, void *func)
 {
     getcontext(context);
@@ -39,11 +40,10 @@ void Function2(void)
             min = 0;
             max = 0;
         }
-        puts("Function2");
+        printf("%d Function2",counter);
     }
 }
 ucontext_t test[3];
-int counter = 0;
 void h(){
     
     int temp = counter;
