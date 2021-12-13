@@ -642,6 +642,11 @@ void OS2021_TestCancel()
     {
         printf("%s\n",running->name);
         
+        temp = dequeue(&running);
+
+        free(temp);
+
+        Scheduler();
         /*
         temp = dequeue(&running);
         memset(&(temp->state),0,sizeof(temp->state));
