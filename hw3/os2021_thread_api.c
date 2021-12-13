@@ -461,6 +461,24 @@ void Scheduler(){
     }
 }
 
+void do_cancel(Thread **root,char *job_name)
+{
+    Thread*result = get_thread(root,job_name,0);
+    if(result)
+    {
+        if(result->cancelmode)
+        {
+            result->cancelsig = 1;
+        }
+        else
+        {
+            result = get_thread(root,job_name,1);
+            memset(&(result->state),0,sizeof(result->state));
+            strcpy(result->state,"TERMINATED");
+            enqueue(&(terminate),result);
+        }
+    }
+}
 
 int OS2021_ThreadCreate(char *job_name, char *p_function, char* priority, int cancel_mode)
 {
@@ -521,25 +539,6 @@ int OS2021_ThreadCreate(char *job_name, char *p_function, char* priority, int ca
         CreateContext(&(temp->ctx),&dispatch_context,&ResourceReclaim);
     }
     return pid_counter;
-}
-
-void do_cancel(Thread **root,char *job_name)
-{
-    Thread*result = get_thread(root,job_name,0);
-    if(result)
-    {
-        if(result->cancelmode)
-        {
-            result->cancelsig = 1;
-        }
-        else
-        {
-            result = get_thread(root,job_name,1);
-            memset(&(result->state),0,sizeof(result->state));
-            strcpy(result->state,"TERMINATED");
-            enqueue(&(terminate),result);
-        }
-    }
 }
 
 void OS2021_ThreadCancel(char *job_name)

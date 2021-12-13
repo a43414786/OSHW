@@ -11,7 +11,9 @@ int main(int argc,char** argv)
 {
     signal(SIGTSTP,zhandler);
     signal(SIGALRM,handler);
-    StartSchedulingSimulation();
+    OS2021_ThreadCreate("random_1","Function2","M",1);
+    while;
+    //StartSchedulingSimulation();
 
     return 0;
 }
