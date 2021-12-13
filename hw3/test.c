@@ -6,6 +6,8 @@
 #include <unistd.h>
 #include <stdbool.h>
 #include <string.h>
+#include <time.h>
+
 
 #define STACK_SIZE 8192
 
