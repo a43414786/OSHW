@@ -645,8 +645,8 @@ void OS2021_DeallocateThreadResource()
 
 void OS2021_TestCancel()
 {
-    fprintf(stdout,"%s\n",running->name);
-    fflush(stdout);
+    //fprintf(stdout,"%s\n",running->name);
+    //fflush(stdout);
     Thread *temp;
     if(running->cancelsig == 1)
     {
