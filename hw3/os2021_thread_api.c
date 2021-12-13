@@ -1,9 +1,7 @@
 #include "os2021_thread_api.h"
-
 struct itimerval Signaltimer;
 ucontext_t dispatch_context;
 ucontext_t timer_context;
-ucontext_t scheduler_context;
 
 typedef struct thread_status
 {
@@ -29,13 +27,24 @@ Thread*time_waiting[3] = {NULL, NULL, NULL};
 Thread*event_waiting[3] = {NULL, NULL, NULL};
 Thread*running = NULL;
 Thread*terminate = NULL;
-Thread*next_run = NULL;
 
 int pid_counter = 1;
-int event1 = 0;
-int event2 = 0;
 
-Thread*get_thread(Thread**root,char*name,int mode)
+Thread*find_thread(Thread**root,char*name)
+{
+    Thread*post = *root;
+    while(post)
+    {
+        if(!strcmp(post->name,name))
+        {
+            return post;
+        }
+        post = post->next;
+    }
+    return NULL;
+}
+
+Thread*get_thread(Thread**root,char*name)
 {
     Thread*pre,*post;
     pre = post = *root;
@@ -43,24 +52,20 @@ Thread*get_thread(Thread**root,char*name,int mode)
     {
         if(!strcmp(post->name,name))
         {
-            if(!mode){
-                return post;
-            }else{
-                if((post == pre) && !(post->next))
-                {
-                    *root = NULL;
-                }
-                else if(post == pre)
-                {
-                    *root = post->next;
-                }
-                else
-                {
-                    pre->next = post->next;
-                }
-                post->next = NULL;
-                return post;
+            if((post == pre) && !(post->next))
+            {
+                *root = NULL;
             }
+            else if(post == pre)
+            {
+                *root = post->next;
+            }
+            else
+            {
+                pre->next = post->next;
+            }
+            post->next = NULL;
+            return post;
         }
         pre = post;
         post = post->next;
@@ -100,30 +105,37 @@ Thread*find_waiting_thread(Thread**root,int id)
 void enqueue(Thread**root,Thread*input)
 {
     Thread*temp = *root;
-    if(input){
-        input->next =NULL;
-    }
-    if(temp){
-        while(temp->next){
-            temp=temp->next;
-        }
-        temp->next = input;
-    }else{
-        *root = input;
-    }
-
+    input->next = temp;
+    *root = input;
 }
 
 Thread *dequeue(Thread**root)
 {
-    Thread*temp = *root;
-    if(temp){
-        *root = temp->next;
-        temp->next = NULL;
-        return temp;
-    }else{
+    Thread*pre,*post;
+    pre = post = *root;
+    if(post)
+    {
+        while(post->next)
+        {
+            pre = post;
+            post = post->next;
+        }
+    }
+    if(!pre)
+    {
         return NULL;
     }
+    else if(post == pre)
+    {
+        *root = NULL;
+        return post;
+    }
+    else
+    {
+        pre->next = NULL;
+        return post;
+    }
+
 }
 
 void init_threads()
@@ -214,12 +226,10 @@ void pr_info(Thread *temp)
         if(strlen(temp->name) > 7)
         {
             printf("*\t%d\t%s\t%s\t%s\t\t%s\t\t%d\t%d\t*\n",temp->pid,temp->name,temp->state,temp->priority_init,temp->priority_cur,temp->queueing_time,temp->waiting_time);
-            printf("%d %d\n",temp->cancelsig,temp->qt);
         }
         else
         {
             printf("*\t%d\t%s\t\t%s\t%s\t\t%s\t\t%d\t%d\t*\n",temp->pid,temp->name,temp->state,temp->priority_init,temp->priority_cur,temp->queueing_time,temp->waiting_time);
-            printf("%d %d\n",temp->cancelsig,temp->qt);
         }
         temp = temp->next;
     }
@@ -245,7 +255,6 @@ void show_info()
 
 void increase(Thread**root)
 {
-    if(!(*root)) return;
     Thread*temp = *root;
     switch(temp->priority_cur[0])
     {
@@ -268,10 +277,8 @@ void increase(Thread**root)
     }
     *root = temp;
 }
-
 void decrease(Thread**root)
 {
-    if(!(*root)) return;
     Thread*temp = *root;
     switch(temp->priority_cur[0])
     {
@@ -295,169 +302,114 @@ void decrease(Thread**root)
     *root = temp;
 }
 
-void time_calculate()
+Thread* time_wait(Thread **root)
 {
-    Thread*temp = NULL;
-    for(int i = 0 ; i < 3 ; i++){
-        temp = ready[i];
-        while(temp){
-            temp->queueing_time += 10;
-            temp = temp->next;
-        }
-    }
-    for(int i = 0 ; i < 3 ; i++){
-        temp = event_waiting[i];
-        while(temp){
-            temp->waiting_time += 10;
-            temp = temp->next;
-        }
-    }
-    for(int i = 0 ; i < 3 ; i++){
-        temp = time_waiting[i];
-        while(temp)
-        {
-            temp->waiting_time += 10;
-            temp->time -= 10;
-            if(!(temp->time))
-            {
-                event2 = 1;
-            }
-            temp = temp->next;
-        }
-    }
-}
-
-void wait2ready(Thread**root,char priority){
-    Thread*temp = *root;
-    memset(&(temp->state),0,sizeof(temp->state));
-    strcpy(temp->state,"READY");
-    switch(priority){
-        case 'H':
-            enqueue(&(ready[2]),temp);
-            break;
-        case 'M':
-            enqueue(&(ready[1]),temp);
-            break;
-        case 'L':
-            enqueue(&(ready[0]),temp);
-            break;    
-    }
-}
-
-void endwait(){ 
     Thread*pre,*post;
-    for(int i = 2 ; i >= 0 ; i--){
-        pre = post = time_waiting[i];
-        while(post)
+    Thread *result = NULL;
+    pre = post = *root;
+    while(post)
+    {
+        post->waiting_time += 10;
+        post->time -= 10;
+        if(!(post->time))
         {
-            if(!(post->time))
+            if((post == pre) && !(post->next))
             {
-                if((pre == post) && (!post->next)){
-                    time_waiting[i] = NULL;
-                    wait2ready(&post,post->priority_cur[0]);
-                    break;
-                }else if(pre == post){
-                    time_waiting[i] = post->next;
-                    post->next = NULL;
-                    wait2ready(&post,post->priority_cur[0]);
-                    pre = post = time_waiting[i];
-                    continue;
-                }else{
-                    pre->next = post->next;
-                    post->next = NULL;
-                    wait2ready(&post,post->priority_cur[0]);
-                    post = pre->next;
-                    continue;
-                }
+                *root = NULL;
             }
-            pre = post;
-            post = post->next;
+            else if(post == pre)
+            {
+                *root = post->next;
+            }
+            else
+            {
+                pre->next = post->next;
+            }
+            post->next = NULL;
+            result = post;
         }
+        pre = post;
+        post = post->next;
+    }
+    return result;
+}
+
+void time_queueing(Thread **root)
+{
+    Thread*temp = *root;
+    while(temp)
+    {
+        temp->queueing_time += 10;
+        temp = temp->next;
+    }
+}
+
+void wait_event(Thread **root)
+{
+    Thread*temp = *root;
+    while(temp)
+    {
+        temp->waiting_time += 10;
+        temp = temp->next;
     }
 }
 
 void handler()
 {
-    show_info();
+    Thread*temp[3];
+    time_queueing(&(ready[0]));
+    time_queueing(&(ready[1]));
+    time_queueing(&(ready[2]));
+    wait_event(&(event_waiting[0]));
+    wait_event(&(event_waiting[1]));
+    wait_event(&(event_waiting[2]));
+    temp[0] = time_wait(&(time_waiting[0]));
+    temp[1] = time_wait(&(time_waiting[1]));
+    temp[2] = time_wait(&(time_waiting[2]));
+    if(temp[0])
+    {
+        memset(&(temp[0]->state),0,sizeof(temp[0]->state));
+        strcpy(temp[0]->state,"READY");
+        enqueue(&(ready[0]),temp[0]);
+    }
+    else if(temp[1])
+    {
+        memset(&(temp[1]->state),0,sizeof(temp[1]->state));
+        strcpy(temp[1]->state,"READY");
+        enqueue(&(ready[1]),temp[1]);
+    }
+    else if(temp[2])
+    {
+        memset(&(temp[2]->state),0,sizeof(temp[2]->state));
+        strcpy(temp[2]->state,"READY");
+        enqueue(&(ready[2]),temp[2]);
+    }
 
-    time_calculate();
-    
-    if(running){
-        running->qt -= 10;
-        if(!(running->qt))
+    if(!running) return;
+    running->qt -= 10;
+    if(!(running->qt))
+    {
+        decrease(&running);
+        memset(&(running->state),0,sizeof(running->state));
+        strcpy(running->state,"READY");
+        temp[0] = running;
+        running = NULL;
+        switch(temp[0]->priority_cur[0])
         {
-            event1 = 1;
+        case 'H':
+            enqueue(&(ready[2]),temp[0]);
+            break;
+        case 'M':
+            enqueue(&(ready[1]),temp[0]);
+            break;
+        case 'L':
+            enqueue(&(ready[0]),temp[0]);
+            break;
         }
+        swapcontext(&(temp[0]->ctx),&dispatch_context);
     }
 
-    ResetTimer();
 
-    if(event1 || event2 || (!running)){
-        if(running){
-            swapcontext(&(running->ctx),&scheduler_context);
-        }else{
-            setcontext(&scheduler_context);
-        }
-    }
-
-}
-
-void Scheduler(){
-    Thread *temp = NULL;
-    while(1){
-        if(event2){
-            event2 = 0;
-            endwait();
-        }
-        if(event1){
-            event1 = 0;
-            decrease(&running);
-            memset(&(running->state),0,sizeof(running->state));
-            strcpy(running->state,"READY");
-            temp = dequeue(&running);
-            switch(temp->priority_cur[0])
-            {
-                case 'H':
-                    enqueue(&(ready[2]),temp);
-                    break;
-                case 'M':
-                    enqueue(&(ready[1]),temp);
-                    break;
-                case 'L':
-                    enqueue(&(ready[0]),temp);
-                    break;
-            }
-        }
-        if(!running){
-            temp = dequeue(&(ready[2]));
-            if(temp)
-            {
-                enqueue(&next_run,temp);
-                setcontext(&dispatch_context);
-                //swapcontext(&scheduler_context,&dispatch_context);
-            }
-            else
-            {
-                temp = dequeue(&(ready[1]));
-                if(temp)
-                {
-                    enqueue(&next_run,temp);
-                    setcontext(&dispatch_context);
-                    //swapcontext(&scheduler_context,&dispatch_context);  
-                }
-                else
-                {
-                    temp = dequeue(&(ready[0]));
-                    if(temp)
-                    {
-                        enqueue(&next_run,temp);
-                        setcontext(&dispatch_context);
-                        //swapcontext(&scheduler_context,&dispatch_context);
-                    }
-                }
-            }
-        }
-    }
 }
 
 int OS2021_ThreadCreate(char *job_name, char *p_function, char* priority, int cancel_mode)
@@ -521,9 +473,11 @@ int OS2021_ThreadCreate(char *job_name, char *p_function, char* priority, int ca
     return pid_counter;
 }
 
-void do_cancel(Thread **root,char *job_name)
+void do_cancel(Thread *root,char *job_name)
 {
-    Thread*result = get_thread(root,job_name,0);
+    Thread*result = NULL;
+    Thread*temp = root;
+    result = find_thread(&temp,job_name);
     if(result)
     {
         if(result->cancelmode)
@@ -532,7 +486,7 @@ void do_cancel(Thread **root,char *job_name)
         }
         else
         {
-            result = get_thread(root,job_name,1);
+            result = get_thread(&temp,job_name);
             memset(&(result->state),0,sizeof(result->state));
             strcpy(result->state,"TERMINATED");
             enqueue(&(terminate),result);
@@ -542,11 +496,16 @@ void do_cancel(Thread **root,char *job_name)
 
 void OS2021_ThreadCancel(char *job_name)
 {
-    for(int i = 0 ; i < 3 ; i++){
-        do_cancel(&(ready[i]),job_name);
-        do_cancel(&(time_waiting[i]),job_name);
-        do_cancel(&(event_waiting[i]),job_name);
-    }
+    do_cancel(ready[2],job_name);
+    do_cancel(ready[1],job_name);
+    do_cancel(ready[0],job_name);
+    do_cancel(time_waiting[2],job_name);
+    do_cancel(time_waiting[1],job_name);
+    do_cancel(time_waiting[0],job_name);
+    do_cancel(event_waiting[2],job_name);
+    do_cancel(event_waiting[1],job_name);
+    do_cancel(event_waiting[0],job_name);
+
 }
 
 void OS2021_ThreadWaitEvent(int event_id)
@@ -571,7 +530,7 @@ void OS2021_ThreadWaitEvent(int event_id)
         break;
     }
     ResetTimer();
-    swapcontext(&(temp->ctx),&scheduler_context);
+    swapcontext(&(temp->ctx),&dispatch_context);
 }
 
 void OS2021_ThreadSetEvent(int event_id)
@@ -610,7 +569,8 @@ void OS2021_ThreadSetEvent(int event_id)
 
 void OS2021_ThreadWaitTime(int msec)
 {
-    Thread*temp = dequeue(&running);
+    Thread*temp = running;
+    running = NULL;
     temp->time = msec*10;
     memset(&(temp->state),0,sizeof(temp->state));
     strcpy(temp->state,"WAITING");
@@ -628,31 +588,36 @@ void OS2021_ThreadWaitTime(int msec)
         break;
     }
     ResetTimer();
-    swapcontext(&(temp->ctx),&scheduler_context);
+    swapcontext(&(temp->ctx),&dispatch_context);
 }
 
 void OS2021_DeallocateThreadResource()
 {
-    Thread*temp = NULL;
-    while(terminate){
-        temp = dequeue(&terminate);
-        free(temp);
+    if(!terminate)
+    {
+        return;
+    }
+    Thread*pre = terminate;
+    Thread*post = pre;
+    terminate = NULL;
+    while(post)
+    {
+        pre = post;
+        post = post->next;
+        free(pre);
     }
 }
 
 void OS2021_TestCancel()
 {
-    Thread *temp;
-    printf("%s",running->name);
-    if(running->cancelsig == 1)
+    Thread *temp = running;
+    if(temp->cancelsig)
     {
-        //printf("%s\n",running->name);
-        /*
-        temp = dequeue(&running);
+        running = NULL;
         memset(&(temp->state),0,sizeof(temp->state));
         strcpy(temp->state,"TERMINATED");
         enqueue(&(terminate),temp);
-        setcontext(&scheduler_context);*/
+        swapcontext(&(temp->ctx),&(dispatch_context));
     }
 }
 
@@ -665,7 +630,6 @@ void CreateContext(ucontext_t *context, ucontext_t *next_context, void *func)
     context->uc_link = next_context;
     makecontext(context,(void (*)(void))func,0);
 }
-
 void ResetTimer()
 {
     Signaltimer.it_value.tv_sec = 0;
@@ -676,37 +640,62 @@ void ResetTimer()
     }
 }
 
+
 void Dispatcher()
 {
+    getcontext(&dispatch_context);
+
+    Signaltimer.it_interval.tv_usec = 10000; //10 ms
+    Signaltimer.it_interval.tv_sec = 0;
+    ResetTimer();
+
     Thread*temp;
 
-    swapcontext(&dispatch_context,&scheduler_context);
-    
-    getcontext(&dispatch_context);
+    OS2021_ThreadCreate("reclaimer","ResourceReclaim","L",1);
+
+    init_threads();
 
     while(1)
     {
-        temp = dequeue(&next_run);
-        memset(&(temp->state),0,sizeof(temp->state));
-        strcpy(temp->state,"RUNNING");
-        enqueue(&running,temp);
-        setcontext(&(running->ctx));
-        //swapcontext(&dispatch_context,&(running->ctx));
+        temp = dequeue(&(ready[2]));
+        if(temp)
+        {
+            running = temp;
+            memset(&(temp->state),0,sizeof(temp->state));
+            strcpy(temp->state,"RUNNING");
+            swapcontext(&dispatch_context,&(temp->ctx));
+        }
+        else
+        {
+            temp = dequeue(&(ready[1]));
+            if(temp)
+            {
+                running = temp;
+                memset(&(temp->state),0,sizeof(temp->state));
+                strcpy(temp->state,"RUNNING");
+                swapcontext(&dispatch_context,&(temp->ctx));
+            }
+            else
+            {
+                temp = dequeue(&(ready[0]));
+                if(temp)
+                {
+                    running = temp;
+                    memset(&(temp->state),0,sizeof(temp->state));
+                    strcpy(temp->state,"RUNNING");
+                    swapcontext(&dispatch_context,&(temp->ctx));
+                }
+            }
+        }
     }
 }
 
 void StartSchedulingSimulation()
 {
-    /*Parsing initial threads*/
-    OS2021_ThreadCreate("reclaimer","ResourceReclaim","L",1);
-
-    init_threads();
     /*Set Timer*/
     Signaltimer.it_interval.tv_usec = 10000;
     Signaltimer.it_interval.tv_sec = 0;
     ResetTimer();
-    /*Create scheduler Context*/
-    CreateContext(&scheduler_context, &timer_context, &Scheduler);
     /*Create Context*/
     CreateContext(&dispatch_context, &timer_context, &Dispatcher);
     setcontext(&dispatch_context);
