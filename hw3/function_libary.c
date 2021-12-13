@@ -41,6 +41,7 @@ void Function2(void)
             min = 0;
             max = 0;
         }
+        printf("a");
         OS2021_TestCancel();
     }
 }
