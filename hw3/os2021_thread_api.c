@@ -214,12 +214,12 @@ void pr_info(Thread *temp)
         if(strlen(temp->name) > 7)
         {
             printf("*\t%d\t%s\t%s\t%s\t\t%s\t\t%d\t%d\t*\n",temp->pid,temp->name,temp->state,temp->priority_init,temp->priority_cur,temp->queueing_time,temp->waiting_time);
-            printf("%d\n",temp->cancelsig);
+            printf("%d %d\n",temp->cancelsig,temp->qt);
         }
         else
         {
             printf("*\t%d\t%s\t\t%s\t%s\t\t%s\t\t%d\t%d\t*\n",temp->pid,temp->name,temp->state,temp->priority_init,temp->priority_cur,temp->queueing_time,temp->waiting_time);
-            printf("%d\n",temp->cancelsig);
+            printf("%d %d\n",temp->cancelsig,temp->qt);
         }
         temp = temp->next;
     }
@@ -640,7 +640,7 @@ void OS2021_TestCancel()
     Thread *temp;
     if(running->cancelsig == 1)
     {
-        printf("%s\n",running->name);
+        //printf("%s\n",running->name);
         /*
         temp = dequeue(&running);
         memset(&(temp->state),0,sizeof(temp->state));
