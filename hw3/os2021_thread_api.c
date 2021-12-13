@@ -213,11 +213,11 @@ void pr_info(Thread *temp)
     {
         if(strlen(temp->name) > 7)
         {
-            printf("*\t%d\t%s\t%s\t%s\t\t%s\t\t%d\t%d\t*%d\n",temp->pid,temp->name,temp->state,temp->priority_init,temp->priority_cur,temp->queueing_time,temp->waiting_time,temp->qt);
+            printf("*\t%d\t%s\t%s\t%s\t\t%s\t\t%d\t%d\t*\n",temp->pid,temp->name,temp->state,temp->priority_init,temp->priority_cur,temp->queueing_time,temp->waiting_time);
         }
         else
         {
-            printf("*\t%d\t%s\t\t%s\t%s\t\t%s\t\t%d\t%d\t*%d\n",temp->pid,temp->name,temp->state,temp->priority_init,temp->priority_cur,temp->queueing_time,temp->waiting_time,temp->qt);
+            printf("*\t%d\t%s\t\t%s\t%s\t\t%s\t\t%d\t%d\t*\n",temp->pid,temp->name,temp->state,temp->priority_init,temp->priority_cur,temp->queueing_time,temp->waiting_time);
         }
         temp = temp->next;
     }
@@ -376,7 +376,6 @@ void endwait(){
 
 void handler()
 {
-    show_info();
     time_calculate();
     
     if(running){
