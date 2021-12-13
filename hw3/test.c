@@ -40,7 +40,7 @@ void Function2(void)
             min = 0;
             max = 0;
         }
-        fprintf(stdout,"%d\n",counter%3);
+        fprintf(stdout,"%d %d\n",counter%3,min);
     }
 }
 ucontext_t test[3];
