@@ -625,6 +625,8 @@ void OS2021_DeallocateThreadResource()
     Thread*temp = NULL;
     while(terminate){
         temp = dequeue(&terminate);
+        fprintf(stdout,"The memory space by %s has been released\n",temp->name);
+        fflush(stdout);
         free(temp);
     }
 }
