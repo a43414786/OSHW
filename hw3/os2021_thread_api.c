@@ -327,6 +327,8 @@ void time_calculate()
 
 void wait2ready(Thread**root,char priority){
     Thread*temp = *root;
+    memset(&(temp->state),0,sizeof(temp->state));
+    strcpy(temp->state,"READY");
     switch(priority){
         case 'H':
             enqueue(&(ready[2]),temp);
@@ -342,7 +344,7 @@ void wait2ready(Thread**root,char priority){
 
 void endwait(){ 
     Thread*pre,*post;
-    for(int i = 0 ; i < 3 ; i++){
+    for(int i = 2 ; i >= 0 ; i--){
         pre = post = time_waiting[i];
         while(post)
         {
@@ -422,27 +424,29 @@ void Scheduler(){
                     break;
             }
         }
-        temp = dequeue(&(ready[2]));
-        if(temp)
-        {
-            enqueue(&next_run,temp);
-            swapcontext(&scheduler_context,&dispatch_context);
-        }
-        else
-        {
-            temp = dequeue(&(ready[1]));
+        if(!running){
+            temp = dequeue(&(ready[2]));
             if(temp)
             {
                 enqueue(&next_run,temp);
-                swapcontext(&scheduler_context,&dispatch_context);  
+                swapcontext(&scheduler_context,&dispatch_context);
             }
             else
             {
-                temp = dequeue(&(ready[0]));
+                temp = dequeue(&(ready[1]));
                 if(temp)
                 {
                     enqueue(&next_run,temp);
-                    swapcontext(&scheduler_context,&dispatch_context);
+                    swapcontext(&scheduler_context,&dispatch_context);  
+                }
+                else
+                {
+                    temp = dequeue(&(ready[0]));
+                    if(temp)
+                    {
+                        enqueue(&next_run,temp);
+                        swapcontext(&scheduler_context,&dispatch_context);
+                    }
                 }
             }
         }
