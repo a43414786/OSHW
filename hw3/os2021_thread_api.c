@@ -426,7 +426,7 @@ void Scheduler(){
             temp = dequeue(&(ready[2]));
             if(temp)
             {
-                enqueue(&running,temp);
+                enqueue(&next_run,temp);
                 swapcontext(&scheduler_context,&dispatch_context);
             }
             else
@@ -434,7 +434,7 @@ void Scheduler(){
                 temp = dequeue(&(ready[1]));
                 if(temp)
                 {
-                    enqueue(&running,temp);
+                    enqueue(&next_run,temp);
                     swapcontext(&scheduler_context,&dispatch_context);
                 }
                 else
@@ -442,7 +442,7 @@ void Scheduler(){
                     temp = dequeue(&(ready[0]));
                     if(temp)
                     {
-                        enqueue(&running,temp);
+                        enqueue(&next_run,temp);
                         swapcontext(&scheduler_context,&dispatch_context);
                     }
                 }
