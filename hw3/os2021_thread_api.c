@@ -433,7 +433,8 @@ void Scheduler(){
             if(temp)
             {
                 enqueue(&next_run,temp);
-                swapcontext(&scheduler_context,&dispatch_context);
+                setcontext(&dispatch_context);
+                //swapcontext(&scheduler_context,&dispatch_context);
             }
             else
             {
@@ -441,7 +442,8 @@ void Scheduler(){
                 if(temp)
                 {
                     enqueue(&next_run,temp);
-                    swapcontext(&scheduler_context,&dispatch_context);  
+                    setcontext(&dispatch_context);
+                    //swapcontext(&scheduler_context,&dispatch_context);  
                 }
                 else
                 {
@@ -449,7 +451,8 @@ void Scheduler(){
                     if(temp)
                     {
                         enqueue(&next_run,temp);
-                        swapcontext(&scheduler_context,&dispatch_context);
+                        setcontext(&dispatch_context);
+                        //swapcontext(&scheduler_context,&dispatch_context);
                     }
                 }
             }
@@ -679,13 +682,16 @@ void Dispatcher()
 
     swapcontext(&dispatch_context,&scheduler_context);
     
+    getcontext(&dispatch_context);
+
     while(1)
     {
         temp = dequeue(&next_run);
         memset(&(temp->state),0,sizeof(temp->state));
         strcpy(temp->state,"RUNNING");
         enqueue(&running,temp);
-        swapcontext(&dispatch_context,&(running->ctx));
+        setcontext(&(running->ctx));
+        //swapcontext(&dispatch_context,&(running->ctx));
     }
 }
 
