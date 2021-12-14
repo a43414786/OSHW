@@ -33,13 +33,11 @@ check:
 	cppcheck os2021_thread_api.c
 	cppcheck os2021_thread_api.h
 	cppcheck simulator.c
-	cppcheck init_threads.json	
 	astyle --style=bsd --indent=spaces=4 --suffix=none function_libary.c
 	astyle --style=bsd --indent=spaces=4 --suffix=none function_libary.h
 	astyle --style=bsd --indent=spaces=4 --suffix=none os2021_thread_api.c
 	astyle --style=bsd --indent=spaces=4 --suffix=none os2021_thread_api.h
 	astyle --style=bsd --indent=spaces=4 --suffix=none simulator.c
-	astyle --style=bsd --indent=spaces=4 --suffix=none init_threads.json	
 move:
 	cp function_libary.c ~/hw3/function_libary.c
 	cp function_libary.h ~/hw3/function_libary.h
