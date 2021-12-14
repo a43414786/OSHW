@@ -430,7 +430,12 @@ void Scheduler(){
                     break;
             }
         }
-        if(!running){
+        if(running)
+        {
+            swapcontext(&scheduler_context,&running->ctx);
+        }
+        else
+        {
             temp = dequeue(&(ready[2]));
             if(temp)
             {
