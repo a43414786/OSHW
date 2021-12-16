@@ -43,9 +43,12 @@ Thread*get_thread(Thread**root,char*name,int mode)
     {
         if(!strcmp(post->name,name))
         {
-            if(!mode){
+            if(!mode)
+            {
                 return post;
-            }else{
+            }
+            else
+            {
                 if((post == pre) && !(post->next))
                 {
                     *root = NULL;
@@ -100,15 +103,20 @@ Thread*find_waiting_thread(Thread**root,int id)
 void enqueue(Thread**root,Thread*input)
 {
     Thread*temp = *root;
-    if(input){
+    if(input)
+    {
         input->next =NULL;
     }
-    if(temp){
-        while(temp->next){
+    if(temp)
+    {
+        while(temp->next)
+        {
             temp=temp->next;
         }
         temp->next = input;
-    }else{
+    }
+    else
+    {
         *root = input;
     }
 
@@ -117,11 +125,14 @@ void enqueue(Thread**root,Thread*input)
 Thread *dequeue(Thread**root)
 {
     Thread*temp = *root;
-    if(temp){
+    if(temp)
+    {
         *root = temp->next;
         temp->next = NULL;
         return temp;
-    }else{
+    }
+    else
+    {
         return NULL;
     }
 }
@@ -304,21 +315,26 @@ void decrease(Thread**root)
 void time_calculate()
 {
     Thread*temp = NULL;
-    for(int i = 0 ; i < 3 ; i++){
+    for(int i = 0 ; i < 3 ; i++)
+    {
         temp = ready[i];
-        while(temp){
+        while(temp)
+        {
             temp->queueing_time += 10;
             temp = temp->next;
         }
     }
-    for(int i = 0 ; i < 3 ; i++){
+    for(int i = 0 ; i < 3 ; i++)
+    {
         temp = event_waiting[i];
-        while(temp){
+        while(temp)
+        {
             temp->waiting_time += 10;
             temp = temp->next;
         }
     }
-    for(int i = 0 ; i < 3 ; i++){
+    for(int i = 0 ; i < 3 ; i++)
+    {
         temp = time_waiting[i];
         while(temp)
         {
@@ -333,42 +349,51 @@ void time_calculate()
     }
 }
 
-void wait2ready(Thread**root,char priority){
+void wait2ready(Thread**root,char priority)
+{
     Thread*temp = *root;
     memset(&(temp->state),0,sizeof(temp->state));
     strcpy(temp->state,"READY");
-    switch(priority){
-        case 'H':
-            enqueue(&(ready[2]),temp);
-            break;
-        case 'M':
-            enqueue(&(ready[1]),temp);
-            break;
-        case 'L':
-            enqueue(&(ready[0]),temp);
-            break;    
+    switch(priority)
+    {
+    case 'H':
+        enqueue(&(ready[2]),temp);
+        break;
+    case 'M':
+        enqueue(&(ready[1]),temp);
+        break;
+    case 'L':
+        enqueue(&(ready[0]),temp);
+        break;
     }
 }
 
-void endwait(){ 
+void endwait()
+{
     Thread*pre,*post;
-    for(int i = 2 ; i >= 0 ; i--){
+    for(int i = 2 ; i >= 0 ; i--)
+    {
         pre = post = time_waiting[i];
         while(post)
         {
             if(!(post->time))
             {
-                if((pre == post) && (!post->next)){
+                if((pre == post) && (!post->next))
+                {
                     time_waiting[i] = NULL;
                     wait2ready(&post,post->priority_cur[0]);
                     break;
-                }else if(pre == post){
+                }
+                else if(pre == post)
+                {
                     time_waiting[i] = post->next;
                     post->next = NULL;
                     wait2ready(&post,post->priority_cur[0]);
                     pre = post = time_waiting[i];
                     continue;
-                }else{
+                }
+                else
+                {
                     pre->next = post->next;
                     post->next = NULL;
                     wait2ready(&post,post->priority_cur[0]);
@@ -385,8 +410,9 @@ void endwait(){
 void handler()
 {
     time_calculate();
-    
-    if(running){
+
+    if(running)
+    {
         running->qt -= 10;
         if(!(running->qt))
         {
@@ -394,24 +420,32 @@ void handler()
         }
     }
 
-    if(event1 || event2 || (!running)){
-        if(running){
+    if(event1 || event2 || (!running))
+    {
+        if(running)
+        {
             swapcontext(&(running->ctx),&scheduler_context);
-        }else{
+        }
+        else
+        {
             setcontext(&scheduler_context);
         }
     }
 
 }
 
-void Scheduler(){
+void Scheduler()
+{
     Thread *temp = NULL;
-    while(1){
-        if(event2){
+    while(1)
+    {
+        if(event2)
+        {
             event2 = 0;
             endwait();
         }
-        if(event1){
+        if(event1)
+        {
             event1 = 0;
             decrease(&running);
             memset(&(running->state),0,sizeof(running->state));
@@ -419,15 +453,15 @@ void Scheduler(){
             temp = dequeue(&running);
             switch(temp->priority_cur[0])
             {
-                case 'H':
-                    enqueue(&(ready[2]),temp);
-                    break;
-                case 'M':
-                    enqueue(&(ready[1]),temp);
-                    break;
-                case 'L':
-                    enqueue(&(ready[0]),temp);
-                    break;
+            case 'H':
+                enqueue(&(ready[2]),temp);
+                break;
+            case 'M':
+                enqueue(&(ready[1]),temp);
+                break;
+            case 'L':
+                enqueue(&(ready[0]),temp);
+                break;
             }
         }
         if(running)
@@ -546,7 +580,8 @@ int OS2021_ThreadCreate(char *job_name, char *p_function, char* priority, int ca
 
 void OS2021_ThreadCancel(char *job_name)
 {
-    for(int i = 0 ; i < 3 ; i++){
+    for(int i = 0 ; i < 3 ; i++)
+    {
         do_cancel(&(ready[i]),job_name);
         do_cancel(&(time_waiting[i]),job_name);
         do_cancel(&(event_waiting[i]),job_name);
@@ -640,7 +675,8 @@ void OS2021_ThreadWaitTime(int msec)
 void OS2021_DeallocateThreadResource()
 {
     Thread*temp = NULL;
-    while(terminate){
+    while(terminate)
+    {
         temp = dequeue(&terminate);
         fprintf(stdout,"The memory space by %s has been released\n",temp->name);
         fflush(stdout);
