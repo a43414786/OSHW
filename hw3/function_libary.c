@@ -44,7 +44,7 @@ void Function2(void)
         OS2021_TestCancel();
     }
 }
-/*
+
 void Function3(void)
 {
     while(1)
@@ -52,30 +52,6 @@ void Function3(void)
         OS2021_ThreadWaitEvent(3);
         fprintf(stdout,"I fell in love with the operating system.\n");
         fflush(stdout);
-    }
-}
-*/
-void Function3(void)
-{
-    int the_num;
-
-    int min = 65400;
-    int max = 65410;
-
-    while(1)
-    {
-        srand(time(NULL));
-        the_num = rand() % (max - min + 1) + min;
-        if(the_num == 65409)
-        {
-            OS2021_ThreadCancel("f3");
-            fprintf(stdout,"I found 65409.\n");
-            fflush(stdout);
-            OS2021_ThreadSetEvent(3);
-            min = 0;
-            max = 0;
-        }
-        OS2021_TestCancel();
     }
 }
 
