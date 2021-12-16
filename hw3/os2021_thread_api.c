@@ -513,6 +513,9 @@ void do_cancel(Thread **root,char *job_name)
             memset(&(result->state),0,sizeof(result->state));
             strcpy(result->state,"TERMINATED");
             enqueue(&(terminate),result);
+            if(root == &running){
+                setcontext(&scheduler_context);
+            }
         }
     }
 }
@@ -580,6 +583,7 @@ int OS2021_ThreadCreate(char *job_name, char *p_function, char* priority, int ca
 
 void OS2021_ThreadCancel(char *job_name)
 {
+    do_cancel(&(running),job_name);
     for(int i = 0 ; i < 3 ; i++)
     {
         do_cancel(&(ready[i]),job_name);
@@ -686,8 +690,6 @@ void OS2021_DeallocateThreadResource()
 
 void OS2021_TestCancel()
 {
-    //fprintf(stdout,"%s\n",running->name);
-    //fflush(stdout);
     Thread *temp;
     if(running->cancelsig == 1)
     {
