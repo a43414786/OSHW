@@ -11,7 +11,7 @@
             "name" : "f3",
             "entry function" : "Function3",
             "priority" : "M",
-            "cancel mode" : "1"
+            "cancel mode" : "0"
         }
     ]
 }
