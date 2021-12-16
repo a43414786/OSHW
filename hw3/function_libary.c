@@ -44,7 +44,7 @@ void Function2(void)
         OS2021_TestCancel();
     }
 }
-
+/*
 void Function3(void)
 {
     while(1)
@@ -53,6 +53,18 @@ void Function3(void)
         fprintf(stdout,"I fell in love with the operating system.\n");
         fflush(stdout);
     }
+}
+*/
+void Function3(void)
+{
+    OS2021_ThreadCancel("f3");
+    while(1)
+    {
+        OS2021_ThreadWaitEvent(3);
+        fprintf(stdout,"I fell in love with the operating system.\n");
+        fflush(stdout);
+    }
+    OS2021_TestCancel();
 }
 
 void Function4(void)
