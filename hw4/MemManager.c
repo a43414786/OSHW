@@ -36,7 +36,7 @@ void pr_info(Node*root){
 
 int main(){
 
-    char num[] = "   123456789";
+    char num[] = ",   123456789";
     printf("%d",atoi(num));
 
     FILE*trace = fopen("trace.txt", "r");
