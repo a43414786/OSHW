@@ -34,8 +34,7 @@ void pr_info(Node*root){
     }
 }
 
-int main(){
-
+Node* get_trace(){
     FILE*trace = fopen("trace.txt", "r");
     char word;
     char name[10];
@@ -78,6 +77,13 @@ int main(){
             frame[framecount++] = word;
         }
     }
+    return root;
+}
+
+int main(){
+
+    Node*root = get_trace();
     pr_info(root);
     return 0;
+    
 }
