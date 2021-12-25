@@ -4,7 +4,7 @@
 struct node{
     char name[100];
     int frame;
-    struct node next;
+    struct node*next;
 }typedef Node;
 
 Node*cnode(char*name,int frame){
@@ -29,7 +29,7 @@ void addnode(Node**root,char*name,int frame){
 
 void pr_info(Node*root){
     while(root){
-        print("%s\n",root->name);
+        printf("%s\n",root->name);
         root = root->next;
     }
 }
@@ -43,7 +43,7 @@ int main(){
     memset(input, 0, sizeof(input));
     while(word = getc(trace)){
         if(word == "\n" || word == EOF){
-            addnode(&root,input,counter)
+            addnode(&root,input,counter);
             input = 0;
             memset(input, 0, sizeof(input));
             if(word == EOF){
