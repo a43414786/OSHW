@@ -42,8 +42,8 @@ int main(){
     char frame[10];
     int namecount = 0;
     int framecount = 0;
-    flag1 = 0;
-    flag2 = 0;
+    int flag1 = 0;
+    int flag2 = 0;
     Node*root = NULL;
     memset(name, 0, sizeof(name));
     while(word = getc(trace)){
