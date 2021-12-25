@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <stlib.h>
+#include <stdlib.h>
 
 FILE*trace = fopen("trace.txt", "r");
 char word;
