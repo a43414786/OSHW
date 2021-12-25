@@ -3,6 +3,6 @@
 
 FILE*trace = fopen("trace.txt", "r");
 char word;
-while((word = fgetc(trace)) != EOF){
+while((word = getc(trace)) != EOF){
     printf("%c",word);
 }
