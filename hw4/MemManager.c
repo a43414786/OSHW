@@ -39,9 +39,9 @@ int main(){
     FILE*trace = fopen("trace.txt", "r");
     char word;
     char name[10];
-    char fram[10];
+    char frame[10];
     int namecount = 0;
-    int framcount = 0;
+    int framecount = 0;
     flag1 = 0;
     flag2 = 0;
     Node*root = NULL;
@@ -52,7 +52,7 @@ int main(){
             namecount = 0;
             framcount = 0;
             memset(name, 0, sizeof(name));
-            memset(fram, 0, sizeof(fram));
+            memset(frame, 0, sizeof(frame));
             if(word == EOF){
                 break;
             }
@@ -75,7 +75,7 @@ int main(){
             name[namecount++] = word;
         }
         if(flag2){
-            fram[framcount++] = word;
+            frame[framecount++] = word;
         }
     }
     pr_info(root);
