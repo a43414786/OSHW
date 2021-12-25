@@ -1,6 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+struct node{
+    
+}typedef Node;
+
 int main(){
     FILE*trace = fopen("trace.txt", "r");
     char word = 0;
