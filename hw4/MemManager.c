@@ -35,23 +35,29 @@ void pr_info(Node*root){
 }
 
 int main(){
+
+    char num[] = "   123456789";
+    printf("%d",atoi(num));
+
     FILE*trace = fopen("trace.txt", "r");
     char word;
-    char input[100];
-    int counter = 0;
+    char name[10];
+    char fram[10];
+    int namecount = 0;
+    int framcount = 0;
     Node*root = NULL;
-    memset(input, 0, sizeof(input));
+    memset(name, 0, sizeof(name));
     while(word = getc(trace)){
         if(word == '\n' || word == EOF){
-            addnode(&root,input,counter);
-            counter = 0;
-            memset(input, 0, sizeof(input));
+            addnode(&root,name,namecount);
+            namecount = 0;
+            memset(name, 0, sizeof(name));
             if(word == EOF){
                 break;
             }
             continue;
         }
-        input[counter++] = word;
+        name[namecount++] = word;
     }
     pr_info(root);
     return 0;
