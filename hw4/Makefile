@@ -17,5 +17,8 @@ $(BINARY): $(SOURCE) $(patsubst %.c, %.h, $(SOURCE))
 	$(CC) $(CFLAGS) $< -o $@
 
 .PHONY: clean
+test:
+	git pull
+	gcc -o t MemManager.c
 clean:
 	rm -f *.o $(BINARY)
