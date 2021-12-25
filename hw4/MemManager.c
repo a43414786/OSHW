@@ -42,7 +42,7 @@ int main(){
     Node*root = NULL;
     memset(input, 0, sizeof(input));
     while(word = getc(trace)){
-        if(word == "\n" || word == EOF){
+        if(word == '\n' || word == EOF){
             addnode(&root,input,counter);
             input = 0;
             memset(input, 0, sizeof(input));
