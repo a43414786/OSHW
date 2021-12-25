@@ -29,15 +29,12 @@ void addnode(Node**root,char*name,int frame){
 
 void pr_info(Node*root){
     while(root){
-        printf("%s\n",root->name);
+        printf("%s %d\n",root->name,root->frame);
         root = root->next;
     }
 }
 
 int main(){
-
-    char num[] = ",   123456789";
-    printf("%d",atoi(num));
 
     FILE*trace = fopen("trace.txt", "r");
     char word;
@@ -45,19 +42,41 @@ int main(){
     char fram[10];
     int namecount = 0;
     int framcount = 0;
+    flag1 = 0;
+    flag2 = 0;
     Node*root = NULL;
     memset(name, 0, sizeof(name));
     while(word = getc(trace)){
         if(word == '\n' || word == EOF){
-            addnode(&root,name,namecount);
+            addnode(&root,name,atoi(frame));
             namecount = 0;
+            framcount = 0;
             memset(name, 0, sizeof(name));
+            memset(fram, 0, sizeof(fram));
             if(word == EOF){
                 break;
             }
             continue;
         }
-        name[namecount++] = word;
+        if(word == '('){
+            flag1 = !flag1;
+            continue;
+        }
+        if(word == ','){
+            flag1 = !flag1;
+            flag2 = !flag2;
+            continue;
+        }
+        if(word == ')'){
+            flag2 = !flag2;
+            continue;
+        }
+        if(flag1){
+            name[namecount++] = word;
+        }
+        if(flag2){
+            fram[framcount++] = word;
+        }
     }
     pr_info(root);
     return 0;
