@@ -50,7 +50,7 @@ int main(){
         if(word == '\n' || word == EOF){
             addnode(&root,name,atoi(frame));
             namecount = 0;
-            framcount = 0;
+            framecount = 0;
             memset(name, 0, sizeof(name));
             memset(frame, 0, sizeof(frame));
             if(word == EOF){
