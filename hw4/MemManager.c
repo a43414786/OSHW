@@ -326,7 +326,8 @@ int main(){
                         //vir[temp->process[0] - 'A'][temp->page].valid = 0;
                         
                         //temp->process[0] = cur_process[0];
-                        
+                        puts("a");
+            
                         temp->page = page;
                         page_table[page].frame = temp->frame;
                         page_table[page].valid = 1;
