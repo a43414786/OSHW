@@ -342,7 +342,7 @@ int main(){
                 
             }
             
-            printf("Process %c TLB miss,Page fault\n",root->name[0]);
+            printf("Process %c TLB miss,Page fault %d\n",root->name[0],root->frame);
 
             // Update TLB
             for(int i = 0 ; i < TLB_num ; i++){
