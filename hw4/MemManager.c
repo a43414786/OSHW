@@ -302,6 +302,7 @@ int main(){
                 page_table[page].reference = 1;
                 page_table[page].present = 1;
                 
+                printf("Process %c TLB miss,Page hit %d => %d\n",root->name[0],page,frame);
             }
             //page fault
             else{
@@ -339,10 +340,10 @@ int main(){
 
                     }
                 }
-                
+            
+                printf("Process %c TLB miss,Page fault %d\n",root->name[0],root->frame);    
             }
             
-            printf("Process %c TLB miss,Page fault %d\n",root->name[0],root->frame);
 
             // Update TLB
             for(int i = 0 ; i < TLB_num ; i++){
