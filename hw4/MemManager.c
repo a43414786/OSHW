@@ -404,6 +404,7 @@ int main(){
             
         }   
         
+        pr_TLB(TLB);
         //strcpy(cur_process,root->name);
         //root = root->next;
             
