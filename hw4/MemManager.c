@@ -396,17 +396,6 @@ int main(){
     pr_TLB(TLB);
     flush_TLB(&TLB);
 
-    printf("%d\n\n",update_TLB(&TLB,0,0,TLB_policy));
-    printf("%d\n\n",update_TLB(&TLB,1,2,TLB_policy));
-    printf("%d\n\n",update_TLB(&TLB,3,4,TLB_policy));
-    printf("%d\n\n",update_TLB(&TLB,5,6,TLB_policy));
-    printf("%d\n\n",update_TLB(&TLB,7,8,TLB_policy));
-    printf("%d\n\n",update_TLB(&TLB,9,10,TLB_policy));
-    printf("%d\n\n",update_TLB(&TLB,11,12,TLB_policy));
-    printf("%d\n\n",search_TLB(&TLB,0,TLB_policy));    
-    printf("%d\n\n",search_TLB(&TLB,3,TLB_policy));    
-    printf("%d\n\n",search_TLB(&TLB,7,TLB_policy));    
-    pr_TLB(TLB);
     while(root){
 
         PTE*page_table = vir[root->name[0] - 'A'];
