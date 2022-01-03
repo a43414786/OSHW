@@ -281,7 +281,7 @@ int main(){
             if(TLB[i].valid){
 
                 if(TLB[i].VPN == page){
-
+                    puts("a");
                     frame = TLB[i].PFN;
                     TLB[i].time = time_counter;
                     TLB_hit = 1;
@@ -360,7 +360,6 @@ int main(){
             for(int i = 0 ; i < TLB_num ; i++){
                             
                 if(!TLB[i].valid){
-                    printf("%d\n",page);
                     TLB[i].valid = 1;
                     TLB[i].VPN = page;
                     TLB[i].PFN = frame;
