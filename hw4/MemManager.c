@@ -25,6 +25,7 @@ struct TLBE{
 
 struct PTE{
     int frame;
+    int dbi;
     int valid;
     int reference;
     int present;
@@ -305,7 +306,7 @@ int main(){
         //TLB miss
         else{
             //page hit
-            if(page_table[page].valid){
+            if(page_table[page].valid && page_table[page].present){
                 
                 page_hit = 1;
                 frame = page_table[page].frame;
@@ -328,6 +329,12 @@ int main(){
                     page_table[page].time = time_counter;
                     page_table[page].reference = 1;
                     page_table[page].present = 1;
+                    printf("Process %c, TLB Miss, Page Fault, %d, Evict -1 of Process %c to -1, %d<<-1\n",
+                    root->name[0],
+                    root->frame,
+                    root->name[0],
+                    page
+                    );
                     
                 }else{
                     
@@ -352,9 +359,10 @@ int main(){
                     else{
 
                     }
+                    printf("Process %c TLB miss,Page fault %d\n",root->name[0],root->frame);
                 }
             
-                printf("Process %c TLB miss,Page fault %d\n",root->name[0],root->frame);    
+                    
             }
             
 
