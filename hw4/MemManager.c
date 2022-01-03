@@ -270,8 +270,10 @@ int main(){
         int min_idx = 0;
         int TLB_full = 1;
         //Flush TLB
+        pr_TLB(TLB);
+        
         if(strcmp(cur_process,root->name) != 0){
-            puts("a");
+            
             memset(TLB,0,sizeof(TLB)); 
 
         }
