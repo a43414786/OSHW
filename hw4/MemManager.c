@@ -269,13 +269,14 @@ int main(){
         int min = 2000000000;
         int min_idx = 0;
         int TLB_full = 1;
+        pr_TLB(TLB);
         //Flush TLB
         if(strcmp(cur_process,root->name) != 0){
             
             memset(TLB,0,sizeof(TLB)); 
 
         }
-        
+
         strcpy(cur_process,root->name);
             
         for(int i = 0 ; i < TLB_num ; i++){
