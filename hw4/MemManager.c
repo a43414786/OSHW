@@ -29,7 +29,6 @@ struct PTE{
     int valid;
     int reference;
     int present;
-    int time;
 }typedef PTE;
 
 Node*cnode(char*name,int frame){
@@ -185,7 +184,6 @@ void pr_TLB(TLBE * TLB){
 void enqueue(FFL**root,FFL*new){
 
     FFL*temp = *root;
-    new->next = NULL;
     if(!temp){
         *root = new;
     }else{
@@ -194,6 +192,7 @@ void enqueue(FFL**root,FFL*new){
         }
         temp->next = new;
     }
+    new->next = NULL;
 
 }
 
@@ -348,8 +347,40 @@ int update_TLB(TLBE**TLB,int page,int frame,char * policy){
     }
 }
 
+void invalid_TLB(TLBE**TLB,int page){
+    
+    TLBE*post= *TLB;
+
+    while(post){
+        
+        if(post->valid == 1){
+
+            if(post->VPN == page){
+                    
+                post->valid=0;
+
+            }
+
+        }
+        post = post->next;
+    }
+
+}
+
+void pr_FFL(FFL*root){
+
+    while(root){
+        printf("%d\n", root->frame);
+        root = root->next;
+    }
+    
+}
+
+void page_out(){
+
+}
+
 int main(){
-    srand(time(NULL));
     char TLB_policy[10];
     char page_policy[10];
     char frame_policy[10];
@@ -359,19 +390,20 @@ int main(){
     char cur_process[2] = " ";
     int time_counter = 0;
     int block_counter = 0;
+    int frame_counter = 0;
     get_sys_config(TLB_policy,page_policy,frame_policy,&process_num,&vir_num,&phy_num);
     
     TLBE*TLB = make_TLB();
     PTE vir[process_num][vir_num];
     FFL* free_memory_list = make_free_memory_list(phy_num);
     FFL* global_victim_page = NULL;
-    int phy[phy_num];
+    FFL* local_victim_page[process_num];
     
     memset(vir,0,sizeof(vir));
-    memset(phy,0,sizeof(phy));
     
     for(int i = 0 ; i < process_num ; i++) {
 
+        local_victim_page[i] = NULL;
         for(int j = 0 ; j < vir_num ; j++) {
 
             vir[i][j].dbi = -1;
@@ -393,49 +425,161 @@ int main(){
     phy_num);
     */
     //strcpy(TLB_policy,"RANDOM");
-    pr_TLB(TLB);
     flush_TLB(&TLB);
 
+    
     while(root){
 
         PTE*page_table = vir[root->name[0] - 'A'];
-        int x;
+        FFL*temp = NULL;
         int page = root->frame;
         int frame = 10;
-
         if(strcmp(cur_process,root->name) != 0){
             
             flush_TLB(&TLB);
-            pr_TLB(TLB);
-
+            
         }
 
         strcpy(cur_process,root->name);
         //TLB miss
-        if((x = search_TLB(&TLB,page,TLB_policy)) == -1){
+        if((frame = search_TLB(&TLB,page,TLB_policy)) == -1){
             //page Hit
             if(page_table[page].valid == 1 && page_table[page].present == 1){
                 
+                frame = page_table[page].frame;
+                page_table[page].reference = 1;
+                printf("Process %c, TLB Miss, Page Hit, %d=>%d",cur_process[0],page,frame);
+
             }
             //page fault casue by invalid
             else if(page_table[page].valid == 0){
+                if(free_memory_list){
+                    
+                    temp = dequeue(&free_memory_list);
+                    //global victim page
+                    
+                    enqueue(&global_victim_page,temp);
+                    //local victim page
+                    enqueue(&(local_victim_page[root->name[0] - 'A']),temp);
+                    frame = temp->frame;
+                    temp->page = page;
+                    temp->process[0] = root->name[0]; 
 
+                    page_table[page].valid = 1;
+                    page_table[page].reference = 1;
+                    page_table[page].present = 1;
+                    page_table[page].frame = frame;
+                    
+                    /*
+                    int frame;
+                    int dbi;
+                    int valid;
+                    int reference;
+                    int present;
+                    */
+                }else{
+                    
+                    if(strcmp(page_policy,"FIFO") == 0){
+                        if(strcmp(frame_policy,"GLOBAL") == 0){
+                            temp = dequeue(&global_victim_page);
+                            enqueue(&global_victim_page,temp);
+                            
+                            frame = temp->frame;
+                            vir[temp->process[0] - 'A'][temp->page].present = 0;
+                            if(vir[temp->process[0] - 'A'][temp->page].dbi == -1){
+                                vir[temp->process[0] - 'A'][temp->page].dbi = block_counter++;
+                            }
+
+                            if(temp->process[0] == cur_process[0]){
+
+                                invalid_TLB(&TLB,page);
+
+                            }
+
+                            temp->process[0] = root->name[0];
+                            temp->page = page;
+                            
+                            page_table[page].valid = 1;
+                            page_table[page].reference = 1;
+                            page_table[page].present = 1;
+                            page_table[page].frame = frame;
+                    
+
+                        }
+                        else if(strcmp(frame_policy,"LOCAL") == 0){
+
+                        }
+                    }
+                    else if(strcmp(page_policy,"CLOCK") == 0){
+
+                        if(strcmp(frame_policy,"GLOBAL") == 0){
+
+                        }
+                        else if(strcmp(frame_policy,"LOCAL") == 0){
+
+                        }
+
+                    }
+                    
+                }
             }
             //page fault casue by page in disk
             else if(page_table[page].present == 0){
+                if(strcmp(page_policy,"FIFO") == 0){
+                    if(strcmp(frame_policy,"GLOBAL") == 0){
+                        temp = dequeue(&global_victim_page);
+                        enqueue(&global_victim_page,temp);
+                        
+                        frame = temp->frame;
+                        vir[temp->process[0] - 'A'][temp->page].present = 0;
+                        if(vir[temp->process[0] - 'A'][temp->page].dbi == -1){
+                            vir[temp->process[0] - 'A'][temp->page].dbi = block_counter++;
+                        }
 
+                        if(temp->process[0] == cur_process[0]){
+
+                            invalid_TLB(&TLB,page);
+
+                        }
+
+                        temp->process[0] = root->name[0];
+                        temp->page = page;
+                        
+                        page_table[page].valid = 1;
+                        page_table[page].reference = 1;
+                        page_table[page].present = 1;
+                        page_table[page].frame = frame;
+                
+
+                    }
+                    else if(strcmp(frame_policy,"LOCAL") == 0){
+
+                    }
+                }
+                else if(strcmp(page_policy,"CLOCK") == 0){
+
+                    if(strcmp(frame_policy,"GLOBAL") == 0){
+
+                    }
+                    else if(strcmp(frame_policy,"LOCAL") == 0){
+
+                    }
+
+                }
+                    
             }
-            printf("%d\n",update_TLB(&TLB,page,frame,TLB_policy));
+            update_TLB(&TLB,page,frame,TLB_policy);
+            
 
         }
         //TLB hit
         else{
-
             printf("Process %c,TLB Hit,%d=>%d\n",root->name[0],page,frame);
-
+            page_table[page].reference = 1;
+            root = root->next;
         }
 
-        root = root->next;
+        
 
     }
     pr_TLB(TLB);
