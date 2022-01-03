@@ -281,7 +281,6 @@ int main(){
                     TLB[i].time = time_counter;
                     TLB_hit = 1;
                     
-                    printf("%d\n",frame);
                     break;
 
                 }
@@ -351,6 +350,8 @@ int main(){
             for(int i = 0 ; i < TLB_num ; i++){
                             
                 if(!TLB[i].valid){
+                    
+                    printf("%d\n",frame);
                     TLB[i].valid = 1;
                     TLB[i].VPN = page;
                     TLB[i].PFN = frame;
