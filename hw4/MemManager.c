@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #define TLB_num 32
 struct node{
     char name[100];
@@ -222,6 +223,7 @@ FFL* make_free_memory_list(int phy_num){
     return root;
 }
 int main(){
+    srand(time(NULL));
     char TLB_policy[10];
     char page_policy[10];
     char frame_policy[10];
@@ -230,6 +232,7 @@ int main(){
     int phy_num = 0;
     char cur_process[2] = " ";
     int time_counter = 0;
+    int block_counter = 0;
     get_sys_config(TLB_policy,page_policy,frame_policy,&process_num,&vir_num,&phy_num);
     
     TLBE TLB[TLB_num];
@@ -245,6 +248,7 @@ int main(){
 
     Node*root = get_trace();
     pr_info(root);
+    
     printf("%s\n%s\n%s\n%d\n%d\n%d\n",
     TLB_policy,
     page_policy,
@@ -252,6 +256,7 @@ int main(){
     process_num,
     vir_num,
     phy_num);
+
     while(root){
         //printf("%s",root->name);
         time_counter++;
@@ -384,14 +389,20 @@ int main(){
                 }
                 //random
                 else{
-                
+
+                    int x = rand() % 32;
+                    TLB[x].VPN = page;
+                    TLB[x].PFN = frame;
+                    TLB[x].valid = 1;
+                    TLB[x].time = time_counter;
+                    
                 }
             
             }
             
         }   
-        strcpy(cur_process,root->name);
-        root = root->next;
+        //strcpy(cur_process,root->name);
+        //root = root->next;
             
     }
     pr_TLB(TLB);
