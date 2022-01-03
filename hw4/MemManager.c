@@ -402,15 +402,37 @@ int main(){
         int x;
         int page = root->frame;
         int frame = 10;
+
+        if(strcmp(cur_process,root->name) != 0){
+            
+            flush_TLB(&TLB);
+            pr_TLB(TLB);
+
+        }
+
+        strcpy(cur_process,root->name);
         //TLB miss
         if((x = search_TLB(&TLB,page,TLB_policy)) == -1){
+            //page Hit
+            if(page_table[page].valid == 1 && page_table[page].present == 1){
+                
+            }
+            //page fault casue by invalid
+            else if(page_table[page].valid == 0){
 
+            }
+            //page fault casue by page in disk
+            else if(page_table[page].present == 0){
+
+            }
             printf("%d\n",update_TLB(&TLB,page,frame,TLB_policy));
 
         }
         //TLB hit
         else{
+
             printf("Process %c,TLB Hit,%d=>%d\n",root->name[0],page,frame);
+
         }
 
         root = root->next;
