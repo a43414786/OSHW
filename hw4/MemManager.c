@@ -403,6 +403,8 @@ int main(){
             }
             
         }   
+        
+        printf("%d\n",TLB[0].VPN);
         //strcpy(cur_process,root->name);
         //root = root->next;
             
