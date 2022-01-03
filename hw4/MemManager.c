@@ -276,6 +276,8 @@ int main(){
 
         }
         
+        strcpy(cur_process,root->name);
+            
         for(int i = 0 ; i < TLB_num ; i++){
 
             
@@ -401,8 +403,6 @@ int main(){
             }
             
         }   
-        
-        strcpy(cur_process,root->name);
         //root = root->next;
             
     }
