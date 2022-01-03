@@ -405,7 +405,7 @@ int main(){
         //root = root->next;
             
     }
-    pr_TLB(TLB);
+    //pr_TLB(TLB);
     
     
     return 0;
