@@ -381,6 +381,7 @@ void page_out(){
 }
 
 int main(){
+    FILE*output_file = fopen("trace_output.txt","w");
     char TLB_policy[10];
     char page_policy[10];
     char frame_policy[10];
@@ -448,6 +449,7 @@ int main(){
                 
                 frame = page_table[page].frame;
                 page_table[page].reference = 1;
+                fprintf(output_file,"Process %c, TLB Miss, Page Hit, %d=>%d\n",cur_process[0],page,frame);
                 printf("Process %c, TLB Miss, Page Hit, %d=>%d\n",cur_process[0],page,frame);
 
             }
