@@ -328,7 +328,7 @@ int update_TLB(TLBE**TLB,int page,int frame,char * policy){
         }
         else if(strcmp(policy,"RANDOM") == 0){
             srand(time(NULL));
-            x = rand()/32;
+            x = rand() % 32;
             post = *TLB;
             while(x){
                 post = post->next;
@@ -392,7 +392,7 @@ int main(){
     vir_num,
     phy_num);
     */
-    strcpy(TLB_policy,"RANDOM");
+    //strcpy(TLB_policy,"RANDOM");
     pr_TLB(TLB);
     flush_TLB(&TLB);
 
