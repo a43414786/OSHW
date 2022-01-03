@@ -275,11 +275,11 @@ int main(){
             memset(TLB,0,sizeof(TLB)); 
 
         }
-        printf("%d\n%d\n",TLB[0].VPN,page);
         for(int i = 0 ; i < TLB_num ; i++){
 
             
             if(TLB[i].valid){
+                printf("%d\n%d\n",TLB[0].VPN,page);
                 printf("%d",i);
                 if(TLB[i].VPN == page){
                     
