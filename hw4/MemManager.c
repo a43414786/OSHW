@@ -271,10 +271,9 @@ int main(){
         int TLB_full = 1;
         //Flush TLB
         pr_TLB(TLB);
-        
+        printf("%s,%s",cur_process,root->name);
         if(strcmp(cur_process,root->name) != 0){
             
-            puts("a\n");
             memset(TLB,0,sizeof(TLB)); 
 
         }
