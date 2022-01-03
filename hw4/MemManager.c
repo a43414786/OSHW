@@ -280,6 +280,8 @@ int main(){
                     frame = TLB[i].PFN;
                     TLB[i].time = time_counter;
                     TLB_hit = 1;
+                    
+                    printf("%d\n",frame);
                     break;
 
                 }
