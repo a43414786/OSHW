@@ -448,7 +448,7 @@ int main(){
                 
                 frame = page_table[page].frame;
                 page_table[page].reference = 1;
-                printf("Process %c, TLB Miss, Page Hit, %d=>%d",cur_process[0],page,frame);
+                printf("Process %c, TLB Miss, Page Hit, %d=>%d\n",cur_process[0],page,frame);
 
             }
             //page fault casue by invalid
