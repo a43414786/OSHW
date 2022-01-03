@@ -277,6 +277,8 @@ int main(){
             memset(TLB,0,sizeof(TLB)); 
 
         }
+        pr_TLB(TLB);
+        
         for(int i = 0 ; i < TLB_num ; i++){
 
             
@@ -296,7 +298,6 @@ int main(){
             }
 
         }
-        pr_TLB(TLB);
         //TLB hit
         if(TLB_hit){
             strcpy(cur_process,root->name);
@@ -406,7 +407,6 @@ int main(){
             
         }   
         
-        pr_TLB(TLB);
         //strcpy(cur_process,root->name);
         //root = root->next;
             
