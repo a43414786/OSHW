@@ -297,7 +297,7 @@ int main(){
         else{
             //page hit
             if(page_table[page].valid){
-
+                
                 page_hit = 1;
                 frame = page_table[page].frame;
                 page_table[page].reference = 1;
@@ -310,6 +310,7 @@ int main(){
                 
                 if(free_memory_list){
                     temp = dequeue(&free_memory_list);
+                    frame = temp->frame;
                     page_table[page].frame = temp->frame;
                     strcpy(temp->process,cur_process);
                     temp->page = page;
@@ -351,7 +352,6 @@ int main(){
                             
                 if(!TLB[i].valid){
                     
-                    printf("%d\n",frame);
                     TLB[i].valid = 1;
                     TLB[i].VPN = page;
                     TLB[i].PFN = frame;
