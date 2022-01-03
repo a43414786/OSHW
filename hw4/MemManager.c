@@ -410,7 +410,7 @@ int main(){
         }
         //TLB hit
         else{
-            printf("%d\n",x);
+            printf("Process %c,TLB Hit,%d=>%d\n",root->name[0],page,frame);
         }
 
         root = root->next;
