@@ -279,7 +279,7 @@ int main(){
 
             
             if(TLB[i].valid){
-                //printf("%d\n%d\n",TLB[0].VPN,page);
+                printf("%d\n%d\n",TLB[0].VPN,page);
                 printf("%d",i);
                 if(TLB[i].VPN == page){
                     
@@ -294,7 +294,7 @@ int main(){
             }
 
         }
-        
+        pr_TLB(TLB);
         //TLB hit
         if(TLB_hit){
             strcpy(cur_process,root->name);
@@ -361,7 +361,6 @@ int main(){
             for(int i = 0 ; i < TLB_num ; i++){
                             
                 if(!TLB[i].valid){
-                    printf("%d",page);
                     TLB[i].valid = 1;
                     TLB[i].VPN = page;
                     TLB[i].PFN = frame;
