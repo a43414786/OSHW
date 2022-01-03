@@ -470,6 +470,7 @@ int main(){
                     page_table[page].present = 1;
                     page_table[page].frame = frame;
                     
+                    printf("Process %c, TLB Miss, Page Fault, %d, Evict -1 of Process %c to -1, %d<<-1\n",cur_process[0],frame,cur_process[0],page);
                     /*
                     int frame;
                     int dbi;
