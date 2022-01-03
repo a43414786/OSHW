@@ -360,6 +360,7 @@ int main(){
             for(int i = 0 ; i < TLB_num ; i++){
                             
                 if(!TLB[i].valid){
+                    printf("a");
                     TLB[i].valid = 1;
                     TLB[i].VPN = page;
                     TLB[i].PFN = frame;
