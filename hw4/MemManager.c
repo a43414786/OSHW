@@ -271,7 +271,7 @@ int main(){
         int TLB_full = 1;
         //Flush TLB
         if(strcmp(cur_process,root->name) != 0){
-            
+            puts("a");
             memset(TLB,0,sizeof(TLB)); 
 
         }
