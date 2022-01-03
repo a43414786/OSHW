@@ -279,7 +279,7 @@ int main(){
         for(int i = 0 ; i < TLB_num ; i++){
 
             if(TLB[i].valid){
-
+                printf("%d",i);
                 if(TLB[i].VPN == page){
                     
                     frame = TLB[i].PFN;
