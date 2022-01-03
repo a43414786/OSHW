@@ -399,17 +399,18 @@ int main(){
     while(root){
 
         PTE*page_table = vir[root->name[0] - 'A'];
+        int x;
         int page = root->frame;
         int frame = 10;
         //TLB miss
-        if(search_TLB(&TLB,page,TLB_policy) == -1){
+        if((x = search_TLB(&TLB,page,TLB_policy)) == -1){
 
             printf("%d\n",update_TLB(&TLB,page,frame,TLB_policy));
 
         }
         //TLB hit
         else{
-            
+            printf("%d\n",x);
         }
 
         root = root->next;
