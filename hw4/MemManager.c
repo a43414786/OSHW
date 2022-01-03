@@ -296,6 +296,8 @@ int main(){
         
         //TLB hit
         if(TLB_hit){
+            strcpy(cur_process,root->name);
+            root = root->next;
             printf("Process %c,TLB Hit,%d=>%d\n",root->name[0],page,frame);
         }
         //TLB miss
