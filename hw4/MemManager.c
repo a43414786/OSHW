@@ -330,6 +330,8 @@ int main(){
                         temp->process[0] = cur_process[0];
                         temp->page = page;
                         enqueue(&global_victim_page,temp);
+                        
+                        frame = temp->frame;
                         page_table[page].frame = temp->frame;
                         page_table[page].valid = 1;
                         page_table[page].time = time_counter;
