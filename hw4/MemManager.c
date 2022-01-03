@@ -274,6 +274,7 @@ int main(){
         
         if(strcmp(cur_process,root->name) != 0){
             
+            puts("a\n");
             memset(TLB,0,sizeof(TLB)); 
 
         }
