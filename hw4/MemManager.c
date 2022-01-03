@@ -275,13 +275,13 @@ int main(){
             memset(TLB,0,sizeof(TLB)); 
 
         }
-
+        printf("%d\n",TLB[0].VPN);
         for(int i = 0 ; i < TLB_num ; i++){
 
             if(TLB[i].valid){
 
                 if(TLB[i].VPN == page){
-                    puts("a");
+                    
                     frame = TLB[i].PFN;
                     TLB[i].time = time_counter;
                     TLB_hit = 1;
