@@ -6,7 +6,6 @@
 
 FILE*output_file;
     
-
 struct node{
     char name[100];
     int frame;
@@ -16,7 +15,7 @@ struct node{
 struct FFL{
     int frame;
     int page;
-    char process[2];
+    char process;
     struct FFL * next;
 }typedef FFL;
 
@@ -53,13 +52,6 @@ void addnode(Node**root,char*name,int frame){
             temp = temp->next;
         }
         temp->next = cnode(name,frame);
-    }
-}
-
-void pr_info(Node*root){
-    while(root){
-        printf("%s %d\n",root->name,root->frame);
-        root = root->next;
     }
 }
 
@@ -172,17 +164,6 @@ void get_sys_config(char*TLB_policy,char*page_policy,char*frame_policy,int*proce
         }
         
     }
-}
-
-
-
-void pr_TLB(TLBE * TLB){
-    while(TLB){
-
-        printf("%d,%d,%d\n",TLB->valid,TLB->VPN,TLB->PFN);
-        TLB = TLB->next;
-    }
-
 }
 
 void enqueue(FFL**root,FFL*new){
@@ -371,30 +352,6 @@ void invalid_TLB(TLBE**TLB,int page){
 
 }
 
-void pr_FFL(FFL*root){
-
-    while(root){
-        fprintf(output_file,"%d,%c\n", root->frame,root->process[0]);
-        
-        printf("%d,%c\n", root->frame,root->process[0]);
-        root = root->next;
-    }
-    
-}
-void pr_PTE(PTE*root,int num){
-
-    for(int i = 0 ; i < num ; i++){
-        fprintf(output_file,"%d,%d,%d,%d,%d\n",root[i].valid,root[i].reference,root[i].present,root[i].frame,root[i].dbi);
-        
-        printf("%d,%d,%d,%d,%d\n",root[i].valid,root[i].reference,root[i].present,root[i].frame,root[i].dbi);
-
-    }
-    
-}
-void page_out(){
-
-}
-
 int main(){
     char TLB_policy[10];
     char page_policy[10];
@@ -402,10 +359,11 @@ int main(){
     int process_num = 0;
     int vir_num = 0;
     int phy_num = 0;
-    char cur_process[2] = " ";
+    char cur_process = 0;
     int time_counter = 0;
     int block_counter = 0;
     int frame_counter = 0;
+    int flag = 0;
     output_file = fopen("trace_output.txt","w");
     
     get_sys_config(TLB_policy,page_policy,frame_policy,&process_num,&vir_num,&phy_num);
@@ -448,34 +406,38 @@ int main(){
         int frame = 10;
         int evict_page;
         int dest;
+        int cur_process_idx = 0;
+        int temp_process_idx = 0;
+        int temp_page = 0;
         char evict_process;
         time_counter++;
-        if(strcmp(cur_process,root->name) != 0){
+
+        if(cur_process != root->name[0]){
             
             flush_TLB(&TLB);
             
         }
+        
+        cur_process = root->name[0];
+        cur_process_idx = cur_process - 'A';
 
-        strcpy(cur_process,root->name);
+        ref_num[cur_process_idx]++;
 
-        ref_num[cur_process[0] - 'A']++;
-
-        //TLB miss
+        //TLB mis
         if((frame = search_TLB(&TLB,page,TLB_policy)) == -1){
-            page_ref_num[cur_process[0] - 'A']++;
+            page_ref_num[cur_process_idx]++;
             //page Hit
             if(page_table[page].valid == 1 && page_table[page].present == 1){
                 
                 frame = page_table[page].frame;
                 page_table[page].reference = 1;
-                fprintf(output_file,"Process %c, TLB Miss, Page Hit, %d=>%d\n",cur_process[0],page,frame);
-                printf("Process %c, TLB Miss, Page Hit, %d=>%d\n",cur_process[0],page,frame);
-
+                fprintf(output_file,"Process %c, TLB Miss, Page Hit, %d=>%d\n",cur_process,page,frame);
+                
             }
             //page fault casue by invalid
             else if(page_table[page].valid == 0){
                 
-                pagefault_num[root->name[0] - 'A']++;
+                pagefault_num[cur_process_idx]++;
                 if(free_memory_list){
                     
                     temp = dequeue(&free_memory_list);
@@ -484,104 +446,215 @@ int main(){
                     if(strcmp(frame_policy,"GLOBAL") == 0){
                         enqueue(&global_victim_page,temp);
                     }else if(strcmp(frame_policy,"LOCAL") == 0){
-                        enqueue(&(local_victim_page[root->name[0] - 'A']),temp);
+                        enqueue(&(local_victim_page[cur_process_idx]),temp);
                     }
                     //local victim page
                     frame = temp->frame;
                     temp->page = page;
-                    temp->process[0] = root->name[0]; 
+                    temp->process = cur_process; 
 
                     page_table[page].valid = 1;
                     page_table[page].reference = 1;
                     page_table[page].present = 1;
                     page_table[page].frame = frame;
-                    fprintf(output_file,"Process %c, TLB Miss, Page Fault, %d, Evict -1 of Process %c to -1, %d<<-1\n",cur_process[0],frame,cur_process[0],page);
+                    fprintf(output_file,"Process %c, TLB Miss, Page Fault, %d, Evict -1 of Process %c to -1, %d<<-1\n",cur_process,frame,cur_process,page);
                     
-                    printf("Process %c, TLB Miss, Page Fault, %d, Evict -1 of Process %c to -1, %d<<-1\n",cur_process[0],frame,cur_process[0],page);
-
-                    /*
-                    int frame;
-                    int dbi;
-                    int valid;
-                    int reference;
-                    int present;
-                    */
                 }else{
-                    
-                    if(strcmp(page_policy,"FIFO") == 0){
+                    if(flag == 0){
                         if(strcmp(frame_policy,"GLOBAL") == 0){
-                            temp = dequeue(&global_victim_page);
-                            temp->next = NULL;
-                            enqueue(&global_victim_page,temp);
+
+                            temp = global_victim_page;
+                            if(temp){
+                                while(temp->next){
+                                    temp = temp->next;
+                                }
+                            }
+                            temp->next = global_victim_page;
                             
+
+                        }else if(strcmp(frame_policy,"LOCAL") == 0){
+
+                            for(int i = 0 ; i < process_num ; i++){
+
+                                temp = local_victim_page[i];
+                                if(temp){
+                                    while(temp->next){
+                                        temp = temp->next;
+                                    }
+                                }
+                                temp->next = local_victim_page[i];
+
+                            }
+
+                        }
+
+                    }
+                    flag = 1;
+                    if(strcmp(page_policy,"FIFO") == 0){
+                        
+                        if(strcmp(frame_policy,"GLOBAL") == 0){
+                            
+                            temp = global_victim_page;
+                            global_victim_page = global_victim_page->next;
+
+                            temp_process_idx = temp->process - 'A';
+                            temp_page = temp->page;
+
                             frame = temp->frame;
-                            vir[temp->process[0] - 'A'][temp->page].present = 0;
-                            if(vir[temp->process[0] - 'A'][temp->page].dbi == -1){
-                                vir[temp->process[0] - 'A'][temp->page].dbi = block_counter++;
+
+                            vir[temp_process_idx][temp_page].present = 0;
+                            vir[temp_process_idx][temp_page].reference = 0;
+                            if(vir[temp_process_idx][temp_page].dbi == -1){
+                                vir[temp_process_idx][temp_page].dbi = block_counter++;
                             }
                             
-                            evict_page = temp->page;
-                            evict_process = temp->process[0];
-                            dest = vir[temp->process[0] - 'A'][temp->page].dbi;
+                            evict_page = temp_page;
+                            evict_process = temp->process;
+                            dest = vir[temp_process_idx][temp_page].dbi;
 
-                            if(temp->process[0] == cur_process[0]){
+                            if(temp->process == cur_process){
 
                                 invalid_TLB(&TLB,page);
 
                             }
 
-                            temp->process[0] = root->name[0];
+                            temp->process = cur_process;
                             temp->page = page;
                             
                             page_table[page].valid = 1;
                             page_table[page].reference = 1;
                             page_table[page].present = 1;
                             page_table[page].frame = frame;
-                            fprintf(output_file,"Process %c, TLB Miss, Page Fault, %d, Evict %d of Process %c to %d, %d<<-1\n",cur_process[0],frame,evict_page,evict_process,dest,page);
-                            printf("Process %c, TLB Miss, Page Fault, %d, Evict %d of Process %c to %d, %d<<-1\n",cur_process[0],frame,evict_page,evict_process,dest,page);
-                    
-
-                        }
-                        else if(strcmp(frame_policy,"LOCAL") == 0){
+                            fprintf(output_file,"Process %c, TLB Miss, Page Fault, %d, Evict %d of Process %c to %d, %d<<-1\n",cur_process,frame,evict_page,evict_process,dest,page);
                             
-                            temp = dequeue(&(local_victim_page[root->name[0] - 'A']));
-                            temp->next = NULL;
-                            enqueue(&(local_victim_page[root->name[0] - 'A']),temp);
+                        }
                         
+                        else if(strcmp(frame_policy,"LOCAL") == 0){
+
+                            temp = local_victim_page[cur_process_idx];
+                            local_victim_page[cur_process_idx] = local_victim_page[cur_process_idx]->next;
+
+                            temp_process_idx = temp->process - 'A';
+                            temp_page = temp->page;
+
                             frame = temp->frame;
-                            vir[temp->process[0] - 'A'][temp->page].present = 0;
-                            if(vir[temp->process[0] - 'A'][temp->page].dbi == -1){
-                                vir[temp->process[0] - 'A'][temp->page].dbi = block_counter++;
+
+                            vir[temp_process_idx][temp_page].present = 0;
+                            vir[temp_process_idx][temp_page].reference = 0;
+                            if(vir[temp_process_idx][temp_page].dbi == -1){
+                                vir[temp_process_idx][temp_page].dbi = block_counter++;
                             }
                             
-                            evict_page = temp->page;
-                            evict_process = temp->process[0];
-                            dest = vir[temp->process[0] - 'A'][temp->page].dbi;
+                            evict_page = temp_page;
+                            evict_process = temp->process;
+                            dest = vir[temp_process_idx][temp_page].dbi;
 
-                            
+                            if(temp->process == cur_process){
 
-                            invalid_TLB(&TLB,page);
+                                invalid_TLB(&TLB,page);
 
-                            temp->process[0] = root->name[0];
+                            }
+
+                            temp->process = cur_process;
                             temp->page = page;
                             
                             page_table[page].valid = 1;
                             page_table[page].reference = 1;
                             page_table[page].present = 1;
                             page_table[page].frame = frame;
-                            fprintf(output_file,"Process %c, TLB Miss, Page Fault, %d, Evict %d of Process %c to %d, %d<<-1\n",cur_process[0],frame,evict_page,evict_process,dest,page);
-                            printf("Process %c, TLB Miss, Page Fault, %d, Evict %d of Process %c to %d, %d<<-1\n",cur_process[0],frame,evict_page,evict_process,dest,page);
-                    
+                            fprintf(output_file,"Process %c, TLB Miss, Page Fault, %d, Evict %d of Process %c to %d, %d<<-1\n",cur_process,frame,evict_page,evict_process,dest,page);
+                            
                         }
+                    
                     }
                     else if(strcmp(page_policy,"CLOCK") == 0){
 
                         if(strcmp(frame_policy,"GLOBAL") == 0){
+                            
+                            while(vir[global_victim_page->process - 'A'][global_victim_page->page].reference){
+                            
+                                vir[global_victim_page->process - 'A'][global_victim_page->page].reference = 0;
+                                global_victim_page = global_victim_page->next;
+                            
+                            }
+                            temp = global_victim_page;
+                            global_victim_page = global_victim_page->next;
 
+                            temp_process_idx = temp->process - 'A';
+                            temp_page = temp->page;
+
+                            frame = temp->frame;
+
+                            vir[temp_process_idx][temp_page].present = 0;
+                            vir[temp_process_idx][temp_page].reference = 0;
+                            if(vir[temp_process_idx][temp_page].dbi == -1){
+                                vir[temp_process_idx][temp_page].dbi = block_counter++;
+                            }
+                            
+                            evict_page = temp_page;
+                            evict_process = temp->process;
+                            dest = vir[temp_process_idx][temp_page].dbi;
+
+                            if(temp->process == cur_process){
+
+                                invalid_TLB(&TLB,page);
+
+                            }
+
+                            temp->process = cur_process;
+                            temp->page = page;
+                            
+                            page_table[page].valid = 1;
+                            page_table[page].reference = 1;
+                            page_table[page].present = 1;
+                            page_table[page].frame = frame;
+                            fprintf(output_file,"Process %c, TLB Miss, Page Fault, %d, Evict %d of Process %c to %d, %d<<-1\n",cur_process,frame,evict_page,evict_process,dest,page);
+                            
                         }
+                        
                         else if(strcmp(frame_policy,"LOCAL") == 0){
 
+                            while(vir[local_victim_page[cur_process_idx]->process - 'A'][local_victim_page[cur_process_idx]->page].reference){
+                            
+                                vir[local_victim_page[cur_process_idx]->process - 'A'][local_victim_page[cur_process_idx]->page].reference = 0;
+                                local_victim_page[cur_process_idx] = local_victim_page[cur_process_idx]->next;
+                            
+                            }
+                            temp = local_victim_page[cur_process_idx];
+                            local_victim_page[cur_process_idx] = local_victim_page[cur_process_idx]->next;
+
+                            temp_process_idx = temp->process - 'A';
+                            temp_page = temp->page;
+
+                            frame = temp->frame;
+
+                            vir[temp_process_idx][temp_page].present = 0;
+                            vir[temp_process_idx][temp_page].reference = 0;
+                            if(vir[temp_process_idx][temp_page].dbi == -1){
+                                vir[temp_process_idx][temp_page].dbi = block_counter++;
+                            }
+                            
+                            evict_page = temp_page;
+                            evict_process = temp->process;
+                            dest = vir[temp_process_idx][temp_page].dbi;
+
+                            if(temp->process == cur_process){
+
+                                invalid_TLB(&TLB,page);
+
+                            }
+
+                            temp->process = cur_process;
+                            temp->page = page;
+                            
+                            page_table[page].valid = 1;
+                            page_table[page].reference = 1;
+                            page_table[page].present = 1;
+                            page_table[page].frame = frame;
+                            fprintf(output_file,"Process %c, TLB Miss, Page Fault, %d, Evict %d of Process %c to %d, %d<<-1\n",cur_process,frame,evict_page,evict_process,dest,page);
+                            
                         }
+                    
 
                     }
                     
@@ -589,84 +662,174 @@ int main(){
             }
             //page fault casue by page in disk
             else if(page_table[page].present == 0){
-                pagefault_num[root->name[0] - 'A']++;
+                
+                pagefault_num[cur_process_idx]++;
                 if(strcmp(page_policy,"FIFO") == 0){
                     if(strcmp(frame_policy,"GLOBAL") == 0){
-                        temp = dequeue(&global_victim_page);
-                        temp->next = NULL;
-                        enqueue(&global_victim_page,temp);
                         
+                        temp = global_victim_page;
+                        global_victim_page = global_victim_page->next;
+
+                        temp_process_idx = temp->process - 'A';
+                        temp_page = temp->page;
+
                         frame = temp->frame;
-                        vir[temp->process[0] - 'A'][temp->page].present = 0;
-                        if(vir[temp->process[0] - 'A'][temp->page].dbi == -1){
-                            vir[temp->process[0] - 'A'][temp->page].dbi = block_counter++;
+
+                        vir[temp_process_idx][temp_page].present = 0;
+                        vir[temp_process_idx][temp_page].reference = 0;
+                        if(vir[temp_process_idx][temp_page].dbi == -1){
+                            vir[temp_process_idx][temp_page].dbi = block_counter++;
                         }
                         
-                        evict_page = temp->page;
-                        evict_process = temp->process[0];
-                        dest = vir[temp->process[0] - 'A'][temp->page].dbi;
+                        evict_page = temp_page;
+                        evict_process = temp->process;
+                        dest = vir[temp_process_idx][temp_page].dbi;
 
-                        if(temp->process[0] == cur_process[0]){
+                        if(temp->process == cur_process){
 
                             invalid_TLB(&TLB,page);
 
                         }
 
-                        temp->process[0] = root->name[0];
+                        temp->process = cur_process;
                         temp->page = page;
                         
                         page_table[page].valid = 1;
                         page_table[page].reference = 1;
                         page_table[page].present = 1;
                         page_table[page].frame = frame;
-                        fprintf(output_file,"Process %c, TLB Miss, Page Fault, %d, Evict %d of Process %c to %d, %d<<%d\n",cur_process[0],frame,evict_page,evict_process,dest,page,page_table[page].dbi);
-                        printf("Process %c, TLB Miss, Page Fault, %d, Evict %d of Process %c to %d, %d<<%d\n",cur_process[0],frame,evict_page,evict_process,dest,page,page_table[page].dbi);
+                        fprintf(output_file,"Process %c, TLB Miss, Page Fault, %d, Evict %d of Process %c to %d, %d<<%d\n",cur_process,frame,evict_page,evict_process,dest,page,page_table[page].dbi);
                         
-
                     }
+
+                    
                     else if(strcmp(frame_policy,"LOCAL") == 0){
-                        temp = dequeue(&(local_victim_page[root->name[0] - 'A']));
-                        temp->next = NULL;
-                        enqueue(&(local_victim_page[root->name[0] - 'A']),temp);
                         
+                        temp = local_victim_page[cur_process_idx];
+                        local_victim_page[cur_process_idx] = local_victim_page[cur_process_idx]->next;
+
+                        temp_process_idx = temp->process - 'A';
+                        temp_page = temp->page;
+
                         frame = temp->frame;
-                        vir[temp->process[0] - 'A'][temp->page].present = 0;
-                        if(vir[temp->process[0] - 'A'][temp->page].dbi == -1){
-                            vir[temp->process[0] - 'A'][temp->page].dbi = block_counter++;
+
+                        vir[temp_process_idx][temp_page].present = 0;
+                        vir[temp_process_idx][temp_page].reference = 0;
+                        if(vir[temp_process_idx][temp_page].dbi == -1){
+                            vir[temp_process_idx][temp_page].dbi = block_counter++;
                         }
                         
-                        evict_page = temp->page;
-                        evict_process = temp->process[0];
-                        dest = vir[temp->process[0] - 'A'][temp->page].dbi;
+                        evict_page = temp_page;
+                        evict_process = temp->process;
+                        dest = vir[temp_process_idx][temp_page].dbi;
 
-                        
-                        invalid_TLB(&TLB,page);
+                        if(temp->process == cur_process){
 
-                        
-                        
-                        temp->process[0] = root->name[0];
+                            invalid_TLB(&TLB,page);
+
+                        }
+
+                        temp->process = cur_process;
                         temp->page = page;
                         
                         page_table[page].valid = 1;
                         page_table[page].reference = 1;
                         page_table[page].present = 1;
                         page_table[page].frame = frame;
-                        fprintf(output_file,"Process %c, TLB Miss, Page Fault, %d, Evict %d of Process %c to %d, %d<<%d\n",cur_process[0],frame,evict_page,evict_process,dest,page,page_table[page].dbi);
-                        printf("Process %c, TLB Miss, Page Fault, %d, Evict %d of Process %c to %d, %d<<%d\n",cur_process[0],frame,evict_page,evict_process,dest,page,page_table[page].dbi);
+                        fprintf(output_file,"Process %c, TLB Miss, Page Fault, %d, Evict %d of Process %c to %d, %d<<%d\n",cur_process,frame,evict_page,evict_process,dest,page,page_table[page].dbi);
                         
                     }
                 }
                 else if(strcmp(page_policy,"CLOCK") == 0){
 
-                    if(strcmp(frame_policy,"GLOBAL") == 0){
+                        if(strcmp(frame_policy,"GLOBAL") == 0){
+                            
+                            while(vir[global_victim_page->process - 'A'][global_victim_page->page].reference){
+                            
+                                vir[global_victim_page->process - 'A'][global_victim_page->page].reference = 0;
+                                global_victim_page = global_victim_page->next;
+                            
+                            }
+                            temp = global_victim_page;
+                            global_victim_page = global_victim_page->next;
 
-                    }
-                    else if(strcmp(frame_policy,"LOCAL") == 0){
+                            temp_process_idx = temp->process - 'A';
+                            temp_page = temp->page;
 
-                    }
+                            frame = temp->frame;
 
-                }
+                            vir[temp_process_idx][temp_page].present = 0;
+                            vir[temp_process_idx][temp_page].reference = 0;
+                            if(vir[temp_process_idx][temp_page].dbi == -1){
+                                vir[temp_process_idx][temp_page].dbi = block_counter++;
+                            }
+                            
+                            evict_page = temp_page;
+                            evict_process = temp->process;
+                            dest = vir[temp_process_idx][temp_page].dbi;
+
+                            if(temp->process == cur_process){
+
+                                invalid_TLB(&TLB,page);
+
+                            }
+
+                            temp->process = cur_process;
+                            temp->page = page;
+                            
+                            page_table[page].valid = 1;
+                            page_table[page].reference = 1;
+                            page_table[page].present = 1;
+                            page_table[page].frame = frame;
+                            fprintf(output_file,"Process %c, TLB Miss, Page Fault, %d, Evict %d of Process %c to %d, %d<<%d\n",cur_process,frame,evict_page,evict_process,dest,page,page_table[page].dbi);
+                            
+                        }
+                        
+                        else if(strcmp(frame_policy,"LOCAL") == 0){
+                            
+                            while(vir[local_victim_page[cur_process_idx]->process - 'A'][local_victim_page[cur_process_idx]->page].reference){
+                            
+                                vir[local_victim_page[cur_process_idx]->process - 'A'][local_victim_page[cur_process_idx]->page].reference = 0;
+                                local_victim_page[cur_process_idx] = local_victim_page[cur_process_idx]->next;
+                            
+                            }
+                            temp = local_victim_page[cur_process_idx];
+                            local_victim_page[cur_process_idx] = local_victim_page[cur_process_idx]->next;
+
+                            temp_process_idx = temp->process - 'A';
+                            temp_page = temp->page;
+
+                            frame = temp->frame;
+
+                            vir[temp_process_idx][temp_page].present = 0;
+                            vir[temp_process_idx][temp_page].reference = 0;
+                            if(vir[temp_process_idx][temp_page].dbi == -1){
+                                vir[temp_process_idx][temp_page].dbi = block_counter++;
+                            }
+                            
+                            evict_page = temp_page;
+                            evict_process = temp->process;
+                            dest = vir[temp_process_idx][temp_page].dbi;
+
+                            if(temp->process == cur_process){
+
+                                invalid_TLB(&TLB,page);
+
+                            }
+
+                            temp->process = cur_process;
+                            temp->page = page;
+                            
+                            page_table[page].valid = 1;
+                            page_table[page].reference = 1;
+                            page_table[page].present = 1;
+                            page_table[page].frame = frame;
+                            fprintf(output_file,"Process %c, TLB Miss, Page Fault, %d, Evict %d of Process %c to %d, %d<<%d\n",cur_process,frame,evict_page,evict_process,dest,page,page_table[page].dbi);
+                            
+                        }
                     
+
+                    }
             }
             update_TLB(&TLB,page,frame,TLB_policy);
             
@@ -674,9 +837,8 @@ int main(){
         }
         //TLB hit
         else{
-            hit_num[root->name[0] - 'A']++;
+            hit_num[cur_process_idx]++;
             fprintf(output_file,"Process %c,TLB Hit,%d=>%d\n",root->name[0],page,frame);
-            printf("Process %c,TLB Hit,%d=>%d\n",root->name[0],page,frame);
             page_table[page].reference = 1;
             root = root->next;
         }
@@ -685,7 +847,6 @@ int main(){
 
     }
 
-    pr_PTE(vir[1],vir_num);
     FILE *fp = fopen("analysis.txt","w");
 
     for(int i = 0 ; i < process_num ; i++){
@@ -700,7 +861,6 @@ int main(){
 
     }
 
-    pr_TLB(TLB);
     
     return 0;
     
