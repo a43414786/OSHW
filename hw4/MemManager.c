@@ -3,6 +3,10 @@
 #include <string.h>
 #include <time.h>
 #define TLB_num 32
+
+FILE*output_file;
+    
+
 struct node{
     char name[100];
     int frame;
@@ -370,7 +374,9 @@ void invalid_TLB(TLBE**TLB,int page){
 void pr_FFL(FFL*root){
 
     while(root){
-        printf("%d\n", root->frame);
+        fprintf(output_file,"%d,%c\n", root->frame,root->process[0]);
+        
+        printf("%d,%c\n", root->frame,root->process[0]);
         root = root->next;
     }
     
@@ -381,7 +387,6 @@ void page_out(){
 }
 
 int main(){
-    FILE*output_file = fopen("trace_output.txt","w");
     char TLB_policy[10];
     char page_policy[10];
     char frame_policy[10];
@@ -392,6 +397,8 @@ int main(){
     int time_counter = 0;
     int block_counter = 0;
     int frame_counter = 0;
+    output_file = fopen("trace_output.txt","w");
+    
     get_sys_config(TLB_policy,page_policy,frame_policy,&process_num,&vir_num,&phy_num);
     
     TLBE*TLB = make_TLB();
@@ -399,8 +406,11 @@ int main(){
     FFL* free_memory_list = make_free_memory_list(phy_num);
     FFL* global_victim_page = NULL;
     FFL* local_victim_page[process_num];
-    
+    int hit_num[process_num];
+    int pagefault_num[process_num];
     memset(vir,0,sizeof(vir));
+    memset(hit_num,0,sizeof(hit_num));
+    memset(pagefault_num,0,sizeof(pagefault_num));
     
     for(int i = 0 ; i < process_num ; i++) {
 
@@ -428,13 +438,16 @@ int main(){
     //strcpy(TLB_policy,"RANDOM");
     flush_TLB(&TLB);
 
-    
     while(root){
 
         PTE*page_table = vir[root->name[0] - 'A'];
         FFL*temp = NULL;
         int page = root->frame;
         int frame = 10;
+        int evict_page;
+        int dest;
+        char evict_process;
+        time_counter++;
         if(strcmp(cur_process,root->name) != 0){
             
             flush_TLB(&TLB);
@@ -455,14 +468,18 @@ int main(){
             }
             //page fault casue by invalid
             else if(page_table[page].valid == 0){
+                pagefault_num[root->name[0] - 'A']++;
                 if(free_memory_list){
                     
                     temp = dequeue(&free_memory_list);
                     //global victim page
-                    
-                    enqueue(&global_victim_page,temp);
+                    temp->next = NULL;
+                    if(strcmp(frame_policy,"GLOBAL") == 0){
+                        enqueue(&global_victim_page,temp);
+                    }else if(strcmp(frame_policy,"LOCAL") == 0){
+                        enqueue(&(local_victim_page[root->name[0] - 'A']),temp);
+                    }
                     //local victim page
-                    enqueue(&(local_victim_page[root->name[0] - 'A']),temp);
                     frame = temp->frame;
                     temp->page = page;
                     temp->process[0] = root->name[0]; 
@@ -471,8 +488,10 @@ int main(){
                     page_table[page].reference = 1;
                     page_table[page].present = 1;
                     page_table[page].frame = frame;
+                    fprintf(output_file,"Process %c, TLB Miss, Page Fault, %d, Evict -1 of Process %c to -1, %d<<-1\n",cur_process[0],frame,cur_process[0],page);
                     
                     printf("Process %c, TLB Miss, Page Fault, %d, Evict -1 of Process %c to -1, %d<<-1\n",cur_process[0],frame,cur_process[0],page);
+
                     /*
                     int frame;
                     int dbi;
@@ -485,6 +504,7 @@ int main(){
                     if(strcmp(page_policy,"FIFO") == 0){
                         if(strcmp(frame_policy,"GLOBAL") == 0){
                             temp = dequeue(&global_victim_page);
+                            temp->next = NULL;
                             enqueue(&global_victim_page,temp);
                             
                             frame = temp->frame;
@@ -492,6 +512,10 @@ int main(){
                             if(vir[temp->process[0] - 'A'][temp->page].dbi == -1){
                                 vir[temp->process[0] - 'A'][temp->page].dbi = block_counter++;
                             }
+                            
+                            evict_page = temp->page;
+                            evict_process = temp->process[0];
+                            dest = vir[temp->process[0] - 'A'][temp->page].dbi;
 
                             if(temp->process[0] == cur_process[0]){
 
@@ -506,11 +530,41 @@ int main(){
                             page_table[page].reference = 1;
                             page_table[page].present = 1;
                             page_table[page].frame = frame;
+                            fprintf(output_file,"Process %c, TLB Miss, Page Fault, %d, Evict %d of Process %c to %d, %d<<-1\n",cur_process[0],frame,evict_page,evict_process,dest,page);
+                            printf("Process %c, TLB Miss, Page Fault, %d, Evict %d of Process %c to %d, %d<<-1\n",cur_process[0],frame,evict_page,evict_process,dest,page);
                     
 
                         }
                         else if(strcmp(frame_policy,"LOCAL") == 0){
+                            
+                            temp = dequeue(&(local_victim_page[root->name[0] - 'A']));
+                            temp->next = NULL;
+                            enqueue(&(local_victim_page[root->name[0] - 'A']),temp);
+                        
+                            frame = temp->frame;
+                            vir[temp->process[0] - 'A'][temp->page].present = 0;
+                            if(vir[temp->process[0] - 'A'][temp->page].dbi == -1){
+                                vir[temp->process[0] - 'A'][temp->page].dbi = block_counter++;
+                            }
+                            
+                            evict_page = temp->page;
+                            evict_process = temp->process[0];
+                            dest = vir[temp->process[0] - 'A'][temp->page].dbi;
 
+                            
+
+                            invalid_TLB(&TLB,page);
+
+                            temp->process[0] = root->name[0];
+                            temp->page = page;
+                            
+                            page_table[page].valid = 1;
+                            page_table[page].reference = 1;
+                            page_table[page].present = 1;
+                            page_table[page].frame = frame;
+                            fprintf(output_file,"Process %c, TLB Miss, Page Fault, %d, Evict %d of Process %c to %d, %d<<-1\n",cur_process[0],frame,evict_page,evict_process,dest,page);
+                            printf("Process %c, TLB Miss, Page Fault, %d, Evict %d of Process %c to %d, %d<<-1\n",cur_process[0],frame,evict_page,evict_process,dest,page);
+                    
                         }
                     }
                     else if(strcmp(page_policy,"CLOCK") == 0){
@@ -528,9 +582,11 @@ int main(){
             }
             //page fault casue by page in disk
             else if(page_table[page].present == 0){
+                pagefault_num[root->name[0] - 'A']++;
                 if(strcmp(page_policy,"FIFO") == 0){
                     if(strcmp(frame_policy,"GLOBAL") == 0){
                         temp = dequeue(&global_victim_page);
+                        temp->next = NULL;
                         enqueue(&global_victim_page,temp);
                         
                         frame = temp->frame;
@@ -538,6 +594,10 @@ int main(){
                         if(vir[temp->process[0] - 'A'][temp->page].dbi == -1){
                             vir[temp->process[0] - 'A'][temp->page].dbi = block_counter++;
                         }
+                        
+                        evict_page = temp->page;
+                        evict_process = temp->process[0];
+                        dest = vir[temp->process[0] - 'A'][temp->page].dbi;
 
                         if(temp->process[0] == cur_process[0]){
 
@@ -552,11 +612,41 @@ int main(){
                         page_table[page].reference = 1;
                         page_table[page].present = 1;
                         page_table[page].frame = frame;
-                
+                        fprintf(output_file,"Process %c, TLB Miss, Page Fault, %d, Evict %d of Process %c to %d, %d<<%d\n",cur_process[0],frame,evict_page,evict_process,dest,page,page_table[page].dbi);
+                        printf("Process %c, TLB Miss, Page Fault, %d, Evict %d of Process %c to %d, %d<<%d\n",cur_process[0],frame,evict_page,evict_process,dest,page,page_table[page].dbi);
+                        
 
                     }
                     else if(strcmp(frame_policy,"LOCAL") == 0){
+                        temp = dequeue(&(local_victim_page[root->name[0] - 'A']));
+                        temp->next = NULL;
+                        enqueue(&(local_victim_page[root->name[0] - 'A']),temp);
+                        
+                        frame = temp->frame;
+                        vir[temp->process[0] - 'A'][temp->page].present = 0;
+                        if(vir[temp->process[0] - 'A'][temp->page].dbi == -1){
+                            vir[temp->process[0] - 'A'][temp->page].dbi = block_counter++;
+                        }
+                        
+                        evict_page = temp->page;
+                        evict_process = temp->process[0];
+                        dest = vir[temp->process[0] - 'A'][temp->page].dbi;
 
+                        
+                        invalid_TLB(&TLB,page);
+
+                        
+                        
+                        temp->process[0] = root->name[0];
+                        temp->page = page;
+                        
+                        page_table[page].valid = 1;
+                        page_table[page].reference = 1;
+                        page_table[page].present = 1;
+                        page_table[page].frame = frame;
+                        fprintf(output_file,"Process %c, TLB Miss, Page Fault, %d, Evict %d of Process %c to %d, %d<<%d\n",cur_process[0],frame,evict_page,evict_process,dest,page,page_table[page].dbi);
+                        printf("Process %c, TLB Miss, Page Fault, %d, Evict %d of Process %c to %d, %d<<%d\n",cur_process[0],frame,evict_page,evict_process,dest,page,page_table[page].dbi);
+                        
                     }
                 }
                 else if(strcmp(page_policy,"CLOCK") == 0){
@@ -577,6 +667,8 @@ int main(){
         }
         //TLB hit
         else{
+            hit_num[root->name[0] - 'A']++;
+            fprintf(output_file,"Process %c,TLB Hit,%d=>%d\n",root->name[0],page,frame);
             printf("Process %c,TLB Hit,%d=>%d\n",root->name[0],page,frame);
             page_table[page].reference = 1;
             root = root->next;
@@ -585,6 +677,22 @@ int main(){
         
 
     }
+
+    
+    FILE *fp = fopen("analysis.txt","w");
+
+    for(int i = 0 ; i < process_num ; i++){
+        
+        double hit_rate = ((double)hit_num[i])/((double)time_counter);
+        double pagefault_rate = ((double)pagefault_num[i])/((double)time_counter);
+
+
+        fprintf(fp,"Process %c, Effective Access Time = %.3f\n",i+'A',(hit_rate*120 + (1-hit_rate)*220));
+        fprintf(fp,"Process %c, Page Fault Rate = %.3f\n",i+'A',pagefault_rate);
+        
+
+    }
+
     pr_TLB(TLB);
     /*
     while(root){
