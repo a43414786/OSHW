@@ -164,6 +164,7 @@ void get_sys_config(char*TLB_policy,char*page_policy,char*frame_policy,int*proce
         }
         
     }
+    fclose(sys_config);
 }
 
 void enqueue(FFL**root,FFL*new){
@@ -860,7 +861,8 @@ int main(){
         
 
     }
-
+    fclose(fp);
+    fclose(output_file);
     
     return 0;
     
