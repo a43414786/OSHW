@@ -98,6 +98,7 @@ Node* get_trace(){
             frame[framecount++] = word;
         }
     }
+    fclose(trace);
     return root;
 }
 
