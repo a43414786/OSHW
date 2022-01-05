@@ -363,7 +363,6 @@ int main(){
     int phy_num = 0;
     char cur_process = 0;
     int time_counter = 0;
-    int block_counter = 0;
     int frame_counter = 0;
     int flag = 0;
     output_file = fopen("trace_output.txt","w");
@@ -375,6 +374,8 @@ int main(){
     FFL* free_memory_list = make_free_memory_list(phy_num);
     FFL* global_victim_page = NULL;
     FFL* local_victim_page[process_num];
+    int block_num = process_num * vir_num;
+    int disk[block_num];
     int hit_num[process_num];
     int ref_num[process_num];
     int page_ref_num[process_num];
@@ -384,6 +385,7 @@ int main(){
     memset(ref_num,0,sizeof(ref_num));
     memset(page_ref_num,0,sizeof(page_ref_num));
     memset(pagefault_num,0,sizeof(pagefault_num));
+    memset(disk,0,sizeof(disk));
     
     for(int i = 0 ; i < process_num ; i++) {
 
@@ -412,6 +414,7 @@ int main(){
         int temp_process_idx = 0;
         int temp_page = 0;
         char evict_process;
+        int tlb_miss = 0;
         time_counter++;
 
         if(cur_process != root->name[0]){
@@ -423,7 +426,6 @@ int main(){
         cur_process = root->name[0];
         cur_process_idx = cur_process - 'A';
 
-        ref_num[cur_process_idx]++;
 
         //TLB mis
         if((frame = search_TLB(&TLB,page,TLB_policy)) == -1){
@@ -506,9 +508,15 @@ int main(){
 
                             vir[temp_process_idx][temp_page].present = 0;
                             vir[temp_process_idx][temp_page].reference = 0;
-                            if(vir[temp_process_idx][temp_page].dbi == -1){
-                                vir[temp_process_idx][temp_page].dbi = block_counter++;
+
+                            for(int i = 0 ; i < block_num ; i++){
+                                if(disk[i] == 0){
+                                    disk[i] = 1;
+                                    vir[temp_process_idx][temp_page].dbi = i;
+                                    break;
+                                }
                             }
+                        
                             
                             evict_page = temp_page;
                             evict_process = temp->process;
@@ -543,8 +551,12 @@ int main(){
 
                             vir[temp_process_idx][temp_page].present = 0;
                             vir[temp_process_idx][temp_page].reference = 0;
-                            if(vir[temp_process_idx][temp_page].dbi == -1){
-                                vir[temp_process_idx][temp_page].dbi = block_counter++;
+                            for(int i = 0 ; i < block_num ; i++){
+                                if(disk[i] == 0){
+                                    disk[i] = 1;
+                                    vir[temp_process_idx][temp_page].dbi = i;
+                                    break;
+                                }
                             }
                             
                             evict_page = temp_page;
@@ -589,8 +601,12 @@ int main(){
 
                             vir[temp_process_idx][temp_page].present = 0;
                             vir[temp_process_idx][temp_page].reference = 0;
-                            if(vir[temp_process_idx][temp_page].dbi == -1){
-                                vir[temp_process_idx][temp_page].dbi = block_counter++;
+                            for(int i = 0 ; i < block_num ; i++){
+                                if(disk[i] == 0){
+                                    disk[i] = 1;
+                                    vir[temp_process_idx][temp_page].dbi = i;
+                                    break;
+                                }
                             }
                             
                             evict_page = temp_page;
@@ -632,8 +648,12 @@ int main(){
 
                             vir[temp_process_idx][temp_page].present = 0;
                             vir[temp_process_idx][temp_page].reference = 0;
-                            if(vir[temp_process_idx][temp_page].dbi == -1){
-                                vir[temp_process_idx][temp_page].dbi = block_counter++;
+                            for(int i = 0 ; i < block_num ; i++){
+                                if(disk[i] == 0){
+                                    disk[i] = 1;
+                                    vir[temp_process_idx][temp_page].dbi = i;
+                                    break;
+                                }
                             }
                             
                             evict_page = temp_page;
@@ -679,8 +699,13 @@ int main(){
 
                         vir[temp_process_idx][temp_page].present = 0;
                         vir[temp_process_idx][temp_page].reference = 0;
-                        if(vir[temp_process_idx][temp_page].dbi == -1){
-                            vir[temp_process_idx][temp_page].dbi = block_counter++;
+
+                        for(int i = 0 ; i < block_num ; i++){
+                            if(disk[i] == 0){
+                                disk[i] = 1;
+                                vir[temp_process_idx][temp_page].dbi = i;
+                                break;
+                            }
                         }
                         
                         evict_page = temp_page;
@@ -700,6 +725,7 @@ int main(){
                         page_table[page].reference = 1;
                         page_table[page].present = 1;
                         page_table[page].frame = frame;
+                        disk[page_table[page].dbi] = 0;
                         fprintf(output_file,"Process %c, TLB Miss, Page Fault, %d, Evict %d of Process %c to %d, %d<<%d\n",cur_process,frame,evict_page,evict_process,dest,page,page_table[page].dbi);
                         
                     }
@@ -717,8 +743,13 @@ int main(){
 
                         vir[temp_process_idx][temp_page].present = 0;
                         vir[temp_process_idx][temp_page].reference = 0;
-                        if(vir[temp_process_idx][temp_page].dbi == -1){
-                            vir[temp_process_idx][temp_page].dbi = block_counter++;
+
+                        for(int i = 0 ; i < block_num ; i++){
+                            if(disk[i] == 0){
+                                disk[i] = 1;
+                                vir[temp_process_idx][temp_page].dbi = i;
+                                break;
+                            }
                         }
                         
                         evict_page = temp_page;
@@ -738,6 +769,7 @@ int main(){
                         page_table[page].reference = 1;
                         page_table[page].present = 1;
                         page_table[page].frame = frame;
+                        disk[page_table[page].dbi] = 0;
                         fprintf(output_file,"Process %c, TLB Miss, Page Fault, %d, Evict %d of Process %c to %d, %d<<%d\n",cur_process,frame,evict_page,evict_process,dest,page,page_table[page].dbi);
                         
                     }
@@ -762,8 +794,12 @@ int main(){
 
                             vir[temp_process_idx][temp_page].present = 0;
                             vir[temp_process_idx][temp_page].reference = 0;
-                            if(vir[temp_process_idx][temp_page].dbi == -1){
-                                vir[temp_process_idx][temp_page].dbi = block_counter++;
+                            for(int i = 0 ; i < block_num ; i++){
+                                if(disk[i] == 0){
+                                    disk[i] = 1;
+                                    vir[temp_process_idx][temp_page].dbi = i;
+                                    break;
+                                }
                             }
                             
                             evict_page = temp_page;
@@ -783,6 +819,7 @@ int main(){
                             page_table[page].reference = 1;
                             page_table[page].present = 1;
                             page_table[page].frame = frame;
+                            disk[page_table[page].dbi] = 0;
                             fprintf(output_file,"Process %c, TLB Miss, Page Fault, %d, Evict %d of Process %c to %d, %d<<%d\n",cur_process,frame,evict_page,evict_process,dest,page,page_table[page].dbi);
                             
                         }
@@ -805,8 +842,12 @@ int main(){
 
                             vir[temp_process_idx][temp_page].present = 0;
                             vir[temp_process_idx][temp_page].reference = 0;
-                            if(vir[temp_process_idx][temp_page].dbi == -1){
-                                vir[temp_process_idx][temp_page].dbi = block_counter++;
+                            for(int i = 0 ; i < block_num ; i++){
+                                if(disk[i] == 0){
+                                    disk[i] = 1;
+                                    vir[temp_process_idx][temp_page].dbi = i;
+                                    break;
+                                }
                             }
                             
                             evict_page = temp_page;
@@ -826,6 +867,7 @@ int main(){
                             page_table[page].reference = 1;
                             page_table[page].present = 1;
                             page_table[page].frame = frame;
+                            disk[page_table[page].dbi] = 0;
                             fprintf(output_file,"Process %c, TLB Miss, Page Fault, %d, Evict %d of Process %c to %d, %d<<%d\n",cur_process,frame,evict_page,evict_process,dest,page,page_table[page].dbi);
                             
                         }
@@ -839,8 +881,9 @@ int main(){
         }
         //TLB hit
         else{
+            ref_num[cur_process_idx]++;
             hit_num[cur_process_idx]++;
-            fprintf(output_file,"Process %c,TLB Hit,%d=>%d\n",root->name[0],page,frame);
+            fprintf(output_file,"Process %c, TLB Hit, %d=>%d\n",root->name[0],page,frame);
             page_table[page].reference = 1;
             root = root->next;
         }
@@ -853,8 +896,8 @@ int main(){
 
     for(int i = 0 ; i < process_num ; i++){
         
-        double hit_rate = ((double)hit_num[i])/((double)ref_num[i]);
-        double pagefault_rate = ((double)pagefault_num[i])/((double)page_ref_num[i]);
+        double hit_rate = ((double)hit_num[i])/((double)page_ref_num[i]);
+        double pagefault_rate = ((double)pagefault_num[i])/((double)hit_num[i]);
 
 
         fprintf(fp,"Process %c, Effective Access Time = %.3f\n",i+'A',(hit_rate*120 + (1-hit_rate)*220));
