@@ -517,14 +517,13 @@ int main(){
                                 }
                             }
                         
-                            
                             evict_page = temp_page;
                             evict_process = temp->process;
                             dest = vir[temp_process_idx][temp_page].dbi;
 
                             if(temp->process == cur_process){
 
-                                invalid_TLB(&TLB,page);
+                                invalid_TLB(&TLB,temp->page);
 
                             }
 
@@ -565,10 +564,10 @@ int main(){
 
                             if(temp->process == cur_process){
 
-                                invalid_TLB(&TLB,page);
+                                invalid_TLB(&TLB,temp->page);
 
                             }
-
+                            
                             temp->process = cur_process;
                             temp->page = page;
                             
@@ -615,7 +614,7 @@ int main(){
 
                             if(temp->process == cur_process){
 
-                                invalid_TLB(&TLB,page);
+                                invalid_TLB(&TLB,temp->page);
 
                             }
 
@@ -662,7 +661,7 @@ int main(){
 
                             if(temp->process == cur_process){
 
-                                invalid_TLB(&TLB,page);
+                                invalid_TLB(&TLB,temp->page);
 
                             }
 
@@ -714,7 +713,7 @@ int main(){
 
                         if(temp->process == cur_process){
 
-                            invalid_TLB(&TLB,page);
+                            invalid_TLB(&TLB,temp->page);
 
                         }
 
@@ -758,7 +757,7 @@ int main(){
 
                         if(temp->process == cur_process){
 
-                            invalid_TLB(&TLB,page);
+                            invalid_TLB(&TLB,temp->page);
 
                         }
 
@@ -808,7 +807,7 @@ int main(){
 
                             if(temp->process == cur_process){
 
-                                invalid_TLB(&TLB,page);
+                                invalid_TLB(&TLB,temp->page);
 
                             }
 
@@ -856,7 +855,7 @@ int main(){
 
                             if(temp->process == cur_process){
 
-                                invalid_TLB(&TLB,page);
+                                invalid_TLB(&TLB,temp->page);
 
                             }
 
