@@ -895,10 +895,9 @@ int main(){
 
     for(int i = 0 ; i < process_num ; i++){
         
-        double hit_rate = ((double)hit_num[i])/((double)page_ref_num[i]);
+        double hit_rate = ((double)hit_num[i])/((double)(page_ref_num[i]+hit_num[i]));
         double pagefault_rate = ((double)pagefault_num[i])/((double)hit_num[i]);
-
-
+        
         fprintf(fp,"Process %c, Effective Access Time = %.3f\n",i+'A',(hit_rate*120 + (1-hit_rate)*220));
         fprintf(fp,"Process %c, Page Fault Rate = %.3f\n",i+'A',pagefault_rate);
         
